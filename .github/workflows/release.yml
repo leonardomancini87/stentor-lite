@@ -1,0 +1,89 @@
+# Compila Sténtor Lite per macOS e Windows e prepara una Release (in bozza) su GitHub.
+#
+# Come si usa:
+#   - da GitHub: Actions → "Pubblica Sténtor Lite" → Run workflow (sceglie il ramo), oppure
+#   - dal Terminale: git tag v0.7.0 && git push origin v0.7.0
+# Alla fine, in Releases trovi una bozza con il .dmg (Mac) e gli installatori .exe/.msi (Windows):
+# controllala e premi "Publish release".
+#
+# Beta NON firmata: al primo avvio macOS e Windows mostrano un avviso di sicurezza.
+# Per firmare e notarizzare su Mac aggiungi in Settings → Secrets and variables → Actions:
+#   APPLE_CERTIFICATE, APPLE_CERTIFICATE_PASSWORD, APPLE_SIGNING_IDENTITY,
+#   APPLE_ID, APPLE_PASSWORD (password specifica per app), APPLE_TEAM_ID
+# e il workflow li userà da solo (le variabili qui sotto restano vuote finché non esistono).
+
+name: Pubblica Sténtor Lite
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Due compilazioni Mac separate (più affidabili del pacchetto "universal"):
+          - name: macOS Apple Silicon
+            platform: macos-latest
+            args: --target aarch64-apple-darwin
+            rust_targets: aarch64-apple-darwin
+          - name: macOS Intel
+            platform: macos-latest
+            args: --target x86_64-apple-darwin
+            rust_targets: x86_64-apple-darwin
+          - name: Windows
+            platform: windows-latest
+            args: ''
+            rust_targets: ''
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust_targets }}
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Installa le dipendenze
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Compila e allega alla Release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        with:
+          tagName: v__VERSION__
+          releaseName: 'Sténtor Lite __VERSION__'
+          releaseBody: |
+            Beta di Sténtor Lite __VERSION__.
+
+            **Mac**: scarica il file `.dmg` (`aarch64` per i Mac con chip Apple M1/M2/M3/M4, `x64` per i Mac Intel), trascina Sténtor Lite in Applicazioni. La prima volta: clic destro sull'app → Apri → Apri.
+            **Windows**: scarica l'installatore `.exe`. Se compare "Windows ha protetto il PC": Ulteriori informazioni → Esegui comunque.
+          releaseDraft: true
+          prerelease: true
+          args: ${{ matrix.args }}

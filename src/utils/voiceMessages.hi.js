@@ -1,0 +1,23 @@
+// Hindi: voci/personaggi e riepilogo importazione Word (da rileggere).
+export const VOICE_MESSAGES_HI = {
+  voice: 'पात्र',
+  noVoice: 'कोई पात्र नहीं',
+  suggestions: 'पहले से उपयोग किए गए पात्र',
+  renameTitle: 'पात्र बदलें',
+  removeTitle: 'पात्र हटाएँ',
+  changeQuestion: 'क्या पात्र केवल इस क्यू में बदलना है या «{voice}» वाले सभी {count} क्यू में?',
+  removeQuestion: 'क्या पात्र केवल इस क्यू से हटाना है या «{voice}» वाले सभी {count} क्यू से?',
+  onlyThis: 'केवल यह क्यू',
+  allCues: 'सभी {count} क्यू',
+  cancel: 'रद्द करें',
+  missingCheck: 'बिना पात्र वाले',
+  missingInfo: 'कोई पात्र निर्धारित नहीं।',
+  importTitle: 'Word स्क्रिप्ट इम्पोर्ट हुई',
+  project: 'प्रोजेक्ट',
+  elements: 'बनाई गई प्रविष्टियाँ',
+  dialogue: 'पहचाने गए क्यू',
+  directions: 'मंच निर्देश',
+  unassigned: 'बिना पात्र वाले पाठ',
+  recognized: 'पहचाने गए पात्र',
+  firstVoices: 'पहले पात्र',
+};

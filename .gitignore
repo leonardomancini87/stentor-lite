@@ -1,0 +1,12 @@
+node_modules/
+dist/
+src-tauri/target/
+.DS_Store
+._*
+*.log
+.vite/
+.env
+.env.*
+src-tauri/gen/
+.oss-work/
+qa/

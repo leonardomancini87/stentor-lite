@@ -1,0 +1,31 @@
+// Card "Mappa".
+export default {
+  it: {
+    'map.title': 'Mappa',
+    'map.aria': 'Mappa dello spettacolo',
+    'map.hint': 'Clic: vai all’inizio della sezione',
+    'map.subtitle': 'Indice dello spettacolo',
+    'map.add.title': 'Inserisci un marcatore prima della battuta selezionata',
+    'map.add.aria': 'Inserisci marcatore',
+    'map.start': 'Inizio',
+    'map.range.none': 'nessuna battuta',
+    'map.range.single': 'battuta {number}',
+    'map.goTo': 'Vai a {title}',
+    'map.emptySection': '{title}: nessuna battuta in questa sezione',
+    'map.empty': 'Seleziona la battuta dove inizia un atto o una scena e premi <icon/> per inserire un marcatore.',
+  },
+  en: {
+    'map.title': 'Map',
+    'map.aria': 'Show map',
+    'map.hint': 'Click: go to the start of the section',
+    'map.subtitle': 'Show outline',
+    'map.add.title': 'Insert a marker before the selected cue',
+    'map.add.aria': 'Insert marker',
+    'map.start': 'Start',
+    'map.range.none': 'no cues',
+    'map.range.single': 'cue {number}',
+    'map.goTo': 'Go to {title}',
+    'map.emptySection': '{title}: no cues in this section',
+    'map.empty': 'Select the cue where an act or scene begins and press <icon/> to insert a marker.',
+  },
+};

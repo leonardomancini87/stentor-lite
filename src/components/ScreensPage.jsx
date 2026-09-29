@@ -1,0 +1,283 @@
+import { useRef } from 'react';
+import { Monitor } from 'lucide-react';
+
+import StageFrame from './StageFrame.jsx';
+import StageSubtitle from './StageSubtitle.jsx';
+import { useI18n } from '../i18n/index.js';
+import { getCueText, getCueTypography } from '../utils/cueTextStyle.js';
+import { getCueTextSpans } from '../utils/inlineStyleSpans.js';
+import { isMarkerCue } from '../utils/markers.js';
+import {
+  DEFAULT_SCREENS,
+  FONT_FAMILY_OPTIONS,
+  SCREEN_ASPECT_OPTIONS,
+  createScreen,
+  deleteActiveScreen,
+  getScreenAspectOption,
+  getScreenLanguage,
+  screenToPublicSettings,
+  setActiveScreen,
+  updateActiveScreenSettings,
+} from '../utils/screenSettings.js';
+
+function classNames(...items) {
+  return items.filter(Boolean).join(' ');
+}
+
+// Pagina Schermi: elenco degli schermi, anteprima e impostazioni dello schermo scelto.
+export default function ScreensPage({
+  project,
+  language,
+  cue,
+  blackout,
+  setBlackout,
+  updateProject,
+  dialogs,
+  projection,
+}) {
+  const { t } = useI18n();
+  const canvasRef = useRef(null);
+  const { screens, activeScreen, openScreen, testScreen } = projection;
+  const activeSettings = screenToPublicSettings(activeScreen);
+  const activeAspect = getScreenAspectOption(activeSettings.publicAspectRatio);
+  const activeScreenLanguage = getScreenLanguage(activeScreen, language, project.languages);
+
+  function updateSettings(nextSettings) {
+    updateProject({ settings: nextSettings });
+  }
+
+  function updateActiveScreen(patch) {
+    updateSettings(updateActiveScreenSettings(project.settings, patch));
+  }
+
+  function statusOf(screen) {
+    if (blackout) return { label: t('screens.status.blackout'), tone: 'off' };
+    if (screen.id === activeScreen.id) return { label: t('screens.status.live'), tone: 'live' };
+    return { label: t('screens.status.active'), tone: 'active' };
+  }
+
+  function previewText() {
+    if (blackout) return '';
+    const text = cue && !isMarkerCue(cue) ? getCueText(cue, activeScreenLanguage) : '';
+    return text || t('screens.previewText.empty');
+  }
+
+  async function addScreen() {
+    const name = await dialogs.input({
+      title: t('screens.dialog.new.title'),
+      message: t('screens.dialog.new.message'),
+      inputLabel: t('screens.dialog.new.label'),
+      defaultValue: t('screens.dialog.new.default'),
+      confirmLabel: t('screens.dialog.new.confirm'),
+      required: true,
+    });
+    if (!name) return;
+    updateSettings(createScreen(project.settings, name.trim() || t('screens.dialog.new.default')));
+  }
+
+  async function removeScreen() {
+    if (screens.length <= 1) return;
+    const confirmed = await dialogs.confirm({
+      title: t('screens.dialog.delete.title'),
+      message: t('screens.dialog.delete.message', { name: activeScreen.name }),
+      confirmLabel: t('common.delete'),
+      variant: 'danger',
+    });
+    if (confirmed) updateSettings(deleteActiveScreen(project.settings));
+  }
+
+  function resetStyle() {
+    const fallback = DEFAULT_SCREENS[0];
+    updateActiveScreen({
+      publicBackground: fallback.publicBackground,
+      publicTextColor: fallback.publicTextColor,
+      publicFontSize: fallback.publicFontSize,
+      publicVerticalAlign: fallback.publicVerticalAlign,
+      publicPaddingTop: fallback.publicPaddingTop,
+      publicMaxWidth: fallback.publicMaxWidth,
+      publicFontFamily: fallback.publicFontFamily,
+      publicFadeInMs: fallback.publicFadeInMs,
+      publicFadeOutMs: fallback.publicFadeOutMs,
+      publicBlackoutFadeMs: fallback.publicBlackoutFadeMs,
+      publicAspectRatio: fallback.publicAspectRatio,
+    });
+  }
+
+  function toggleCanvasFullscreen() {
+    const element = canvasRef.current;
+    if (!element) return;
+    if (!document.fullscreenElement) element.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  }
+
+  const status = statusOf(activeScreen);
+  const fontSize = parseInt(activeSettings.publicFontSize, 10) || 58;
+  const maxWidth = parseInt(activeSettings.publicMaxWidth, 10) || 90;
+
+  return (
+    <section className="desktopScreensWorkspace liteScreensWorkspace" aria-label={t('screens.aria')}>
+      <header className="desktopScreensToolbar liteScreensToolbar" aria-label={t('screens.toolbar.aria')}>
+        <div className="desktopScreensToolbarTitle">
+          <span>{t('screens.eyebrow')}</span>
+          <strong>{t('screens.heading')}</strong>
+        </div>
+        <div className="desktopScreensToolbarActions">
+          <button type="button" onClick={addScreen}>{t('screens.add')}</button>
+          <button type="button" onClick={() => openScreen(activeScreen)}>{t('screens.open')}</button>
+          <button type="button" onClick={() => testScreen(activeScreen, t('screens.testText'))}>{t('screens.test')}</button>
+          <button type="button" onClick={toggleCanvasFullscreen}>{t('screens.fullscreen')}</button>
+          <button type="button" className={blackout ? 'isActive' : ''} onClick={() => setBlackout(!blackout)}>
+            {blackout ? t('screens.showText') : t('screens.blackout')}
+          </button>
+        </div>
+      </header>
+
+      <div className="liteScreensBody">
+        <aside className="liteScreenPicker" aria-label={t('screens.list.aria')}>
+          <div className="desktopPanelTitle">
+            <span>{t('screens.list.title')}</span>
+            <strong>{screens.length}</strong>
+          </div>
+          <div className="desktopOutputRows">
+            {screens.map((screen) => {
+              const rowStatus = statusOf(screen);
+              return (
+                <button
+                  key={screen.id}
+                  type="button"
+                  className={classNames('desktopOutputRow', screen.id === activeScreen.id && 'selected')}
+                  onClick={() => updateSettings(setActiveScreen(project.settings, screen.id))}
+                >
+                  <span className="desktopOutputIcon"><Monitor size={16} /></span>
+                  <span className="desktopOutputCopy">
+                    <strong>{screen.name}</strong>
+                    <em>{getScreenLanguage(screen, language, project.languages).toUpperCase()}</em>
+                  </span>
+                  <span className={classNames('desktopOutputStatus', rowStatus.tone)}>{rowStatus.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </aside>
+
+        <main className="desktopScreenCanvasColumn liteScreenPreviewColumn">
+          <div className="desktopCanvasHeader">
+            <div>
+              <span>{t('screens.preview')}</span>
+              <strong>{activeScreen.name}</strong>
+            </div>
+            <div className="desktopCanvasMeta">
+              <small>{t(`screens.aspect.${activeAspect.value}`)}</small>
+              <small>{activeScreenLanguage.toUpperCase()}</small>
+              <small className={classNames('desktopCanvasLiveBadge', status.tone)}>{status.label}</small>
+            </div>
+          </div>
+
+          <div className="desktopScreenCanvasShell" ref={canvasRef}>
+            <StageFrame id={`desktop-screen-canvas-${activeScreen.id}`} settings={activeSettings} className="desktopScreenStageFrame">
+              {blackout ? null : (
+                <StageSubtitle
+                  key={`${cue?.id || 'empty'}-${activeScreen.id}-${activeScreenLanguage}`}
+                  text={previewText()}
+                  spans={getCueTextSpans(cue, activeScreenLanguage)}
+                  fontSize={activeSettings.publicFontSize}
+                  maxWidth={activeSettings.publicMaxWidth || '90%'}
+                  verticalAlign={activeSettings.publicVerticalAlign || 'center'}
+                  paddingTop={activeSettings.publicPaddingTop || '0vh'}
+                  fadeInMs={activeSettings.publicFadeInMs ?? 120}
+                  style={{
+                    color: activeSettings.publicTextColor,
+                    fontFamily: activeSettings.publicFontFamily || FONT_FAMILY_OPTIONS[0].value,
+                    ...getCueTypography(cue),
+                  }}
+                />
+              )}
+            </StageFrame>
+          </div>
+        </main>
+
+        <aside className="desktopScreenInspector liteScreenInspector" aria-label={t('screens.inspector.aria')}>
+          <div className="desktopPanelTitle inspectorTitle">
+            <span>{t('screens.inspector.title')}</span>
+            <strong>{activeScreen.name}</strong>
+          </div>
+
+          <section className="desktopInspectorSection">
+            <h3>{t('screens.section.screen')}</h3>
+            <label>
+              {t('screens.field.name')}
+              <input value={activeScreen.name} onChange={(event) => updateActiveScreen({ name: event.target.value })} />
+            </label>
+            <label>
+              {t('screens.field.language')}
+              <select value={activeScreen.publicLanguage || 'active'} onChange={(event) => updateActiveScreen({ publicLanguage: event.target.value })}>
+                <option value="active">{t('screens.field.followActive')}</option>
+                {project.languages.map((lang) => (
+                  <option key={lang} value={lang}>{project.languageNames?.[lang] || lang.toUpperCase()}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              {t('screens.field.format')}
+              <select value={activeSettings.publicAspectRatio || '16:9'} onChange={(event) => updateActiveScreen({ publicAspectRatio: event.target.value })}>
+                {SCREEN_ASPECT_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>{t(`screens.aspect.${option.value}`)}</option>
+                ))}
+              </select>
+            </label>
+          </section>
+
+          <section className="desktopInspectorSection">
+            <h3>{t('screens.section.look')}</h3>
+            <label>
+              {t('screens.field.font')}
+              <select value={activeSettings.publicFontFamily || FONT_FAMILY_OPTIONS[0].value} onChange={(event) => updateActiveScreen({ publicFontFamily: event.target.value })}>
+                {FONT_FAMILY_OPTIONS.map((font, index) => (
+                  <option key={font.value} value={font.value}>{index === 0 ? t('screens.font.system') : font.label}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              {t('screens.field.size')}
+              <div className="desktopRange">
+                <input type="range" min="28" max="120" value={fontSize} onChange={(event) => updateActiveScreen({ publicFontSize: `${event.target.value}px` })} />
+                <strong>{fontSize}px</strong>
+              </div>
+            </label>
+            <label>
+              {t('screens.field.width')}
+              <div className="desktopRange">
+                <input type="range" min="45" max="100" value={maxWidth} onChange={(event) => updateActiveScreen({ publicMaxWidth: `${event.target.value}%` })} />
+                <strong>{maxWidth}%</strong>
+              </div>
+            </label>
+            <label>
+              {t('screens.field.position')}
+              <select value={activeSettings.publicVerticalAlign || 'center'} onChange={(event) => updateActiveScreen({ publicVerticalAlign: event.target.value })}>
+                <option value="top">{t('screens.position.top')}</option>
+                <option value="center">{t('screens.position.center')}</option>
+                <option value="bottom">{t('screens.position.bottom')}</option>
+              </select>
+            </label>
+            <div className="desktopColorGrid">
+              <label>
+                {t('screens.field.text')}
+                <input type="color" value={activeSettings.publicTextColor || '#F3E7B3'} onChange={(event) => updateActiveScreen({ publicTextColor: event.target.value })} />
+              </label>
+              <label>
+                {t('screens.field.background')}
+                <input type="color" value={activeSettings.publicBackground || '#000000'} onChange={(event) => updateActiveScreen({ publicBackground: event.target.value })} />
+              </label>
+            </div>
+          </section>
+
+          <section className="desktopInspectorSection liteScreenActionsSection">
+            <button type="button" onClick={() => openScreen(activeScreen)}>{t('screens.open')}</button>
+            <button type="button" onClick={resetStyle}>{t('screens.resetStyle')}</button>
+            <button type="button" className="dangerMiniButton" onClick={removeScreen} disabled={screens.length <= 1}>{t('screens.delete')}</button>
+          </section>
+        </aside>
+      </div>
+    </section>
+  );
+}

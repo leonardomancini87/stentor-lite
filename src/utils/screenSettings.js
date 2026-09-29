@@ -1,0 +1,213 @@
+export const FONT_FAMILY_OPTIONS = [
+  { label: 'Sistema sans', value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' },
+  { label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+  { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+  { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+  { label: 'Georgia', value: 'Georgia, "Times New Roman", serif' },
+  { label: 'Times New Roman', value: '"Times New Roman", Times, serif' },
+  { label: 'Courier New', value: '"Courier New", Courier, monospace' },
+  { label: 'Atkinson Hyperlegible', value: '"Atkinson Hyperlegible", Arial, sans-serif' },
+  { label: 'OpenDyslexic', value: 'OpenDyslexic, Arial, sans-serif' },
+];
+
+export const SCREEN_ASPECT_OPTIONS = [
+  { label: '16:9 panoramico', value: '16:9', ratio: '16 / 9', width: 1280, height: 720 },
+  { label: '4:3 classico', value: '4:3', ratio: '4 / 3', width: 1024, height: 768 },
+  { label: 'Libero', value: 'free', ratio: '16 / 9', width: 1280, height: 720 },
+];
+
+export function getScreenAspectOption(value) {
+  return SCREEN_ASPECT_OPTIONS.find((option) => option.value === value) || SCREEN_ASPECT_OPTIONS[0];
+}
+
+export const DEFAULT_SCREENS = [
+  {
+    id: 'studio-torino',
+    name: 'Studio Torino',
+    publicBackground: '#000000',
+    publicTextColor: '#F3E7B3',
+    publicFontSize: '72px',
+    publicVerticalAlign: 'top',
+    publicPaddingTop: '6vh',
+    publicMaxWidth: '90%',
+    publicFontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    publicFadeInMs: 120,
+    publicFadeOutMs: 120,
+    publicBlackoutFadeMs: 160,
+    publicLanguage: 'active',
+    publicAspectRatio: '16:9',
+  },
+  {
+    id: 'pannello-lione',
+    name: 'Pannello Lione',
+    publicBackground: '#000000',
+    publicTextColor: '#F3E7B3',
+    publicFontSize: '58px',
+    publicVerticalAlign: 'center',
+    publicPaddingTop: '0vh',
+    publicMaxWidth: '88%',
+    publicFontFamily: 'Helvetica, Arial, sans-serif',
+    publicFadeInMs: 120,
+    publicFadeOutMs: 120,
+    publicBlackoutFadeMs: 160,
+    publicLanguage: 'en',
+    publicAspectRatio: '16:9',
+  },
+];
+
+function cloneScreen(screen) {
+  return { ...screen };
+}
+
+export function clampTransitionMs(value, fallback = 120) {
+  const parsed = Number.parseInt(value, 10);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.max(0, Math.min(1200, parsed));
+}
+
+export function screenToPublicSettings(screen) {
+  return {
+    publicBackground: screen.publicBackground || '#000000',
+    publicTextColor: screen.publicTextColor || '#F3E7B3',
+    publicFontSize: screen.publicFontSize || '58px',
+    publicVerticalAlign: screen.publicVerticalAlign || 'center',
+    publicPaddingTop: screen.publicPaddingTop || '0vh',
+    publicMaxWidth: screen.publicMaxWidth || '90%',
+    publicFontFamily: screen.publicFontFamily || FONT_FAMILY_OPTIONS[0].value,
+    publicFadeInMs: clampTransitionMs(screen.publicFadeInMs, 120),
+    publicFadeOutMs: clampTransitionMs(screen.publicFadeOutMs, 120),
+    publicBlackoutFadeMs: clampTransitionMs(screen.publicBlackoutFadeMs, 160),
+    publicLanguage: screen.publicLanguage || 'active',
+    publicAspectRatio: getScreenAspectOption(screen.publicAspectRatio).value,
+  };
+}
+
+function normalizeScreen(screen, fallback, index) {
+  const base = fallback || DEFAULT_SCREENS[index] || DEFAULT_SCREENS[0];
+  const id = screen?.id || base.id || `schermo-${index + 1}`;
+
+  return {
+    ...cloneScreen(base),
+    ...(screen || {}),
+    id,
+    name: screen?.name || base.name || `Schermo ${index + 1}`,
+  };
+}
+
+export function getScreens(settings = {}) {
+  if (Array.isArray(settings.screens) && settings.screens.length > 0) {
+    return settings.screens.map((screen, index) =>
+      normalizeScreen(screen, DEFAULT_SCREENS[index], index)
+    );
+  }
+
+  return DEFAULT_SCREENS.map((screen) => cloneScreen(screen));
+}
+
+export function getActiveScreenId(settings = {}) {
+  const screens = getScreens(settings);
+  return settings.activeScreenId || screens[0]?.id || DEFAULT_SCREENS[0].id;
+}
+
+export function getActiveScreen(settings = {}) {
+  const screens = getScreens(settings);
+  const activeScreenId = getActiveScreenId(settings);
+  return screens.find((screen) => screen.id === activeScreenId) || screens[0] || DEFAULT_SCREENS[0];
+}
+
+export function getPublicSettings(settings = {}) {
+  return screenToPublicSettings(getActiveScreen(settings));
+}
+
+export function getScreenLanguage(screen = {}, activeLanguage = 'it', languages = []) {
+  const requested = screen.publicLanguage || 'active';
+  if (requested === 'active') return activeLanguage || languages[0] || 'it';
+  if (Array.isArray(languages) && languages.includes(requested)) return requested;
+  return activeLanguage || languages[0] || requested || 'it';
+}
+
+export function withScreensInitialized(settings = {}) {
+  const screens = getScreens(settings);
+  const activeScreenId = getActiveScreenId(settings);
+  const activeScreen = screens.find((screen) => screen.id === activeScreenId) || screens[0];
+
+  return {
+    ...settings,
+    activeScreenId: activeScreen.id,
+    screens,
+    ...screenToPublicSettings(activeScreen),
+  };
+}
+
+export function updateActiveScreenSettings(settings = {}, patch = {}) {
+  const current = withScreensInitialized(settings);
+  const screens = current.screens.map((screen) =>
+    screen.id === current.activeScreenId
+      ? { ...screen, ...patch }
+      : screen
+  );
+  const activeScreen = screens.find((screen) => screen.id === current.activeScreenId) || screens[0];
+
+  return {
+    ...current,
+    screens,
+    ...screenToPublicSettings(activeScreen),
+  };
+}
+
+export function setActiveScreen(settings = {}, screenId) {
+  const current = withScreensInitialized(settings);
+  const activeScreen = current.screens.find((screen) => screen.id === screenId) || current.screens[0];
+
+  return {
+    ...current,
+    activeScreenId: activeScreen.id,
+    ...screenToPublicSettings(activeScreen),
+  };
+}
+
+export function makeScreenId(name) {
+  const slug = String(name || 'schermo')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'schermo';
+
+  return `${slug}-${Date.now().toString(36)}`;
+}
+
+export function createScreen(settings = {}, name = 'Nuovo schermo') {
+  const current = withScreensInitialized(settings);
+  const base = getActiveScreen(current);
+  const screen = {
+    ...base,
+    id: makeScreenId(name),
+    name,
+  };
+
+  return {
+    ...current,
+    activeScreenId: screen.id,
+    screens: [...current.screens, screen],
+    ...screenToPublicSettings(screen),
+  };
+}
+
+export function deleteActiveScreen(settings = {}) {
+  const current = withScreensInitialized(settings);
+
+  if (current.screens.length <= 1) {
+    return current;
+  }
+
+  const screens = current.screens.filter((screen) => screen.id !== current.activeScreenId);
+  const activeScreen = screens[0];
+
+  return {
+    ...current,
+    activeScreenId: activeScreen.id,
+    screens,
+    ...screenToPublicSettings(activeScreen),
+  };
+}

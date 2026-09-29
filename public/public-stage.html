@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sténtor — Schermo di proiezione</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000000;
+      cursor: none;
+    }
+
+    #stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000000;
+    }
+
+    #canvas {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 2360px;
+      height: 800px;
+      transform-origin: center center;
+      transform: translate(-50%, -50%) scale(1);
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      background: #000000;
+    }
+
+    #subtitle {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: visible;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 120ms ease-out;
+    }
+
+    .stage-line {
+      white-space: pre;
+    }
+
+    .hint {
+      position: fixed;
+      left: 18px;
+      bottom: 14px;
+      color: rgba(255,255,255,0.35);
+      font: 13px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    body:hover .hint { opacity: 1; }
+
+    .emptyNotice {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: rgba(255,255,255,0.22);
+      font: 16px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    body.debug-empty .emptyNotice { opacity: 1; }
+
+
+  </style>
+</head>
+<body>
+  <main id="stage">
+    <div id="canvas">
+      <svg id="subtitle" viewBox="0 0 2360 800" preserveAspectRatio="xMidYMid meet" role="img" aria-label=""></svg>
+    </div>
+  </main>
+  <div class="hint">Doppio clic: tutto schermo · Esc: esci</div>
+  <div class="emptyNotice">In attesa dello schermo di proiezione di Sténtor…</div>
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const SCREEN_ID = params.get('i') || params.get('screenId') || '';
+      const SCREEN_NAME = params.get('screenName') || 'Schermo di proiezione';
+      const PAYLOAD_KEY = SCREEN_ID
+        ? `stentore-public-stage-payload-${SCREEN_ID}`
+        : 'stentore-public-stage-payload';
+      document.title = `Sténtor — ${SCREEN_NAME}`;
+      const DESIGN_WIDTH = 2360;
+      const DESIGN_HEIGHT = 800;
+      const stage = document.getElementById('stage');
+      const canvas = document.getElementById('canvas');
+      const subtitle = document.getElementById('subtitle');
+      let lastPayloadText = '';
+      let lastUpdatedAt = 0;
+      let transitionTimer = null;
+
+      function escapeHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function updateScale() {
+        const width = window.innerWidth || stage.clientWidth || 1;
+        const height = window.innerHeight || stage.clientHeight || 1;
+        const scale = Math.min(width / DESIGN_WIDTH, height / DESIGN_HEIGHT);
+        canvas.style.transform = `translate(-50%, -50%) scale(${scale || 1})`;
+      }
+
+      function parsePixels(value, fallback = 58) {
+        const parsed = parseFloat(String(value || '').replace('px', ''));
+        return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+      }
+
+      function parsePercent(value, fallback = 90) {
+        const parsed = parseFloat(String(value || '').replace('%', ''));
+        return Number.isFinite(parsed) && parsed > 0 ? Math.max(1, Math.min(100, parsed)) : fallback;
+      }
+
+      function parseVh(value, fallback = 0) {
+        const parsed = parseFloat(String(value || '').replace('vh', ''));
+        return Number.isFinite(parsed) ? parsed : fallback;
+      }
+
+      function getCenterY(verticalAlign, paddingTop) {
+        const offset = (parseVh(paddingTop, 0) / 100) * DESIGN_HEIGHT;
+        if (verticalAlign === 'top') return DESIGN_HEIGHT * 0.26 + offset;
+        if (verticalAlign === 'bottom') return DESIGN_HEIGHT * 0.74 + offset;
+        return DESIGN_HEIGHT * 0.5 + offset;
+      }
+
+      function createSvgElement(name, attributes = {}) {
+        const element = document.createElementNS('http://www.w3.org/2000/svg', name);
+        Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+        return element;
+      }
+
+
+      function parseInlineFormatting(text = '') {
+        const value = String(text || '');
+        const segments = [];
+        let index = 0;
+        let italic = false;
+        let buffer = '';
+
+        function pushBuffer() {
+          if (!buffer) return;
+          segments.push({ text: buffer, italic });
+          buffer = '';
+        }
+
+        while (index < value.length) {
+          if (value.startsWith('<i>', index)) {
+            pushBuffer();
+            italic = true;
+            index += 3;
+            continue;
+          }
+          if (value.startsWith('</i>', index)) {
+            pushBuffer();
+            italic = false;
+            index += 4;
+            continue;
+          }
+          if (value.startsWith('<em>', index)) {
+            pushBuffer();
+            italic = true;
+            index += 4;
+            continue;
+          }
+          if (value.startsWith('</em>', index)) {
+            pushBuffer();
+            italic = false;
+            index += 5;
+            continue;
+          }
+          buffer += value[index];
+          index += 1;
+        }
+
+        pushBuffer();
+        return segments.length ? segments : [{ text: '', italic: false }];
+      }
+
+      function styledLineSegments(line, lineStart, spans) {
+        var lineEnd = lineStart + line.length;
+        var relevant = (Array.isArray(spans) ? spans : []).filter(function(span) {
+          return Number(span.end) > lineStart && Number(span.start) < lineEnd;
+        });
+        if (!line.length) return [{ text: '\u00A0' }];
+        if (!relevant.length) return [{ text: line }];
+        var boundaries = [lineStart, lineEnd];
+        relevant.forEach(function(span) {
+          boundaries.push(Math.max(lineStart, Number(span.start) || 0));
+          boundaries.push(Math.min(lineEnd, Number(span.end) || 0));
+        });
+        boundaries = boundaries.filter(function(value, index, values) {
+          return value >= lineStart && value <= lineEnd && values.indexOf(value) === index;
+        }).sort(function(a, b) { return a - b; });
+        var result = [];
+        for (var i = 0; i < boundaries.length - 1; i += 1) {
+          var start = boundaries[i];
+          var end = boundaries[i + 1];
+          if (end <= start) continue;
+          var style = {};
+          relevant.forEach(function(span) {
+            if (Number(span.start) <= start && Number(span.end) >= end) {
+              ['bold', 'italic', 'underline', 'color', 'fontScale'].forEach(function(key) {
+                if (Object.prototype.hasOwnProperty.call(span, key)) style[key] = span[key];
+              });
+            }
+          });
+          result.push(Object.assign({ text: line.slice(start - lineStart, end - lineStart) }, style));
+        }
+        return result;
+      }
+
+      function renderSubtitleText(text, settings = {}, cueStyle = 'normal', cueTextStyle = {}, textSpans = []) {
+        const value = String(text || '');
+        const lines = value.split(/\r?\n/);
+        const fontPx = parsePixels(settings.fontSize || settings.publicFontSize, 58);
+        const widthPercent = parsePercent(settings.maxWidth || settings.publicMaxWidth, 90);
+        const clipWidth = DESIGN_WIDTH * (widthPercent / 100);
+        const clipX = (DESIGN_WIDTH - clipWidth) / 2;
+        const lineHeight = fontPx * 1.12;
+        const centerY = getCenterY(settings.verticalAlign || settings.publicVerticalAlign, settings.paddingTop || settings.publicPaddingTop);
+        const fill = settings.color || settings.publicTextColor || '#F3E7B3';
+        const fontFamily = settings.fontFamily || settings.publicFontFamily || 'Helvetica, Arial, sans-serif';
+        const fontStyle = cueStyle === 'italic' ? 'italic' : 'normal';
+        const fontWeight = cueTextStyle.bold === false ? '400' : '800';
+        const alignment = 'center'; // Sténtor Lite: sopratitoli sempre centrati
+        const textAnchor = alignment === 'left' ? 'start' : alignment === 'right' ? 'end' : 'middle';
+        const textX = alignment === 'left' ? clipX : alignment === 'right' ? clipX + clipWidth : DESIGN_WIDTH / 2;
+
+        subtitle.replaceChildren();
+        subtitle.setAttribute('aria-label', value);
+
+        const defs = createSvgElement('defs');
+        const clipPath = createSvgElement('clipPath', { id: 'stageTextClip' });
+        clipPath.appendChild(createSvgElement('rect', { x: clipX, y: 0, width: clipWidth, height: DESIGN_HEIGHT }));
+        defs.appendChild(clipPath);
+        subtitle.appendChild(defs);
+
+        const group = createSvgElement('g', { 'clip-path': 'url(#stageTextClip)' });
+        var lineStart = 0;
+        lines.forEach((line, index) => {
+          const y = centerY + (index - (lines.length - 1) / 2) * lineHeight;
+          const textNode = createSvgElement('text', {
+            x: textX,
+            y,
+            'text-anchor': textAnchor,
+            'dominant-baseline': 'middle',
+            fill,
+            'font-family': fontFamily,
+            'font-size': fontPx,
+            'font-style': fontStyle,
+            'font-weight': fontWeight,
+            'letter-spacing': '0.005em',
+          });
+          styledLineSegments(line, lineStart, textSpans).forEach((segment) => {
+            const attrs = {
+              'font-style': segment.italic === true ? 'italic' : segment.italic === false ? 'normal' : fontStyle,
+              'font-weight': segment.bold === true ? '800' : segment.bold === false ? '400' : fontWeight,
+            };
+            if (segment.underline === true) attrs['text-decoration'] = 'underline';
+            if (segment.underline === false) attrs['text-decoration'] = 'none';
+            if (segment.color) attrs.fill = segment.color;
+            if (Number.isFinite(Number(segment.fontScale))) attrs['font-size'] = fontPx * Number(segment.fontScale);
+            const tspan = createSvgElement('tspan', attrs);
+            tspan.textContent = segment.text || '\u00A0';
+            textNode.appendChild(tspan);
+          });
+          group.appendChild(textNode);
+          lineStart += line.length + 1;
+        });
+        subtitle.appendChild(group);
+      }
+
+      function getTransitionMs(settings = {}, key, fallback) {
+        const value = Number.parseInt(settings[key], 10);
+        if (!Number.isFinite(value)) return fallback;
+        return Math.max(0, Math.min(1200, value));
+      }
+
+      function applyPayload(payload) {
+        if (!payload || !payload.settings) return;
+
+        const settings = payload.settings;
+        const nextText = payload.blackout ? '' : payload.text || '';
+        const previousText = lastPayloadText || '';
+        const fadeOutMs = payload.blackout
+          ? getTransitionMs(settings, 'blackoutFadeMs', 160)
+          : getTransitionMs(settings, 'fadeOutMs', 120);
+        const fadeInMs = payload.blackout
+          ? 0
+          : getTransitionMs(settings, 'fadeInMs', 120);
+        const shouldFadeOut = previousText && previousText !== nextText && fadeOutMs > 0;
+
+        window.clearTimeout(transitionTimer);
+        stage.style.background = settings.background || '#000000';
+        canvas.style.background = settings.background || '#000000';
+        subtitle.style.transition = `opacity ${shouldFadeOut ? fadeOutMs : fadeInMs}ms ease-out`;
+
+        const finishRender = () => {
+          renderSubtitleText(nextText, settings, payload.cueStyle, payload.cueTextStyle, payload.textSpans || []);
+          lastPayloadText = subtitle.textContent || '';
+          lastUpdatedAt = payload.updatedAt || Date.now();
+          document.body.classList.toggle('debug-empty', !lastPayloadText && !payload.blackout);
+          subtitle.style.transition = `opacity ${fadeInMs}ms ease-out`;
+          subtitle.style.opacity = nextText && fadeInMs > 0 ? '0' : '1';
+          updateScale();
+          requestAnimationFrame(() => {
+            subtitle.style.opacity = '1';
+          });
+        };
+
+        if (shouldFadeOut) {
+          subtitle.style.opacity = '0';
+          transitionTimer = window.setTimeout(finishRender, fadeOutMs);
+        } else {
+          finishRender();
+        }
+      }
+
+      function readStoredPayload() {
+        try {
+          const raw = window.localStorage.getItem(PAYLOAD_KEY);
+          return raw ? JSON.parse(raw) : null;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function refreshFromStorage() {
+        const payload = readStoredPayload();
+        if (!payload) {
+          document.body.classList.add('debug-empty');
+          return;
+        }
+        if (payload.updatedAt && payload.updatedAt === lastUpdatedAt) return;
+        applyPayload(payload);
+      }
+
+      window.addEventListener('resize', updateScale);
+      window.addEventListener('storage', (event) => {
+        if (event.key !== PAYLOAD_KEY || !event.newValue) return;
+        try { applyPayload(JSON.parse(event.newValue)); } catch (error) {}
+      });
+      window.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'OPENSURTITLES_PUBLIC_STAGE_UPDATE') {
+          if (SCREEN_ID && event.data.screenId && event.data.screenId !== SCREEN_ID) return;
+          if (SCREEN_ID && event.data.payload?.screenId && event.data.payload.screenId !== SCREEN_ID) return;
+          applyPayload(event.data.payload);
+        }
+      });
+      window.addEventListener('dblclick', () => {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      });
+
+      // Comandi da tastiera anche nella finestra dello schermo: gli stessi tasti della regia
+      // (card "Scorciatoie"; predefiniti Spazio/→ avanti, Maiusc+Spazio/← indietro, B buio, F schermo intero).
+      // Il comando va alla finestra di regia sia con postMessage sia con localStorage, con lo stesso id:
+      // la regia lo esegue una volta sola.
+      var CONTROL_TYPE = 'STENTORE_CONTROL';
+      var CONTROL_STORAGE_KEY = 'stentore-control-command-v1';
+      var DEFAULT_KEYS = {
+        next: [{ code: 'Space' }, { code: 'ArrowRight' }],
+        previous: [{ code: 'Space', shift: true }, { code: 'ArrowLeft' }],
+        blackout: [{ code: 'KeyB' }],
+        fullscreen: [{ code: 'KeyF' }],
+      };
+      function loadKeys() {
+        try {
+          var saved = JSON.parse(window.localStorage.getItem('stentor.shortcuts.v1') || 'null');
+          if (!saved || typeof saved !== 'object') return DEFAULT_KEYS;
+          var keys = {};
+          Object.keys(DEFAULT_KEYS).forEach(function (action) {
+            keys[action] = Array.isArray(saved[action]) ? saved[action] : DEFAULT_KEYS[action];
+          });
+          return keys;
+        } catch (error) {
+          return DEFAULT_KEYS;
+        }
+      }
+      function actionForEvent(event) {
+        if (event.metaKey || event.ctrlKey || event.altKey) return null;
+        var keys = loadKeys();
+        var actions = Object.keys(keys);
+        for (var i = 0; i < actions.length; i += 1) {
+          var list = keys[actions[i]] || [];
+          for (var j = 0; j < list.length; j += 1) {
+            if (list[j] && list[j].code === event.code && Boolean(list[j].shift) === Boolean(event.shiftKey)) return actions[i];
+          }
+        }
+        return null;
+      }
+      function sendControl(comando) {
+        var command = { type: CONTROL_TYPE, id: Date.now() + '-' + Math.random().toString(36).slice(2), comando: comando, origine: 'schermo', ricevutoAlle: Date.now() };
+        try { if (window.opener && !window.opener.closed) window.opener.postMessage(command, '*'); } catch (error) {}
+        try { window.localStorage.setItem(CONTROL_STORAGE_KEY, JSON.stringify(command)); } catch (error) {}
+      }
+      window.addEventListener('keydown', function (event) {
+        var action = actionForEvent(event);
+        if (!action) return;
+        event.preventDefault();
+        if (event.repeat) return;
+        if (action === 'next') sendControl('avanti');
+        else if (action === 'previous') sendControl('indietro');
+        else if (action === 'blackout') sendControl('alterna_buio');
+        else if (action === 'fullscreen') {
+          if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+          else document.exitFullscreen?.();
+        }
+      });
+
+      window.__STENTORE_APPLY_PUBLIC_PAYLOAD = applyPayload;
+      updateScale();
+      refreshFromStorage();
+      window.setInterval(refreshFromStorage, 150);
+    })();
+  </script>
+</body>
+</html>

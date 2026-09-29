@@ -1,0 +1,206 @@
+
+.liteCueItem { min-width: 0; }
+
+.liteCueExpandButton {
+  width: 30px; height: 30px; padding: 0; flex: 0 0 30px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid transparent; border-radius: 7px;
+  background: transparent; color: #c9c9c9;
+}
+
+.liteCueExpandButton:hover { background: rgba(255,255,255,.07); color: #fff; }
+
+.liteCueExpandButton:focus-visible { outline: 2px solid #bdbdbd; outline-offset: 2px; }
+
+.liteCueExpandButton[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+.liteCueExpandedEditor {
+  padding: 16px; margin: 0 0 6px; min-width: 0;
+  border: 1px solid #414141; border-top: 0; border-radius: 0 0 10px 10px;
+  background: #191919; color: #f0f0f0;
+  display: grid; gap: 14px;
+}
+
+.liteCueLanguageFields {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: 14px; min-width: 0;
+}
+
+.liteCueLanguageField, .liteCueNoteField { display: grid; gap: 7px; min-width: 0; }
+
+.liteCueFieldLabel { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; font-size: 12px; }
+
+.liteCueFieldLabel strong { color: #e5e5e5; font-weight: 650; }
+
+.liteCueFieldLabel > span { color: #a5a5a5; font-size: 11px; }
+
+.workspace.liteRegiaWorkspace .liteCueExpandedEditor textarea {
+  width: 100%; min-width: 0; box-sizing: border-box;
+  border: 1px solid #424242; border-radius: 8px;
+  padding: 10px 12px; background: #101010; color: #f3f3f3;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif !important; font-size: 14px !important; line-height: 1.45 !important;
+  resize: vertical; min-height: 74px; max-height: 340px;
+  white-space: pre-wrap; overflow-wrap: anywhere; overscroll-behavior: contain;
+}
+
+.workspace.liteRegiaWorkspace .liteCueExpandedEditor textarea:focus { outline: 2px solid #a7a7a7; outline-offset: 1px; }
+
+.workspace.liteRegiaWorkspace .liteCueExpandedEditor textarea::placeholder { color: #888; }
+
+.liteCueStyleRow { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+.liteCueStyleButtons { display: flex; align-items: center; gap: 5px; }
+
+.liteCueStyleButtons button {
+  width: 34px; height: 32px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid #3c3c3c; border-radius: 6px;
+  background: #242424; color: #bdbdbd;
+}
+
+.liteCueStyleButtons button:hover { background: #303030; color: #fff; }
+
+.liteCueStyleButtons button[aria-pressed="true"] { background: #3b3b3b; border-color: #737373; color: #fff; }
+
+.liteCueStyleButtons button:focus-visible { outline: 2px solid #bdbdbd; outline-offset: 2px; }
+
+.liteCueStyleDivider { width: 1px; height: 22px; margin: 0 5px; background: #444; }
+
+/* Optional voice: deliberately confined to the expanded editor. */
+
+.liteCueVoiceField { display: grid; gap: 7px; width: min(340px, 100%); min-width: 0; }
+
+.liteCueVoiceCombobox { position: relative; min-width: 0; }
+
+.workspace.liteRegiaWorkspace .liteCueVoiceCombobox input {
+  display: block; width: 100%; min-width: 0; box-sizing: border-box;
+  border: 1px solid #424242; border-radius: 8px; padding: 8px 12px;
+  background: #101010; color: #f3f3f3; font: inherit; font-size: 14px; line-height: 1.4;
+}
+
+.workspace.liteRegiaWorkspace .liteCueVoiceCombobox input:focus { outline: 2px solid #a7a7a7; outline-offset: 1px; }
+
+.workspace.liteRegiaWorkspace .liteCueVoiceCombobox input::placeholder { color: #a5a5a5; }
+
+.liteCueVoiceSuggestions {
+  position: absolute; z-index: 20; top: calc(100% + 4px); left: 0; right: 0;
+  margin: 0; padding: 4px; list-style: none; max-height: 170px; overflow: auto;
+  overscroll-behavior: contain; border: 1px solid #626262; border-radius: 8px;
+  background: #292929; color: #f3f3f3; box-shadow: 0 6px 16px #0006;
+}
+
+.liteCueVoiceSuggestions [role="option"] { padding: 8px; border-radius: 4px; cursor: pointer; font-size: 14px; overflow-wrap: anywhere; }
+
+.liteCueVoiceSuggestions [role="option"]:hover,
+.liteCueVoiceSuggestions [aria-selected="true"] { background: #454545; }
+
+/* Same operator note in the compact list; deliberately not a status badge. */
+
+.workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow > .liteCueOperatorNote {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #bdbab5 !important;
+  font-size: 12px;
+  line-height: 1.35;
+  font-style: italic;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+  text-transform: none;
+  text-align: start;
+}
+
+/* Override the inherited all-caps list header style only for this label. */
+
+.workspace.liteRegiaWorkspace .liteCueNoteField > .liteCueNoteLabel {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  color: #c9c9c9;
+}
+
+/* Local rich text editor: plain text in the model, styled spans only in the view. */
+
+.workspace.liteRegiaWorkspace .liteRichCueTextEditor {
+  width: 100%; min-width: 0; box-sizing: border-box;
+  border: 1px solid #424242; border-radius: 8px;
+  padding: 10px 12px; background: #101010; color: #f3f3f3;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif !important;
+  font-size: 14px !important; line-height: 1.45 !important;
+  min-height: 82px; max-height: 340px; overflow: auto;
+  white-space: pre-wrap; overflow-wrap: anywhere; overscroll-behavior: contain;
+  caret-color: #fff;
+}
+
+.workspace.liteRegiaWorkspace .liteRichCueTextEditor:focus {
+  outline: 2px solid #a7a7a7; outline-offset: 1px;
+}
+
+.workspace.liteRegiaWorkspace .liteRichCueTextEditor:empty::before {
+  content: 'Inserisci il sopratitolo…'; color: #777; pointer-events: none;
+}
+
+.liteCueStyleButtons button:disabled,
+.liteCueColorControl.disabled,
+.liteCueScaleValue.disabled {
+  opacity: .38;
+}
+
+.liteCueStyleButtons button:disabled { cursor: default; }
+
+.liteCueStyleButtons button[data-mixed="true"] {
+  background: linear-gradient(135deg, #3a3a3a 0 50%, #252525 50% 100%);
+  border-color: #666;
+  color: #e7e7e7;
+}
+
+.liteCueColorControl {
+  position: relative;
+  width: 34px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid #3c3c3c; border-radius: 6px;
+  background: #242424; color: #ddd; overflow: hidden;
+  cursor: pointer;
+}
+
+.liteCueColorControl:not(.disabled):hover { background: #303030; }
+
+.liteCueColorGlyph {
+  position: relative; z-index: 1; font-weight: 700; font-size: 15px; line-height: 1;
+}
+
+.liteCueColorGlyph::after {
+  content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: -6px; width: 17px; height: 3px; border-radius: 2px;
+  background: var(--selected-text-color, #F3E7B3);
+}
+
+.liteCueColorControl input[type="color"] {
+  position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+}
+
+.liteCueColorControl.disabled input[type="color"] { cursor: default; }
+
+.liteCueScaleValue {
+  min-width: 42px; text-align: center; color: #c8c8c8; font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1180px) {
+  .liteCueStyleRow { align-items: flex-start; }
+
+  .liteCueStyleButtons { flex-wrap: wrap; }
+}
+
+.workspace.liteRegiaWorkspace .liteRichCueTextEditor {
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}

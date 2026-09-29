@@ -1,0 +1,23 @@
+// Malayalam: voci/personaggi e riepilogo importazione Word (da rileggere).
+export const VOICE_MESSAGES_ML = {
+  voice: 'കഥാപാത്രം',
+  noVoice: 'കഥാപാത്രമില്ല',
+  suggestions: 'ഇതിനകം ഉപയോഗിച്ച കഥാപാത്രങ്ങൾ',
+  renameTitle: 'കഥാപാത്രം മാറ്റുക',
+  removeTitle: 'കഥാപാത്രം നീക്കുക',
+  changeQuestion: 'ഈ ക്യൂവിൽ മാത്രമാണോ, അതോ «{voice}» ഉള്ള എല്ലാ {count} ക്യൂകളിലും കഥാപാത്രം മാറ്റണോ?',
+  removeQuestion: 'ഈ ക്യൂവിൽ നിന്ന് മാത്രമാണോ, അതോ «{voice}» ഉള്ള എല്ലാ {count} ക്യൂകളിൽ നിന്നും കഥാപാത്രം നീക്കണോ?',
+  onlyThis: 'ഈ ക്യൂ മാത്രം',
+  allCues: 'എല്ലാ {count} ക്യൂകളും',
+  cancel: 'റദ്ദാക്കുക',
+  missingCheck: 'കഥാപാത്രം നൽകാത്തവ',
+  missingInfo: 'കഥാപാത്രം നൽകിയിട്ടില്ല.',
+  importTitle: 'Word സ്ക്രിപ്റ്റ് ഇമ്പോർട്ട് ചെയ്തു',
+  project: 'പ്രോജക്റ്റ്',
+  elements: 'ഉണ്ടാക്കിയ ഇനങ്ങൾ',
+  dialogue: 'തിരിച്ചറിഞ്ഞ ക്യൂകൾ',
+  directions: 'രംഗനിർദ്ദേശങ്ങൾ',
+  unassigned: 'കഥാപാത്രമില്ലാത്ത വാചകങ്ങൾ',
+  recognized: 'തിരിച്ചറിഞ്ഞ കഥാപാത്രങ്ങൾ',
+  firstVoices: 'ആദ്യ കഥാപാത്രങ്ങൾ',
+};

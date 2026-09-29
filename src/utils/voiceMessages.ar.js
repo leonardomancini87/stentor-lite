@@ -1,0 +1,23 @@
+// Arabo: voci/personaggi e riepilogo importazione Word (da rileggere).
+export const VOICE_MESSAGES_AR = {
+  voice: 'الشخصية',
+  noVoice: 'بلا شخصية',
+  suggestions: 'شخصيات مستخدمة سابقًا',
+  renameTitle: 'تغيير الشخصية',
+  removeTitle: 'إزالة الشخصية',
+  changeQuestion: 'هل تريد تغيير الشخصية في هذا المقطع فقط أم في جميع المقاطع ({count}) التي فيها «{voice}»؟',
+  removeQuestion: 'هل تريد إزالة الشخصية من هذا المقطع فقط أم من جميع المقاطع ({count}) التي فيها «{voice}»؟',
+  onlyThis: 'هذا المقطع فقط',
+  allCues: 'جميع المقاطع ({count})',
+  cancel: 'إلغاء',
+  missingCheck: 'مقاطع بلا شخصية',
+  missingInfo: 'لم تُحدَّد شخصية.',
+  importTitle: 'تم استيراد نص Word',
+  project: 'المشروع',
+  elements: 'العناصر المُنشأة',
+  dialogue: 'المقاطع المُتعرَّف عليها',
+  directions: 'الإرشادات المسرحية',
+  unassigned: 'نصوص بلا شخصية',
+  recognized: 'الشخصيات المُتعرَّف عليها',
+  firstVoices: 'أولى الشخصيات',
+};

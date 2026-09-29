@@ -1,0 +1,1889 @@
+/* Sténtor Lite — aspetto chiaro e nativo (variabili --pk-*). Le regole qui sotto hanno la precedenza sugli stili di base. */
+:root {
+  --pk-window: #ffffff;
+  --pk-sidebar: #f3f4f6;
+  --pk-card: #eceef1;
+  --pk-row: #e2e5e9;
+  --pk-row-hover: #d9dde2;
+  --pk-field: #ffffff;
+  --pk-line: #d8dce1;
+  --pk-line-2: #c4cbd3;
+  --pk-ink: #1d1f22;
+  --pk-muted: #5c636c;
+  --pk-faint: #878f99;
+  --pk-accent: #3d5c7d;
+  --pk-accent-hover: #34506d;
+  --pk-live-bg: #cdd8e3;
+  --pk-live-line: #8ca3ba;
+  --pk-live-badge: #a8bbce;
+  --pk-live-ink: #26415e;
+  --pk-next-bg: #dfe5ec;
+  --pk-next-line: #b3c2d1;
+  --pk-marker: #c8742c;
+  --pk-danger: #b3261e;
+  --pk-danger-bg: #fbf1f0;
+  --pk-danger-line: #e5c3c0;
+  --pk-note-bg: #eef2f6;
+  --pk-note-line: #cad5e0;
+  --pk-ok-bg: #e3efe7;
+  --pk-ok-line: #b7d6c1;
+  --pk-ok-ink: #1f6b3d;
+  --pk-overlay: rgba(30, 36, 44, .28);
+  --pk-shadow: rgba(20, 30, 45, .14);
+  --pk-shadow-strong: rgba(20, 30, 45, .22);
+  --pk-tab-active-shadow: 0 1px 2px rgba(20, 30, 45, .16);
+  --pk-radius: 14px;
+  --pk-radius-sm: 10px;
+  --pk-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+  --pk-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --pk-scheme: light;
+  color-scheme: light;
+}
+
+/* ---------- Tema scuro: segue l'aspetto del Mac ----------
+   Con Impostazioni di Sistema → Aspetto → "Automatico", macOS passa allo scuro
+   la sera e Sténtor lo segue da solo. Stessa struttura, colori ribaltati. */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pk-window: #111519;
+    --pk-sidebar: #171c21;
+    --pk-card: #1c2228;
+    --pk-row: #242b33;
+    --pk-row-hover: #2c343d;
+    --pk-field: #14191e;
+    --pk-line: #2b333c;
+    --pk-line-2: #3a444f;
+    --pk-ink: #e8edf2;
+    --pk-muted: #a3adb8;
+    --pk-faint: #76818c;
+    --pk-accent: #4a719b;
+    --pk-accent-hover: #5580ad;
+    --pk-live-bg: #22364b;
+    --pk-live-line: #4f77a1;
+    --pk-live-badge: #34506e;
+    --pk-live-ink: #d4e4f4;
+    --pk-next-bg: #1c2a38;
+    --pk-next-line: #33506c;
+    --pk-marker: #d9853b;
+    --pk-danger: #f0877d;
+    --pk-danger-bg: #2a1a1a;
+    --pk-danger-line: #5c2d2a;
+    --pk-note-bg: #1c2733;
+    --pk-note-line: #34475b;
+    --pk-ok-bg: #16281d;
+    --pk-ok-line: #2e5a3d;
+    --pk-ok-ink: #8fd4a6;
+    --pk-overlay: rgba(0, 0, 0, .5);
+    --pk-shadow: rgba(0, 0, 0, .35);
+    --pk-shadow-strong: rgba(0, 0, 0, .5);
+    --pk-tab-active-shadow: 0 1px 2px rgba(0, 0, 0, .4);
+    --pk-scheme: dark;
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Base ---------- */
+
+html[data-app-theme], html[data-app-theme] body, html[data-app-theme] #root,
+html[data-app-theme] .appShell, html[data-app-theme] .appShell .main {
+  background: var(--pk-window) !important;
+  color: var(--pk-ink) !important;
+  font-family: var(--pk-font) !important;
+}
+
+html[data-app-theme] .appShell button,
+html[data-app-theme] .appShell input,
+html[data-app-theme] .appShell select,
+html[data-app-theme] .appShell textarea { font-family: var(--pk-font) !important; }
+
+/* ---------- Barra laterale ---------- */
+
+html[data-app-theme] .appShell .stentorSidebar {
+  background: var(--pk-sidebar) !important;
+  border-right: 1px solid var(--pk-line) !important;
+  box-shadow: none !important;
+  color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarProjectTitle {
+  color: var(--pk-ink) !important; font-size: 15px !important; font-weight: 700 !important; letter-spacing: 0 !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarProjectMeta { color: var(--pk-faint) !important; font-size: 12px !important; }
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarSectionRule { background: var(--pk-line) !important; border-color: var(--pk-line) !important; }
+
+html[data-app-theme] .appShell .stentorSidebar .stentorNavItem {
+  background: transparent !important; border: 0 !important; box-shadow: none !important;
+  color: var(--pk-ink) !important; border-radius: 9px !important; font-weight: 500 !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorNavItem svg { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .stentorSidebar .stentorNavItem:hover { background: var(--pk-row) !important; }
+
+html[data-app-theme] .appShell .stentorSidebar .stentorNavItem.active { background: var(--pk-accent) !important; color: #fff !important; }
+
+html[data-app-theme] .appShell .stentorSidebar .stentorNavItem.active svg { color: #fff !important; }
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter,
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarToggle {
+  background: transparent !important; border-color: var(--pk-line) !important; color: var(--pk-faint) !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter strong { color: var(--pk-ink) !important; }
+
+/* ---------- Sopratitoli: intestazione di pagina ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace { background: var(--pk-window) !important; }
+
+/* ---------- Anteprime come schede ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11Previews > .liteRegiaEditorPreview {
+  background: var(--pk-card) !important;
+  border: 1px solid var(--pk-line) !important;
+  border-radius: var(--pk-radius) !important;
+  padding: 12px 14px 14px !important;
+  grid-template-rows: 22px minmax(0, 1fr) !important;
+}
+
+html[data-app-theme] .appShell .r11PreviewLabel {
+  font-size: 14px !important; font-weight: 500 !important; letter-spacing: 0 !important; text-transform: none !important;
+}
+
+html[data-app-theme] .appShell .r11PreviewLabel.live,
+html[data-app-theme] .appShell .r11PreviewLabel.next { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .r11PreviewLabel.live .r11Dot { background: var(--pk-accent) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11Previews .liteRegiaEditorPreview > .regiaLiveCueCardCurrent {
+  border: 0 !important; border-radius: 12px !important; background: #000 !important; box-shadow: none !important; overflow: hidden !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaEditorPreview .regiaLiveCueCard footer {
+  background: #0d0f12 !important; border-top: 1px solid #1c2026 !important; color: #7d858f !important;
+  font-family: var(--pk-font) !important; font-size: 11px !important; border-radius: 0 !important;
+}
+
+/* ---------- Elenco battute ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueListCard {
+  background: var(--pk-card) !important; border: 1px solid var(--pk-line) !important;
+  border-radius: var(--pk-radius) !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeader { border-bottom: 0 !important; background: transparent !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeader > div > span {
+  color: var(--pk-ink) !important; font-size: 15px !important; font-weight: 600 !important; letter-spacing: 0 !important; text-transform: none !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeader small { color: var(--pk-muted) !important; font-size: 13px !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls > em,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeader > div > em {
+  background: var(--pk-row) !important; border: 0 !important; color: var(--pk-ink) !important;
+  font-family: var(--pk-font) !important; font-style: normal !important; font-weight: 600 !important; border-radius: 999px !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls button {
+  background: var(--pk-field) !important; border: 1px solid var(--pk-line) !important; color: var(--pk-muted) !important;
+  border-radius: 999px !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls button:hover:not(:disabled) { color: var(--pk-ink) !important; background: var(--pk-row) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList { gap: 6px !important; row-gap: 6px !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow {
+  background: var(--pk-row) !important;
+  border: 1px solid var(--pk-line) !important;
+  border-radius: var(--pk-radius-sm) !important;
+  box-shadow: none !important;
+  color: var(--pk-ink) !important;
+  min-height: 52px !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow:hover { background: var(--pk-row-hover) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow > strong {
+  color: var(--pk-muted) !important; font-family: var(--pk-mono) !important; font-weight: 500 !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteCueSpeaker {
+  color: var(--pk-ink) !important; font-weight: 600 !important; font-size: 12px !important; letter-spacing: 0 !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteEditableCueBody > span,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteEditableCueBody textarea {
+  color: var(--pk-ink) !important; font-weight: 500 !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteEditableCueBody textarea {
+  background: var(--pk-field) !important; border-radius: 6px !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteCueOperatorNote { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteCueExpandButton {
+  background: transparent !important; border: 0 !important; color: var(--pk-faint) !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteCueExpandButton:hover { color: var(--pk-ink) !important; background: var(--pk-row-hover) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.live {
+  background: var(--pk-live-bg) !important;
+  border: 1.5px solid var(--pk-live-line) !important;
+  box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.live > strong,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.live .liteCueSpeaker,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.live .liteEditableCueBody > span,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.live .liteCueOperatorNote,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.live .liteCueExpandButton {
+  color: var(--pk-live-ink) !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.live > em,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.live .liteCueCurrentBadge {
+  background: var(--pk-live-badge) !important; color: var(--pk-live-ink) !important;
+  font-style: normal !important; font-weight: 700 !important; border-radius: 999px !important;
+}
+
+/* Prossima: blu più tenue */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.next:not(.live) {
+  background: var(--pk-next-bg) !important;
+  border: 1px solid var(--pk-next-line) !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.next:not(.live) > strong { color: var(--pk-live-ink) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.next .liteCueOperatorNote { color: var(--pk-live-ink) !important; }
+
+/* Selezionata (modifica): contorno ardesia */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.selected:not(.live) {
+  box-shadow: inset 0 0 0 1.5px var(--pk-accent) !important;
+}
+
+/* Atti e scene */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .r11SceneHeader {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--pk-muted) !important; font-size: 11px !important; letter-spacing: .08em !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .r11SceneHeader::before {
+  content: ""; width: 8px; height: 11px; background: var(--pk-marker);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 72%, 0 100%);
+}
+
+/* ---------- Barra di conduzione ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaConductorBar { background: transparent !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorGoTo {
+  background: var(--pk-card) !important;
+  border: 1px solid var(--pk-line) !important;
+  color: var(--pk-ink) !important;
+  box-shadow: none !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton svg { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton:hover { background: var(--pk-row) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton.primary {
+  background: var(--pk-accent) !important; border-color: var(--pk-accent) !important; color: #fff !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton.primary svg { color: #fff !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton.primary:hover { background: var(--pk-accent-hover) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton.blackout.active {
+  background: var(--pk-ink) !important; border-color: var(--pk-ink) !important; color: var(--pk-window) !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton.blackout.active svg { color: #fff !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton.projection,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton.projection:hover {
+  background: var(--pk-card) !important; border-color: var(--pk-line) !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11GoTo { background: var(--pk-field) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11GoTo:focus-within { border-color: var(--pk-accent) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11GoTo svg { color: var(--pk-faint) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11GoTo input { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11GoTo input::placeholder { color: var(--pk-faint) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11GoTo.missed { border-color: var(--pk-danger) !important; }
+
+/* ---------- Colonna destra (Proprietà) ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn * { color: var(--pk-ink); }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn h2,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn h3,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn strong { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn p,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn small {
+  color: var(--pk-muted) !important; font-family: var(--pk-font) !important; font-style: normal !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn button:not(.dialogPrimary) { box-shadow: none !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn input,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn select,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn textarea {
+  background: var(--pk-field) !important; border: 1px solid var(--pk-line-2) !important; color: var(--pk-ink) !important;
+}
+
+/* ---------- Schermi ---------- */
+
+html[data-app-theme] .appShell .liteScreensWorkspace,
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreensBody { background: var(--pk-window) !important; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace * { font-family: var(--pk-font) !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreensToolbar {
+  background: transparent !important; border: 0 !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopScreensToolbarTitle span { color: var(--pk-muted) !important; font-size: 13px !important; letter-spacing: 0 !important; text-transform: none !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopScreensToolbarTitle strong { color: var(--pk-ink) !important; font-size: 24px !important; font-weight: 700 !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenPicker,
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenPreviewColumn,
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenInspector {
+  background: var(--pk-card) !important; border: 1px solid var(--pk-line) !important;
+  border-radius: var(--pk-radius) !important; box-shadow: none !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopPanelTitle,
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopCanvasHeader,
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopInspectorSection { background: transparent !important; border-color: var(--pk-line) !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopPanelTitle *,
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopCanvasHeader > div > span:first-child,
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopInspectorSection label,
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopInspectorSection label > span {
+  color: var(--pk-muted) !important; font-size: 11px !important; font-weight: 600 !important; letter-spacing: .06em !important;
+}
+
+html[data-app-theme] .appShell .liteScreensWorkspace strong,
+html[data-app-theme] .appShell .liteScreensWorkspace h2,
+html[data-app-theme] .appShell .liteScreensWorkspace h3 { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopScreenCanvasShell { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopScreenStageFrame { border-radius: 12px !important; border: 0 !important; box-shadow: none !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopOutputRow {
+  background: var(--pk-row) !important; border: 1px solid var(--pk-line) !important; border-radius: var(--pk-radius-sm) !important;
+  box-shadow: none !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopOutputRow.selected {
+  background: var(--pk-live-bg) !important; border-color: var(--pk-live-line) !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopOutputIcon {
+  background: var(--pk-field) !important; border: 1px solid var(--pk-line) !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopOutputCopy span,
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopOutputCopy small { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopOutputStatus,
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopCanvasLiveBadge,
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopCanvasMeta > * {
+  background: var(--pk-field) !important; border: 1px solid var(--pk-line) !important; color: var(--pk-muted) !important;
+  border-radius: 999px !important; box-shadow: none !important; font-size: 11px !important; font-weight: 600 !important; letter-spacing: .02em !important;
+}
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopOutputStatus.live,
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopCanvasLiveBadge.live {
+  background: var(--pk-live-badge) !important; border-color: var(--pk-live-badge) !important; color: var(--pk-live-ink) !important;
+}
+
+html[data-app-theme] .appShell .liteScreensWorkspace input[type="text"],
+html[data-app-theme] .appShell .liteScreensWorkspace input:not([type]),
+html[data-app-theme] .appShell .liteScreensWorkspace select,
+html[data-app-theme] .appShell .liteScreensWorkspace textarea {
+  background: var(--pk-field) !important; border: 1px solid var(--pk-line-2) !important; border-radius: 8px !important;
+  color: var(--pk-ink) !important; font-size: 13px !important; font-weight: 500 !important; box-shadow: none !important;
+  min-height: 32px; padding-inline: 10px !important;
+}
+
+html[data-app-theme] .appShell .liteScreensWorkspace input:focus,
+html[data-app-theme] .appShell .liteScreensWorkspace select:focus { border-color: var(--pk-accent) !important; outline: none !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace input[type="range"] { accent-color: var(--pk-accent) !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace input[type="color"] { border: 1px solid var(--pk-line-2) !important; border-radius: 8px !important; background: var(--pk-field) !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace button {
+  background: var(--pk-row) !important; border: 1px solid var(--pk-line) !important; border-radius: 8px !important;
+  color: var(--pk-ink) !important; box-shadow: none !important; font-weight: 600 !important; font-size: 13px !important;
+}
+
+html[data-app-theme] .appShell .liteScreensWorkspace button:hover:not(:disabled) { background: var(--pk-row-hover) !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenActionsSection button:first-child {
+  background: var(--pk-accent) !important; border-color: var(--pk-accent) !important; color: #fff !important;
+}
+
+html[data-app-theme] .appShell .liteScreensWorkspace button.isActive { background: var(--pk-ink) !important; border-color: var(--pk-ink) !important; color: var(--pk-window) !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .dangerMiniButton,
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenActionsSection button:last-child {
+  color: var(--pk-danger) !important; background: var(--pk-danger-bg) !important; border-color: var(--pk-danger-line) !important;
+}
+
+/* ---------- Progetti ---------- */
+
+html[data-app-theme] .appShell .projectsWorkspace,
+html[data-app-theme] .appShell .projectsMainPanel,
+html[data-app-theme] .appShell .stentorWorkspace,
+html[data-app-theme] .appShell .desktopDashboard { background: var(--pk-window) !important; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .projectsWorkspace h1,
+html[data-app-theme] .appShell .projectsWorkspace h2,
+html[data-app-theme] .appShell .projectsWorkspace h3,
+html[data-app-theme] .appShell .projectsWorkspace strong,
+html[data-app-theme] .appShell .projectsWorkspace dd { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .projectsWorkspace p,
+html[data-app-theme] .appShell .projectsWorkspace dt,
+html[data-app-theme] .appShell .projectsWorkspace span,
+html[data-app-theme] .appShell .projectsWorkspace small { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .projectDetailsPanel {
+  background: var(--pk-sidebar) !important; border-left: 1px solid var(--pk-line) !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .projectDetailsPanel dl > div { border-color: var(--pk-line) !important; }
+
+html[data-app-theme] .appShell .desktopProjectCard {
+  background: var(--pk-card) !important; border: 1px solid var(--pk-line) !important; border-radius: var(--pk-radius) !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .desktopProjectCard:hover { background: var(--pk-row) !important; }
+
+html[data-app-theme] .appShell .desktopProjectPoster { background: var(--pk-row) !important; border: 1px solid var(--pk-line) !important; box-shadow: none !important; }
+
+html[data-app-theme] .appShell .desktopProjectPoster * { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .desktopProjectMetaLine span,
+html[data-app-theme] .appShell .desktopProjectCardBody span:not(.statusOnlineDot) {
+  background: var(--pk-field) !important; border-color: var(--pk-line) !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .dashboardSearch,
+html[data-app-theme] .appShell .proSearch,
+html[data-app-theme] .appShell .viewToggle {
+  background: var(--pk-card) !important; border: 1px solid var(--pk-line) !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .dashboardSearch input,
+html[data-app-theme] .appShell .proSearch input {
+  color: var(--pk-ink) !important; background: transparent !important; text-transform: none !important; letter-spacing: 0 !important;
+}
+
+html[data-app-theme] .appShell .dashboardSearch input::placeholder,
+html[data-app-theme] .appShell .proSearch input::placeholder { color: var(--pk-faint) !important; text-transform: none !important; letter-spacing: 0 !important; font-family: var(--pk-font) !important; }
+
+html[data-app-theme] .appShell .viewToggle button { background: transparent !important; color: var(--pk-muted) !important; border: 0 !important; }
+
+html[data-app-theme] .appShell .viewToggle button.active,
+html[data-app-theme] .appShell .viewToggle button[aria-pressed="true"] { background: var(--pk-field) !important; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .secondaryImportAction,
+html[data-app-theme] .appShell .projectCardMenuTrigger {
+  background: var(--pk-row) !important; border: 1px solid var(--pk-line) !important; color: var(--pk-ink) !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .secondaryImportAction svg { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .primaryDesktopAction {
+  background: var(--pk-accent) !important; border: 1px solid var(--pk-accent) !important; color: #fff !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .primaryDesktopAction * { color: #fff !important; }
+
+html[data-app-theme] .appShell .dangerProjectAction { color: var(--pk-danger) !important; }
+
+/* ---------- Impostazioni ---------- */
+
+html[data-app-theme] .appShell .settingsPage,
+html[data-app-theme] .appShell .settingsPage * { font-family: var(--pk-font) !important; }
+
+html[data-app-theme] .appShell .settingsPage { background: var(--pk-window) !important; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .settingsPage .darkPanel,
+html[data-app-theme] .appShell .settingsPage .settingsUnifiedPanel,
+html[data-app-theme] .appShell .settingsPage .dashboardTopbar {
+  background: var(--pk-card) !important; border: 1px solid var(--pk-line) !important; border-radius: var(--pk-radius) !important;
+  box-shadow: none !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .settingsPage .dashboardTopbar { background: transparent !important; border: 0 !important; }
+
+html[data-app-theme] .appShell .settingsPage h1,
+html[data-app-theme] .appShell .settingsPage h2,
+html[data-app-theme] .appShell .settingsPage strong { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .settingsPage p,
+html[data-app-theme] .appShell .settingsPage .dashboardSubtitle { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .settingsPage .stateLine { border-color: var(--pk-line) !important; }
+
+html[data-app-theme] .appShell .settingsPage .stateLine > :first-child {
+  color: var(--pk-muted) !important; font-size: 12px !important; letter-spacing: .04em !important; font-weight: 600 !important;
+}
+
+html[data-app-theme] .appShell .settingsPage button,
+html[data-app-theme] .appShell .settingsPage select {
+  background: var(--pk-field) !important; border: 1px solid var(--pk-line-2) !important; color: var(--pk-ink) !important; box-shadow: none !important;
+}
+
+/* ---------- Rifiniture ---------- */
+
+html[data-app-theme] .appShell .liveOnlyWorkspace,
+html[data-app-theme] .appShell .desktopLiveWorkspace { background: var(--pk-window) !important; border: 0 !important; box-shadow: none !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopOutputCopy em {
+  color: var(--pk-muted) !important; font-style: normal !important; font-size: 11px !important;
+}
+
+html[data-app-theme] .appShell .settingsPage .darkDashboardTopbar,
+html[data-app-theme] .appShell .settingsPage .refinedSettingsHeader {
+  background: transparent !important; border: 0 !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .settingsPage .dashboardTitleRow h1,
+html[data-app-theme] .appShell .settingsPage .dashboardTitleRow * { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .settingsPage label > span,
+html[data-app-theme] .appShell .settingsPage .settingsPanelTitleWithIcon svg { color: var(--pk-muted) !important; font-size: 12px !important; font-weight: 600 !important; letter-spacing: .04em !important; }
+
+html[data-app-theme] .appShell .settingsPage .appLanguageControl button,
+html[data-app-theme] .appShell .settingsPage .appLanguageControl button * { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .settingsPage .appLanguageControl button span:last-of-type,
+html[data-app-theme] .appShell .settingsPage .interfaceLanguageShort {
+  background: var(--pk-row) !important; border-color: var(--pk-line) !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .projectsCount { color: var(--pk-faint) !important; }
+
+html[data-app-theme] .appShell .dashboardSearch svg, html[data-app-theme] .appShell .proSearch svg { color: var(--pk-faint) !important; }
+
+/* Sopratitoli: barra di conduzione proporzionata anche con barra laterale aperta */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaConductorBar {
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.5fr) minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 10px !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorGoTo { height: 60px !important; font-size: 14px !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton.primary { font-size: 14px !important; letter-spacing: 0 !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaEditorMain { grid-template-rows: auto minmax(0, 1fr) 64px !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11Previews .liteRegiaEditorPreview .regiaLiveCueText {
+  font-size: clamp(22px, 2.2vw, 38px) !important;
+}
+
+html[data-app-theme] .appShell .settingsPage .dashboardTopbar.darkDashboardTopbar.compactPageHeader.refinedSettingsHeader {
+  background: transparent !important; border: 0 !important; box-shadow: none !important; padding-left: 2px !important;
+}
+
+html[data-app-theme] .appShell .settingsPage .dashboardTopbar.darkDashboardTopbar.compactPageHeader.refinedSettingsHeader h1 { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .settingsPage .dashboardTopbar.darkDashboardTopbar.compactPageHeader.refinedSettingsHeader p { color: var(--pk-muted) !important; }
+
+/* ---------- Editor della battuta (freccia ▾) ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueItem.expanded {
+  background: var(--pk-field) !important; border: 1px solid var(--pk-line) !important; border-radius: 12px !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueExpandedEditor {
+  background: var(--pk-field) !important; border-color: var(--pk-line) !important; color: var(--pk-ink) !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueFieldLabel strong { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueFieldLabel > span,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueNoteField > .liteCueNoteLabel { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueExpandedEditor textarea,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRichCueTextEditor,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueVoiceCombobox input {
+  background: var(--pk-window) !important; border: 1px solid var(--pk-line-2) !important; color: var(--pk-ink) !important; border-radius: 8px !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueExpandedEditor textarea:focus,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRichCueTextEditor:focus,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueVoiceCombobox input:focus { outline: 2px solid var(--pk-accent) !important; outline-offset: 0 !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueStyleButtons button,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueColorControl {
+  background: var(--pk-row) !important; border: 1px solid var(--pk-line) !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueStyleButtons button:hover { background: var(--pk-row-hover) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueStyleButtons button[aria-pressed="true"] {
+  background: var(--pk-accent) !important; border-color: var(--pk-accent) !important; color: #fff !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueStyleDivider { background: var(--pk-line-2) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueVoiceSuggestions {
+  background: var(--pk-window) !important; border: 1px solid var(--pk-line) !important; color: var(--pk-ink) !important;
+  box-shadow: 0 10px 30px var(--pk-shadow) !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueVoiceSuggestions [aria-selected="true"] { background: var(--pk-live-bg) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace textarea.liteInlineCueText {
+  background: var(--pk-window) !important; color: var(--pk-ink) !important; border: 1px solid var(--pk-accent) !important; border-radius: 6px !important;
+}
+
+/* ---------- Finestre di dialogo e modali ---------- */
+
+html[data-app-theme] .stentoreDialogOverlay,
+html[data-app-theme] .projectActionsOverlay { background: var(--pk-overlay) !important; backdrop-filter: blur(4px); }
+
+html[data-app-theme] .stentoreDialog,
+html[data-app-theme] .projectActionsDialog {
+  background: var(--pk-window) !important; color: var(--pk-ink) !important;
+  border: 1px solid var(--pk-line) !important; border-radius: 16px !important;
+  box-shadow: 0 24px 60px var(--pk-shadow-strong) !important; font-family: var(--pk-font) !important;
+}
+
+html[data-app-theme] .stentoreDialog *, html[data-app-theme] .projectActionsDialog * { font-family: var(--pk-font) !important; }
+
+html[data-app-theme] .stentoreDialog h2, html[data-app-theme] .stentoreDialog h3, html[data-app-theme] .stentoreDialog strong,
+html[data-app-theme] .projectActionsDialog h2, html[data-app-theme] .projectActionsDialog strong { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .stentoreDialog p, html[data-app-theme] .stentoreDialog label, html[data-app-theme] .stentoreDialog small,
+html[data-app-theme] .projectActionsDialog p, html[data-app-theme] .projectActionsDialog span { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .stentoreDialog input, html[data-app-theme] .stentoreDialog select, html[data-app-theme] .stentoreDialog textarea {
+  background: var(--pk-window) !important; border: 1px solid var(--pk-line-2) !important; color: var(--pk-ink) !important; border-radius: 8px !important;
+}
+
+html[data-app-theme] .stentoreDialog button, html[data-app-theme] .projectActionsDialog button {
+  background: var(--pk-row) !important; border: 1px solid var(--pk-line) !important; color: var(--pk-ink) !important; box-shadow: none !important; border-radius: 9px !important;
+}
+
+html[data-app-theme] .stentoreDialog .dialogPrimary, html[data-app-theme] .projectActionsDialog .interfaceLanguageConfirm {
+  background: var(--pk-accent) !important; border-color: var(--pk-accent) !important; color: #fff !important;
+}
+
+html[data-app-theme] .stentoreDialog.dangerDialog .dialogPrimary { background: var(--pk-danger) !important; border-color: var(--pk-danger) !important; }
+
+html[data-app-theme] .stentoreDialog .dialogChoiceList > * { background: var(--pk-card) !important; border-color: var(--pk-line) !important; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeader span,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeader small { font-family: var(--pk-font) !important; }
+
+html[data-app-theme] .appShell .r11NextTag {
+  display: inline !important; color: var(--pk-live-ink) !important; background: var(--pk-live-badge);
+  padding: 2px 8px; border-radius: 999px; font-size: 10px !important;
+}
+
+/* ---------- Proprietà: Strumenti, Controlli, Stile — testi leggibili ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn label {
+  color: var(--pk-ink) !important; font-family: var(--pk-font) !important;
+  font-size: 12.5px !important; font-weight: 500 !important; letter-spacing: 0 !important; text-transform: none !important;
+  line-height: 1.35 !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn input[type="checkbox"],
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn input[type="radio"] {
+  accent-color: var(--pk-accent) !important; width: 15px !important; height: 15px !important; flex: 0 0 15px !important;
+}
+
+/* controlli nativi (caselle, menu) nel tema giusto */
+
+html[data-app-theme] .appShell, html[data-app-theme] .appShell * { color-scheme: var(--pk-scheme) !important; }
+
+/* Avanti: scritto normale, non tutto maiuscolo */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteConductorButton.primary {
+  text-transform: none !important; letter-spacing: 0 !important; font-weight: 700 !important;
+}
+
+/* ---------- Barra laterale: pulsante di riduzione e firma ---------- */
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarToggle {
+  width: 28px !important; height: 28px !important; min-width: 28px !important; min-height: 28px !important;
+  padding: 0 !important; border-radius: 999px !important; display: inline-flex !important;
+  align-items: center !important; justify-content: center !important;
+  background: transparent !important; border: 1px solid transparent !important; color: var(--pk-faint) !important;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarToggle svg {
+  width: 16px !important; height: 16px !important; stroke-width: 2.2 !important; color: currentColor !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarToggle:hover {
+  background: var(--pk-field) !important; border-color: var(--pk-line) !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarToggle:focus-visible { outline: 2px solid var(--pk-accent) !important; outline-offset: 2px; }
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter {
+  display: flex !important; align-items: center !important; gap: 10px !important;
+  padding-top: 12px !important; border-top: 1px solid var(--pk-line) !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter img {
+  width: 30px !important; height: 30px !important; border-radius: 8px !important;
+  box-shadow: 0 0 0 1px var(--pk-line) !important; object-fit: cover !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter > div { display: grid !important; gap: 1px !important; }
+
+html[data-app-theme] .appShell .stentorSidebar .stentorWordmark {
+  display: inline-flex !important; align-items: center !important; gap: 6px !important;
+  font-size: 15px !important; font-weight: 700 !important; letter-spacing: -.01em !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter small {
+  font-size: 11px !important; color: var(--pk-faint) !important; font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Barra laterale destra: freccia di riduzione globale ---------- */
+
+:root { --stentor-right-rail: 56px; }
+
+html[data-app-theme] .appShell .stentorRightSidebarToggle {
+  position: fixed !important;
+  right: calc((var(--stentor-right-rail) - 28px) / 2) !important;
+  top: calc(var(--stentor-right-toggle-center, calc(100vh - 120px)) - 14px) !important;
+  z-index: 40 !important;
+  width: 28px !important; height: 28px !important; min-width: 28px !important; min-height: 28px !important;
+  padding: 0 !important; margin: 0 !important; border-radius: 999px !important;
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  background: transparent !important; border: 1px solid transparent !important; box-shadow: none !important;
+  color: var(--pk-faint) !important; cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+html[data-app-theme] .appShell .stentorRightSidebarToggle svg {
+  width: 16px !important; height: 16px !important; stroke-width: 2.2 !important; color: currentColor !important;
+}
+
+html[data-app-theme] .appShell .stentorRightSidebarToggle:hover {
+  background: var(--pk-field) !important; border-color: var(--pk-line) !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .stentorRightSidebarToggle:focus-visible { outline: 2px solid var(--pk-accent) !important; outline-offset: 2px; }
+
+/* Le colonne destre finiscono sopra la freccia, così non ne coprono i contenuti */
+
+html[data-app-theme] .appShell .projectDetailsPanel { padding-bottom: 72px !important; }
+
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenInspector,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn {
+  margin-bottom: max(0px, calc(100vh - var(--stentor-right-toggle-center, calc(100vh - 120px)) + 22px)) !important;
+  min-height: 0 !important;
+}
+
+/* Barra destra ridotta: resta una sottile striscia con la freccia per riaprirla */
+
+html[data-app-theme] .appShell.rightSidebarCollapsed > .main {
+  margin-right: var(--stentor-right-rail) !important;
+  min-width: 0 !important;
+}
+
+html[data-app-theme] .appShell .stentorRightRail {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: var(--stentor-right-rail);
+  box-sizing: border-box;
+  background: var(--pk-sidebar, #f3f4f6);
+  border-left: 1px solid var(--pk-line);
+  z-index: 30;
+  pointer-events: none;
+}
+
+html[data-app-theme] .appShell.rightSidebarCollapsed .projectDetailsPanel,
+html[data-app-theme] .appShell.rightSidebarCollapsed .workspace.liteRegiaWorkspace .liteRegiaRightColumn,
+html[data-app-theme] .appShell.rightSidebarCollapsed .liteScreensWorkspace .liteScreenInspector {
+  display: none !important;
+}
+
+html[data-app-theme] .appShell.rightSidebarCollapsed .projectsWorkspace,
+html[data-app-theme] .appShell.rightSidebarCollapsed .workspace.liteRegiaWorkspace {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+html[data-app-theme] .appShell.rightSidebarCollapsed .liteScreensWorkspace .liteScreensBody {
+  grid-template-columns: minmax(190px, 240px) minmax(0, 1fr) !important;
+}
+
+/* ---------- Mappa dello spettacolo e marcatori ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn > .liteShowMap {
+  flex: 0 1 auto; min-height: 0; max-height: 42%;
+  display: flex; flex-direction: column;
+  background: var(--pk-card); border: 1px solid var(--pk-line); border-radius: 14px;
+  overflow: hidden;
+}
+
+html[data-app-theme] .appShell .liteShowMapHeader {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+  padding: 14px 14px 8px 16px;
+}
+
+html[data-app-theme] .appShell .liteShowMapHeader > div { display: grid; gap: 3px; min-width: 0; }
+
+html[data-app-theme] .appShell .liteShowMapEyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteShowMapHeader small { font-size: 12px; color: var(--pk-faint) !important; }
+
+html[data-app-theme] .appShell .liteShowMapAdd {
+  flex: none; width: 30px; height: 30px; border-radius: 999px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--pk-field); border: 1px solid var(--pk-line); color: var(--pk-muted) !important; cursor: pointer;
+}
+
+html[data-app-theme] .appShell .liteShowMapAdd:hover:not(:disabled) { color: var(--pk-ink) !important; border-color: var(--pk-faint); }
+
+html[data-app-theme] .appShell .liteShowMapAdd:focus-visible,
+html[data-app-theme] .appShell .liteShowMapItem:focus-visible { outline: 2px solid var(--pk-accent); outline-offset: 2px; }
+
+html[data-app-theme] .appShell .liteShowMapList {
+  list-style: none; margin: 0; padding: 2px 8px 10px; overflow: auto; min-height: 0;
+  display: grid; gap: 2px;
+}
+
+html[data-app-theme] .appShell .liteShowMapItem {
+  width: 100%; display: grid; grid-template-columns: 8px minmax(0, 1fr) auto; align-items: center; gap: 10px;
+  padding: 8px 8px; border-radius: 9px; border: 1px solid transparent; background: transparent;
+  text-align: left; cursor: pointer; font: inherit;
+}
+
+html[data-app-theme] .appShell .liteShowMapItem:hover { background: var(--pk-field); }
+
+html[data-app-theme] .appShell .liteShowMapMark {
+  width: 8px; height: 11px; background: var(--pk-marker);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 72%, 0 100%);
+}
+
+html[data-app-theme] .appShell .liteShowMapItem.implicit .liteShowMapMark { background: var(--pk-faint); }
+
+html[data-app-theme] .appShell .liteShowMapItem.type-interval .liteShowMapMark { background: var(--pk-faint); clip-path: none; height: 2px; }
+
+html[data-app-theme] .appShell .liteShowMapTitle {
+  font-size: 13px; font-weight: 600; color: var(--pk-ink) !important;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+html[data-app-theme] .appShell .liteShowMapItem.type-scene .liteShowMapTitle,
+html[data-app-theme] .appShell .liteShowMapItem.type-picture .liteShowMapTitle { font-weight: 500; padding-left: 10px; }
+
+html[data-app-theme] .appShell .liteShowMapRange {
+  font-size: 11px; color: var(--pk-faint) !important; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+
+html[data-app-theme] .appShell .liteShowMapItem.current { background: var(--pk-live-bg); border-color: rgba(38, 65, 94, .18); }
+
+html[data-app-theme] .appShell .liteShowMapItem.current .liteShowMapTitle { color: var(--pk-live-ink) !important; }
+
+html[data-app-theme] .appShell .liteShowMapItem.current .liteShowMapRange { color: var(--pk-live-ink) !important; opacity: .75; }
+
+html[data-app-theme] .appShell .liteShowMapEmpty {
+  margin: 0; padding: 2px 16px 14px; font-size: 12px; line-height: 1.45; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteShowMapEmpty svg { vertical-align: -2px; }
+
+/* Riga del marcatore nell'elenco battute */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteMarkerRow {
+  justify-content: flex-start; min-height: 30px; cursor: default; user-select: none;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteMarkerRow.current { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteMarkerRowTitle { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+html[data-app-theme] .appShell .liteMarkerRowActions {
+  margin-left: auto; display: inline-flex; gap: 4px; opacity: 0; transition: opacity .12s ease;
+}
+
+html[data-app-theme] .appShell .liteMarkerRow:hover .liteMarkerRowActions,
+html[data-app-theme] .appShell .liteMarkerRow:focus-within .liteMarkerRowActions { opacity: 1; }
+
+html[data-app-theme] .appShell .liteMarkerRowActions button {
+  width: 24px; height: 24px; padding: 0; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--pk-field); border: 1px solid var(--pk-line); color: var(--pk-muted) !important; cursor: pointer;
+}
+
+html[data-app-theme] .appShell .liteMarkerRowActions button:hover { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteMarkerRowActions button.danger:hover { color: #b3261e !important; }
+
+html[data-app-theme] .appShell .liteShowMapRange { display: inline-flex; align-items: center; gap: 8px; }
+
+/* ---------- Selettore lingua (Sopratitoli) ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls .liteLanguageSwitcher {
+  display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+  border-radius: 999px; background: var(--pk-field); border: 1px solid var(--pk-line);
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls .liteLanguageSwitcher button {
+  width: auto !important; height: 28px !important; min-width: 34px !important; padding: 0 10px !important; border-radius: 999px !important; border: 0 !important;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent !important; color: var(--pk-muted) !important; box-shadow: none !important;
+  font-size: 12px; font-weight: 700; letter-spacing: .04em; cursor: pointer;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls .liteLanguageSwitcher button:hover { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls .liteLanguageSwitcher .liteLanguageOption.active {
+  background: var(--pk-accent) !important; color: #fff !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls .liteLanguageSwitcher .liteLanguageManage { min-width: 28px !important; width: 28px !important; padding: 0 !important; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls .liteLanguageSwitcher select {
+  height: 28px; border: 0; background: transparent; color: var(--pk-ink); font-size: 12px; font-weight: 700; padding: 0 6px;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls .liteLanguageSwitcher :focus-visible { outline: 2px solid var(--pk-accent); outline-offset: 1px; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls { gap: 10px; }
+
+/* ---------- Finestra Lingue del progetto ---------- */
+
+html[data-app-theme] .languagesDialogOverlay { z-index: 110 !important; }
+
+html[data-app-theme] .stentoreDialog.languagesDialog { width: min(620px, 94vw); display: grid; gap: 16px; }
+
+html[data-app-theme] .languagesDialogHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+
+html[data-app-theme] .languagesDialogHeader h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 18px; }
+
+html[data-app-theme] .languagesDialogHeader p { margin: 0; font-size: 13px; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogClose {
+  width: 30px; height: 30px; padding: 0; border-radius: 999px !important; flex: none;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+}
+
+html[data-app-theme] .languagesDialogList { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 44vh; overflow: auto; }
+
+html[data-app-theme] .languagesDialogRow {
+  display: grid; grid-template-columns: 34px minmax(0, 1fr) 40px 136px 30px; align-items: center; gap: 10px;
+  padding: 8px 8px 8px 12px; border-radius: 10px; background: var(--pk-card); border: 1px solid var(--pk-line);
+}
+
+html[data-app-theme] .languagesDialogRow.active { border-color: var(--pk-accent); }
+
+html[data-app-theme] .languagesDialogCode { font-size: 12px; font-weight: 800; letter-spacing: .06em; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .stentoreDialog input.languagesDialogName { height: 32px; padding: 0 10px; font-size: 14px; min-width: 0; width: 100%; }
+
+html[data-app-theme] .languagesDialogCount { text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--pk-faint) !important; }
+
+html[data-app-theme] .languagesDialogCount.complete { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogPrimary,
+html[data-app-theme] .stentoreDialog .languagesDialogDelete {
+  height: 30px; padding: 0 10px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer;
+  background: transparent !important;
+}
+
+html[data-app-theme] .stentoreDialog .languagesDialogPrimary span { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogPrimary.active { color: var(--pk-marker) !important; border-color: transparent !important; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogPrimary.active span { color: var(--pk-marker) !important; font-weight: 700; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogDelete { width: 30px; padding: 0; justify-content: center; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogDelete:hover:not(:disabled) { color: var(--pk-danger) !important; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogDelete:disabled { opacity: .35; cursor: default; }
+
+html[data-app-theme] .languagesDialogAdd { display: grid; gap: 10px; padding-top: 14px; border-top: 1px solid var(--pk-line); }
+
+html[data-app-theme] .languagesDialogAdd > strong { font-size: 13px; }
+
+html[data-app-theme] .languagesDialogQuick { display: flex; flex-wrap: wrap; gap: 6px; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogQuick button { height: 30px; padding: 0 10px; display: inline-flex; align-items: center; gap: 5px; font-size: 13px; cursor: pointer; }
+
+html[data-app-theme] .languagesDialogCustom { display: grid; grid-template-columns: 130px minmax(0, 1fr) auto; gap: 8px; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogCustom input { height: 32px; padding: 0 10px; font-size: 13px; min-width: 0; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogCustom button { height: 32px; padding: 0 14px; font-size: 13px; cursor: pointer; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogCustom button:disabled { opacity: .45; cursor: default; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogCopy,
+html[data-app-theme] .stentoreDialog .languagesDialogCopy span { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500 !important; text-transform: none !important; letter-spacing: 0 !important; cursor: pointer; }
+
+html[data-app-theme] .stentoreDialog .languagesDialogCopy input { width: 15px; height: 15px; margin: 0; }
+
+html[data-app-theme] .stentoreDialog.languagesDialog .dialogActions { display: flex; justify-content: flex-end; margin: 0; }
+
+html[data-app-theme] .stentoreDialog.languagesDialog .dialogPrimary { height: 36px; padding: 0 18px; font-weight: 700; cursor: pointer; }
+
+/* ---------- Dettagli progetto: lingue con "Gestisci" ---------- */
+
+html[data-app-theme] .appShell .projectDetailsLanguages dd { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+
+html[data-app-theme] .appShell .projectDetailsInlineAction {
+  flex: none; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; cursor: pointer;
+  background: var(--pk-field) !important; border: 1px solid var(--pk-line) !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .projectDetailsInlineAction:hover { border-color: var(--pk-faint) !important; }
+
+/* ---------- Azioni progetto: "Cambia immagine" allineata alle altre card ---------- */
+
+html[data-app-theme] .projectActionsDialog .projectActionsUpload {
+  background: var(--pk-row) !important; border: 1px solid var(--pk-line) !important; border-radius: 9px !important; box-shadow: none !important;
+}
+
+html[data-app-theme] .projectActionsDialog .projectActionsUpload small { font-weight: 400 !important; }
+
+/* Intestazione "Battute" allineata a sinistra con le righe dell'elenco (bandierina dei marcatori) */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeader { padding-left: 10px !important; }
+
+/* ---------- Card Strumenti (Verifica / Pulizia) ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn > .liteToolsCard {
+  flex: 0 1 auto; min-height: 0; overflow: auto;
+  display: flex; flex-direction: column; gap: 10px; padding: 14px 14px 16px 16px;
+  background: var(--pk-card); border: 1px solid var(--pk-line); border-radius: 14px;
+}
+
+html[data-app-theme] .appShell .liteToolsHeader { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+
+html[data-app-theme] .appShell .liteToolsEyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteToolsTabs {
+  display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; background: var(--pk-field); border: 1px solid var(--pk-line);
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsTab {
+  height: 26px; padding: 0 12px; border-radius: 999px; border: 0; cursor: pointer;
+  background: transparent !important; color: var(--pk-muted) !important; font-size: 12px; font-weight: 600;
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsTab.active { background: var(--pk-accent) !important; color: #fff !important; }
+
+html[data-app-theme] .appShell .liteToolsPane { display: grid; gap: 10px; }
+
+html[data-app-theme] .appShell .liteToolsIntro { margin: 0; font-size: 12px; line-height: 1.4; color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteToolsFootnote { margin: 0; font-size: 11px; color: var(--pk-faint) !important; }
+
+html[data-app-theme] .appShell .liteToolsCueSummary {
+  display: grid; gap: 2px; padding: 10px 12px; border-radius: 10px; background: var(--pk-field); border: 1px solid var(--pk-line);
+}
+
+html[data-app-theme] .appShell .liteToolsCueSummary strong { font-size: 13px; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteToolsCueSummary span { font-size: 12px; color: var(--pk-muted) !important; font-variant-numeric: tabular-nums; }
+
+html[data-app-theme] .appShell .liteToolsCueSummary em { font-style: normal; font-size: 12px; font-weight: 600; color: #a15c12 !important; }
+
+html[data-app-theme] .appShell .liteToolsIssues { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsIssue {
+  width: 100%; display: grid; grid-template-columns: 8px minmax(0, 1fr) 14px; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 10px; text-align: left; cursor: pointer; font: inherit;
+  background: var(--pk-field) !important; border: 1px solid var(--pk-line) !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsIssue:hover { border-color: var(--pk-faint) !important; }
+
+html[data-app-theme] .appShell .liteToolsIssueDot { width: 8px; height: 8px; border-radius: 999px; background: var(--pk-faint); }
+
+html[data-app-theme] .appShell .liteToolsIssue.error .liteToolsIssueDot { background: #c0392b; }
+
+html[data-app-theme] .appShell .liteToolsIssue.warning .liteToolsIssueDot { background: #d98a1f; }
+
+html[data-app-theme] .appShell .liteToolsIssueText { display: block; font-size: 13px; line-height: 1.35; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteToolsIssueText small { display: block; margin-top: 2px; font-size: 11px; color: var(--pk-faint) !important; }
+
+html[data-app-theme] .appShell .liteToolsIssue svg { color: var(--pk-faint); }
+
+html[data-app-theme] .appShell .liteToolsContrast {
+  display: grid; gap: 2px; font-size: 12px; padding: 9px 10px; border-radius: 10px;
+  background: var(--pk-field); border: 1px solid var(--pk-line);
+}
+
+html[data-app-theme] .appShell .liteToolsContrast span { font-weight: 700; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteToolsContrast strong { font-weight: 500; color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteToolsContrast.warning span { color: #a15c12 !important; }
+
+html[data-app-theme] .appShell .liteToolsContrast.error span { color: #b3261e !important; }
+
+html[data-app-theme] .appShell .liteToolsScope { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; border-radius: 10px; background: var(--pk-field); border: 1px solid var(--pk-line); }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsScope button {
+  height: 30px; border-radius: 8px; border: 0; cursor: pointer; font-size: 12px; font-weight: 600;
+  background: transparent !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsScope button.active { background: var(--pk-window) !important; color: var(--pk-ink) !important; box-shadow: 0 1px 2px rgba(0,0,0,.08) !important; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsScope button:disabled { opacity: .45; cursor: default; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsPrimary {
+  height: 36px; border-radius: 10px; border: 0; cursor: pointer; font-size: 13px; font-weight: 700;
+  background: var(--pk-accent) !important; color: #fff !important;
+}
+
+html[data-app-theme] .appShell .liteToolsResult { margin: 0; font-size: 12px; color: var(--pk-muted) !important; }
+
+/* Pulizia: tre voci con icona sempre visibili */
+
+html[data-app-theme] .appShell .liteToolsCleanupList { display: grid; gap: 4px; }
+
+html[data-app-theme] .appShell .liteToolsCleanupItem {
+  display: grid; grid-template-columns: 30px minmax(0, 1fr) 18px; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 10px; background: var(--pk-field); border: 1px solid var(--pk-line); cursor: pointer;
+}
+
+html[data-app-theme] .appShell .liteToolsCleanupIcon {
+  width: 30px; height: 30px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--pk-card); color: var(--pk-faint) !important;
+}
+
+html[data-app-theme] .appShell .liteToolsCleanupItem.on .liteToolsCleanupIcon { background: var(--pk-live-bg); color: var(--pk-live-ink) !important; }
+
+html[data-app-theme] .appShell .liteToolsCleanupText { display: grid; gap: 2px; min-width: 0; }
+
+html[data-app-theme] .appShell .liteToolsCleanupText strong { font-size: 13px; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteToolsCleanupText small { font-size: 11px; line-height: 1.35; color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteToolsCleanupItem input { width: 16px; height: 16px; margin: 0; accent-color: var(--pk-accent); }
+
+/* ---------- Card Tempo ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn > .liteTimeCard {
+  flex: none; display: grid; gap: 10px; padding: 14px 14px 14px 16px;
+  background: var(--pk-card); border: 1px solid var(--pk-line); border-radius: 14px;
+}
+
+html[data-app-theme] .appShell .liteTimeHeader { display: flex; align-items: center; justify-content: space-between; }
+
+html[data-app-theme] .appShell .liteTimeEyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteTimeStatus { font-size: 11px; color: var(--pk-faint) !important; }
+
+html[data-app-theme] .appShell .liteTimeCard.running .liteTimeStatus { color: #2f7d4a !important; font-weight: 700; }
+
+html[data-app-theme] .appShell .liteTimeCard.paused .liteTimeStatus { color: #a15c12 !important; font-weight: 700; }
+
+html[data-app-theme] .appShell .liteTimeClock { display: grid; gap: 2px; }
+
+html[data-app-theme] .appShell .liteTimeClock > strong {
+  font-size: 30px; line-height: 1.1; font-weight: 700; letter-spacing: -.01em; font-variant-numeric: tabular-nums; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .liteTimeCard.idle .liteTimeClock > strong { color: var(--pk-faint) !important; }
+
+html[data-app-theme] .appShell .liteTimeClock > span { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 12px; }
+
+html[data-app-theme] .appShell .liteTimeSection { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteTimeClock b { font-variant-numeric: tabular-nums; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteTimeActions { display: flex; gap: 6px; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteTimeButton {
+  flex: 1; height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border-radius: 9px; cursor: pointer; font-size: 13px; font-weight: 600;
+  background: var(--pk-field) !important; border: 1px solid var(--pk-line) !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteTimeButton.primary { background: var(--pk-accent) !important; border-color: var(--pk-accent) !important; color: #fff !important; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteTimeButton.icon { flex: none; width: 32px; padding: 0; color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteTimeLast { display: grid; gap: 6px; padding-top: 10px; border-top: 1px solid var(--pk-line); font-size: 12px; }
+
+html[data-app-theme] .appShell .liteTimeLastHead { display: flex; justify-content: space-between; gap: 8px; }
+
+html[data-app-theme] .appShell .liteTimeLastHead span { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteTimeLastHead strong { font-variant-numeric: tabular-nums; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteTimeLast ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+
+html[data-app-theme] .appShell .liteTimeLast li { display: flex; justify-content: space-between; gap: 8px; }
+
+html[data-app-theme] .appShell .liteTimeLast li span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteTimeLast li b { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteTimeHistoryToggle {
+  justify-self: start; display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; cursor: pointer;
+  font-size: 12px; font-weight: 600; background: transparent !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteTimeHint { margin: 0; font-size: 12px; line-height: 1.4; color: var(--pk-muted) !important; }
+
+/* ---------- Card laterali riducibili in verticale ---------- */
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteCardCollapse {
+  flex: none; width: 26px; height: 26px; padding: 0; border-radius: 999px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent !important; border: 1px solid transparent !important; color: var(--pk-faint) !important;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteCardCollapse:hover {
+  background: var(--pk-field) !important; border-color: var(--pk-line) !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteCardCollapse:focus-visible { outline: 2px solid var(--pk-accent); outline-offset: 2px; }
+
+html[data-app-theme] .appShell .liteShowMapHeader { align-items: center; }
+
+html[data-app-theme] .appShell .liteShowMapHeader > div { flex: 1; }
+
+html[data-app-theme] .appShell .liteShowMap.collapsed .liteShowMapHeader { padding-bottom: 14px; }
+
+html[data-app-theme] .appShell .liteShowMapHeader small b { font-weight: 700; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteTimeHeader { gap: 8px; }
+
+html[data-app-theme] .appShell .liteTimeStatus { margin-left: auto; display: inline-flex; align-items: baseline; gap: 6px; }
+
+html[data-app-theme] .appShell .liteTimeStatus b { font-size: 13px; font-variant-numeric: tabular-nums; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteToolsHeader { gap: 8px; }
+
+html[data-app-theme] .appShell .liteToolsHeader .liteToolsTabs,
+html[data-app-theme] .appShell .liteToolsCollapsedSummary { margin-left: auto; }
+
+html[data-app-theme] .appShell .liteToolsCollapsedSummary { font-size: 11px; color: var(--pk-faint) !important; white-space: nowrap; }
+
+html[data-app-theme] .appShell .liteToolsEyebrow { display: inline-flex; align-items: center; gap: 6px; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn > .liteToolsCard.collapsed { padding-bottom: 14px; }
+
+/* Schede Verifica / Pulizia sotto l'intestazione, a tutta larghezza */
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsCard > .liteToolsTabs { display: grid; grid-template-columns: 1fr 1fr; margin-left: 0; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsCard > .liteToolsTabs .liteToolsTab { height: 28px; }
+
+html[data-app-theme] .appShell .liteToolsIssueText { font-weight: 600; }
+
+/* Contatore caratteri nella modifica della battuta */
+
+html[data-app-theme] .appShell .liteCueFieldLabel { width: 100%; }
+
+html[data-app-theme] .appShell .liteCueCharCounter {
+  margin-left: auto; font-size: 11px !important; font-weight: 500; letter-spacing: 0 !important; text-transform: none !important;
+  font-variant-numeric: tabular-nums; color: var(--pk-faint) !important;
+}
+
+html[data-app-theme] .appShell .liteCueCharCounter span { color: inherit !important; font-size: inherit !important; }
+
+html[data-app-theme] .appShell .liteCueCharCounter .over,
+html[data-app-theme] .appShell .liteCueCharCounter b { color: #b86a12 !important; font-weight: 700; }
+
+/* Verifica: limite di caratteri per riga */
+
+html[data-app-theme] .appShell .liteToolsLimit {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding-top: 10px; border-top: 1px solid var(--pk-line); font-size: 12px;
+}
+
+html[data-app-theme] .appShell .liteToolsLimit > span { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteToolsLimitChoices {
+  display: inline-flex; gap: 2px; padding: 2px; border-radius: 999px; background: var(--pk-field); border: 1px solid var(--pk-line);
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsLimitChoices button {
+  height: 24px; min-width: 32px; padding: 0 9px; border: 0; border-radius: 999px; cursor: pointer;
+  font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums;
+  background: transparent !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsLimitChoices button.active { background: var(--pk-accent) !important; color: #fff !important; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteToolsLimitChoices input {
+  width: 48px; height: 24px; padding: 0 6px; border-radius: 999px; border: 1px solid var(--pk-accent);
+  font-size: 12px; font-weight: 700; text-align: center; background: var(--pk-window); color: var(--pk-ink);
+}
+
+/* ---------- Tempi delle battute: Manuale / Registra / Riproduci ---------- */
+
+html[data-app-theme] .appShell .liteTimeCues {
+  display: grid; gap: 8px; padding: 10px; border-radius: 10px; background: var(--pk-field); border: 1px solid var(--pk-line);
+}
+
+html[data-app-theme] .appShell .liteTimeCuesHead { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; }
+
+html[data-app-theme] .appShell .liteTimeCuesHead strong { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteTimeCuesHead span { font-size: 11px; color: var(--pk-faint) !important; font-variant-numeric: tabular-nums; }
+
+html[data-app-theme] .appShell .liteTimeModes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; border-radius: 999px; background: var(--pk-card); border: 1px solid var(--pk-line); }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteTimeModes button {
+  height: 26px; border: 0; border-radius: 999px; cursor: pointer; font-size: 12px; font-weight: 600;
+  background: transparent !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteTimeModes button.active { background: var(--pk-accent) !important; color: #fff !important; }
+
+html[data-app-theme] .appShell .liteTimeCuesText { margin: 0; font-size: 11px; line-height: 1.4; color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteTimeCuesText b { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteTimeCuesText.recording { color: #b3261e !important; font-weight: 600; }
+
+html[data-app-theme] .appShell .liteTimeSteps { margin: 0; padding-left: 18px; display: grid; gap: 2px; font-size: 11px; line-height: 1.4; color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteTimeSteps b { color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteTimePlay { display: grid; gap: 6px; }
+
+html[data-app-theme] .appShell .liteTimePlayRow { display: flex; align-items: center; gap: 8px; }
+
+html[data-app-theme] .appShell .liteTimePlayRow .liteTimeButton { flex: 1; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteTimePlayRow .liteTimeButton:disabled { opacity: .45; cursor: default; }
+
+html[data-app-theme] .appShell .liteTimePlayClock { font-size: 13px; font-variant-numeric: tabular-nums; color: var(--pk-ink) !important; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteTimeClearTimings {
+  justify-self: start; padding: 0; border: 0; cursor: pointer; font-size: 11px; text-decoration: underline;
+  background: transparent !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteCueAnnotationCell { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; }
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueAnnotationCell > .liteCueOperatorNote {
+  min-width: 0; flex: 1 1 auto; font-style: italic !important; font-size: 12px !important; font-weight: 400 !important; color: var(--pk-muted) !important;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+html[data-app-theme] .appShell .liteCueRecordedTime {
+  flex: none; padding: 1px 6px; border-radius: 5px; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;
+  background: var(--pk-field); border: 1px solid var(--pk-line); color: var(--pk-muted) !important;
+}
+
+/* Cursore di testo visibile nell'editor delle battute (prima era bianco su fondo chiaro). */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRichCueTextEditor,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueExpandedEditor textarea,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteCueVoiceCombobox input,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace textarea.liteInlineCueText {
+  caret-color: var(--pk-ink) !important;
+  cursor: text;
+}
+
+/* Nota operatore modificabile con un clic direttamente nella riga. */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteCueOperatorNote[data-editable="true"] {
+  cursor: text; border-radius: 4px;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteCueOperatorNote[data-editable="true"]:hover {
+  text-decoration: underline dotted; text-underline-offset: 3px;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteCueOperatorNote.editing {
+  display: flex; align-items: center; gap: 8px; overflow: visible !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace textarea.liteInlineNoteText {
+  flex: 1 1 auto; min-width: 120px; width: 100%; box-sizing: border-box; resize: none; overflow: hidden;
+  margin: 0; padding: 2px 6px; font: inherit; font-style: italic; font-size: inherit; line-height: 1.3;
+  background: var(--pk-window) !important; color: var(--pk-ink) !important; caret-color: var(--pk-ink) !important;
+  border: 1px solid var(--pk-accent) !important; border-radius: 6px !important; outline: none;
+}
+
+/* Anteprime Attuale e Prossima: impaginazione fedele allo schermo (a capo solo dove li mette l'utente). */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11Previews .liteRegiaEditorPreview .regiaLiveCueText.liteScreenPreviewHost {
+  display: contents !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11Previews .liteRegiaEditorPreview .liteScreenPreview {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 34px;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  border-radius: 10px 10px 0 0;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteScreenPreviewText {
+  white-space: pre; overflow: hidden; line-height: 1.12; letter-spacing: 0.005em; flex: none; width: max-content;
+}
+
+/* Anteprima "Prossima" rimossa: l'Attuale occupa tutta la larghezza. */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaTopStack > .r11Previews.r11PreviewsSingle {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+/* Barra "lingua · schermo" sotto l'anteprima rimossa: lo schermo occupa tutta la card. */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11PreviewsSingle .liteRegiaEditorPreview > .regiaLiveCueCardCurrent {
+  padding-bottom: 0 !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .r11PreviewsSingle .liteRegiaEditorPreview .liteScreenPreview {
+  bottom: 0 !important; border-radius: 10px !important;
+}
+
+/* ---------- Card Scorciatoie ---------- */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn > .liteShortcutsCard {
+  flex: 0 1 auto; min-height: 0; overflow: auto;
+  display: flex; flex-direction: column; gap: 10px; padding: 14px 14px 16px 16px;
+  background: var(--pk-card); border: 1px solid var(--pk-line); border-radius: 14px;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn > .liteShortcutsCard.collapsed { padding-bottom: 14px; }
+
+html[data-app-theme] .appShell .liteShortcutsBody { display: grid; gap: 10px; }
+
+html[data-app-theme] .appShell .liteShortcutsList { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+
+html[data-app-theme] .appShell .liteShortcutsList.fixed { padding-top: 8px; border-top: 1px solid var(--pk-line); }
+
+html[data-app-theme] .appShell .liteShortcutsRow {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 28px;
+}
+
+html[data-app-theme] .appShell .liteShortcutsLabel { font-size: 12.5px; color: var(--pk-ink) !important; min-width: 0; }
+
+html[data-app-theme] .appShell .liteShortcutsList.fixed .liteShortcutsLabel { color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteShortcutsKeys { display: inline-flex; align-items: center; gap: 4px; flex: none; }
+
+html[data-app-theme] .appShell .liteShortcutsKey { position: relative; display: inline-flex; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteShortcutsKey > button:first-child {
+  padding: 0; border: 0; background: transparent !important; cursor: pointer;
+}
+
+html[data-app-theme] .appShell .liteShortcutsCard kbd {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 24px; padding: 0 7px;
+  border-radius: 6px; border: 1px solid var(--pk-line-2); border-bottom-width: 2px;
+  background: var(--pk-window) !important; color: var(--pk-ink) !important;
+  font-family: var(--pk-font); font-size: 11.5px; font-weight: 600; white-space: nowrap;
+}
+
+html[data-app-theme] .appShell .liteShortcutsCard kbd.fixed { color: var(--pk-muted) !important; background: transparent !important; }
+
+html[data-app-theme] .appShell .liteShortcutsKey > button:first-child:hover kbd { border-color: var(--pk-accent); }
+
+html[data-app-theme] .appShell .liteShortcutsKey.recording kbd {
+  border-color: var(--pk-accent); color: var(--pk-accent) !important; font-style: italic;
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteShortcutsRemove {
+  position: absolute; top: -6px; right: -6px; width: 16px; height: 16px; padding: 0; border-radius: 50%;
+  display: none; align-items: center; justify-content: center; cursor: pointer;
+  border: 1px solid var(--pk-line-2); background: var(--pk-window) !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteShortcutsKey:hover .liteShortcutsRemove,
+html[data-app-theme] .appShell .liteShortcutsRemove:focus-visible { display: inline-flex; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteShortcutsAdd {
+  width: 24px; height: 24px; padding: 0; border-radius: 6px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px dashed var(--pk-line-2); background: transparent !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteShortcutsAdd:hover { border-color: var(--pk-accent); color: var(--pk-accent) !important; }
+
+html[data-app-theme] .appShell .liteShortcutsHint { margin: 0; font-size: 11.5px; color: var(--pk-muted) !important; }
+
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteShortcutsReset {
+  justify-self: start; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--pk-line); background: var(--pk-row) !important; color: var(--pk-ink) !important; font-size: 12px;
+}
+
+/* ---------- Interfaccia in Malayalam ----------
+   Niente maiuscoletto (la scrittura malayalam non ha maiuscole) e niente spaziatura tra le lettere,
+   che spezzerebbe i gruppi di consonanti. */
+
+html:lang(ml) .appShell *,
+html:lang(ml) .stentoreDialogOverlay *,
+html:lang(ml) .projectActionsOverlay *,
+html:lang(hi) .appShell *,
+html:lang(hi) .stentoreDialogOverlay *,
+html:lang(hi) .projectActionsOverlay *,
+html:lang(ar) .appShell *,
+html:lang(ar) .stentoreDialogOverlay *,
+html:lang(ar) .projectActionsOverlay * {
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+/* I caratteri malayalam sono più alti: un po' più di interlinea nei titoli. */
+
+html:lang(ml) .appShell h1,
+html:lang(ml) .appShell h2,
+html:lang(ml) .appShell h3,
+html:lang(hi) .appShell h1,
+html:lang(hi) .appShell h2,
+html:lang(hi) .appShell h3 { line-height: 1.35 !important; }
+
+/* ---------- Interfaccia da destra a sinistra (arabo) ----------
+   L'interfaccia si specchia con dir="rtl" sull'html; i contenuti scritti dall'utente
+   (battute, note, voci, nomi) prendono la direzione dal proprio testo, così un copione
+   italiano resta leggibile anche con l'interfaccia in arabo. */
+
+html[dir="rtl"] .appShell .liteEditableCueBody,
+html[dir="rtl"] .appShell .liteEditableCueBody > span,
+html[dir="rtl"] .appShell .liteScreenPreviewText,
+html[dir="rtl"] .appShell .liteCueOperatorNote,
+html[dir="rtl"] .appShell .liteCueSpeaker,
+html[dir="rtl"] .appShell .liteRichCueTextEditor,
+html[dir="rtl"] .appShell textarea,
+html[dir="rtl"] .appShell input,
+html[dir="rtl"] .appShell [data-no-translate],
+html[dir="rtl"] .appShell .desktopProjectCard h3,
+html[dir="rtl"] .appShell .projectDetailsPanel h3 {
+  unicode-bidi: plaintext;
+}
+
+/* Le anteprime dello schermo restano come la finestra di proiezione (che non si specchia). */
+
+html[dir="rtl"] .appShell .stageFrame,
+html[dir="rtl"] .appShell .stageFrame * {
+  direction: ltr;
+}
+
+/* Firma in fondo alla barra laterale: discreta, una riga, grigia. */
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter {
+  display: flex !important; align-items: center !important; gap: 8px !important;
+  min-height: 0 !important; padding-top: 10px !important; padding-bottom: 10px !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter img {
+  width: 18px !important; height: 18px !important; border-radius: 5px !important; opacity: .75;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter .stentorWordmark {
+  font-size: 12px !important; font-weight: 500 !important; letter-spacing: 0 !important;
+  color: var(--pk-muted) !important; white-space: nowrap;
+}
+
+/* Freccia di riduzione dentro la firma in basso; logo più grande. */
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter.withToggle {
+  display: flex !important; align-items: center !important; gap: 10px !important;
+  padding-top: 12px !important; padding-bottom: 12px !important; margin-top: auto !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter.withToggle img {
+  width: 32px !important; height: 32px !important; border-radius: 50% !important; opacity: 1 !important;
+  box-shadow: none !important; object-fit: cover !important; flex: none;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter.withToggle .stentorWordmark {
+  flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+  font-size: 13px !important; font-weight: 600 !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter .stentorSidebarToggle.inFooter {
+  position: static !important; transform: none !important; inset: auto !important; margin: 0 !important;
+  flex: none; width: 28px !important; height: 28px !important; padding: 0 !important;
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  border-radius: 7px !important; border: 0 !important; background: transparent !important; color: var(--pk-muted) !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter .stentorSidebarToggle.inFooter:hover {
+  background: var(--pk-field) !important; color: var(--pk-ink) !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter .stentorSidebarToggle.inFooter svg { width: 16px !important; height: 16px !important; }
+
+/* Barra ridotta: logo sopra, freccia sotto, centrati. */
+
+html[data-app-theme] .appShell .stentorSidebar.collapsed .stentorSidebarFooter.withToggle {
+  flex-direction: column !important; justify-content: center !important; gap: 8px !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar.collapsed .stentorSidebarFooter.withToggle .stentorWordmark { display: none !important; }
+
+html[data-app-theme] .appShell .stentorSidebar.collapsed .stentorSidebarFooter.withToggle { align-items: center !important; padding-left: 0 !important; padding-right: 0 !important; }
+
+html[data-app-theme] .appShell .stentorSidebar.collapsed .stentorSidebarFooter .stentorSidebarToggle.inFooter,
+html[data-app-theme] .appShell .stentorSidebar.collapsed .stentorSidebarFooter.withToggle img { align-self: center !important; margin: 0 auto !important; }
+
+/* Logo della firma più grande (richiesta 29/9). */
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter.withToggle img {
+  width: 44px !important; height: 44px !important;
+}
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter.withToggle .stentorWordmark { font-size: 14px !important; }
+
+html[data-app-theme] .appShell .stentorSidebar.collapsed .stentorSidebarFooter.withToggle img { width: 36px !important; height: 36px !important; }
+
+html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter .stentorSidebarToggle.inFooter { align-self: center !important; top: auto !important; bottom: auto !important; }
+
+/* ---------- Modulo di feedback (Impostazioni) ---------- */
+
+html[data-app-theme] .settingsFeedbackPanel p { margin: 6px 0 12px; }
+
+html[data-app-theme] .settingsFeedbackButton { align-self: flex-start; }
+
+html[data-app-theme] .feedbackDialog {
+  width: min(640px, calc(100vw - 32px)) !important; max-height: calc(100vh - 48px) !important;
+  display: flex !important; flex-direction: column !important; gap: 14px; overflow: hidden !important;
+}
+
+html[data-app-theme] .feedbackHeader h2 { margin: 2px 0 6px; }
+
+html[data-app-theme] .feedbackHeader p:last-child { margin: 0; color: var(--pk-muted, #6b7280); font-size: 13px; }
+
+html[data-app-theme] .feedbackBody { overflow: auto; display: grid; gap: 16px; padding-right: 4px; }
+
+html[data-app-theme] .feedbackField { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; min-width: 0; }
+
+html[data-app-theme] .feedbackField legend,
+html[data-app-theme] .feedbackField > span { font-size: 13px; font-weight: 600; color: var(--pk-ink, #1d1f22); padding: 0; }
+
+html[data-app-theme] .feedbackField legend small { font-weight: 400; color: var(--pk-muted, #6b7280); }
+
+html[data-app-theme] .feedbackRating { display: flex; align-items: center; gap: 4px; }
+
+html[data-app-theme] .feedbackRating small { font-size: 11px; color: var(--pk-muted, #6b7280); }
+
+html[data-app-theme] .feedbackRating small:first-child { margin-right: 6px; }
+
+html[data-app-theme] .feedbackRating small:last-child { margin-left: 6px; }
+
+html[data-app-theme] .feedbackStar {
+  border: 0; background: transparent; padding: 2px; cursor: pointer; color: #c3c8cf; line-height: 0;
+}
+
+html[data-app-theme] .feedbackStar.on { color: #e0a42b; }
+
+html[data-app-theme] .feedbackStar.on svg { fill: currentColor; }
+
+html[data-app-theme] .feedbackChoices { display: flex; flex-wrap: wrap; gap: 6px; }
+
+html[data-app-theme] .feedbackChoice {
+  border: 1px solid var(--pk-line-2, #d4d8de); background: var(--pk-window, #fff); color: var(--pk-ink, #1d1f22);
+  border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer;
+}
+
+html[data-app-theme] .feedbackChoice.on { background: var(--pk-accent, #455a78); border-color: var(--pk-accent, #455a78); color: #fff; }
+
+html[data-app-theme] .feedbackOpen textarea,
+html[data-app-theme] .feedbackOpen input {
+  width: 100%; box-sizing: border-box; font: inherit; font-size: 13px; padding: 8px 10px; resize: vertical;
+  border: 1px solid var(--pk-line-2, #d4d8de); border-radius: 8px; background: var(--pk-window, #fff); color: var(--pk-ink, #1d1f22);
+}
+
+html[data-app-theme] .feedbackFooter { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+html[data-app-theme] .feedbackStatus { margin: 0; font-size: 12px; color: var(--pk-muted, #6b7280); flex: 1 1 220px; }
+
+html[data-app-theme] .feedbackActions { display: flex; gap: 8px; }
+
+html[data-app-theme] .feedbackActions button { display: inline-flex; align-items: center; gap: 6px; }
+
+html[data-app-theme] .feedbackDialog .feedbackChoice { background: var(--pk-window, #fff) !important; color: var(--pk-ink, #1d1f22) !important; border: 1px solid var(--pk-line-2, #d4d8de) !important; }
+
+html[data-app-theme] .feedbackDialog .feedbackChoice.on { background: var(--pk-accent, #455a78) !important; border-color: var(--pk-accent, #455a78) !important; color: #fff !important; }
+
+html[data-app-theme] .feedbackDialog .feedbackOpen textarea,
+html[data-app-theme] .feedbackDialog .feedbackOpen input { background: var(--pk-window, #fff) !important; color: var(--pk-ink, #1d1f22) !important; border: 1px solid var(--pk-line-2, #d4d8de) !important; }
+
+html[data-app-theme] .feedbackDialog .feedbackField > span,
+html[data-app-theme] .feedbackDialog .feedbackField legend { text-transform: none !important; letter-spacing: normal !important; font-size: 13px !important; }
+
+html[data-app-theme] .feedbackDialog .feedbackStar { color: #c3c8cf !important; background: transparent !important; border: 0 !important; }
+
+html[data-app-theme] .feedbackDialog .feedbackStar.on { color: #e0a42b !important; }
+
+html[data-app-theme] .feedbackDialog .feedbackStar.on svg { fill: #e0a42b !important; }
+
+/* ---------- Caratteri: SF Pro (sistema) più arioso ----------
+   Stesso carattere di sistema (SF Pro su Mac, Segoe UI su Windows), ma senza la spaziatura
+   negativa che comprimeva titoli e nomi ("Progetti", "Opera demo", "Battute"…).
+   Le etichette in maiuscoletto mantengono la loro spaziatura positiva. */
+
+html[data-app-theme] .appShell,
+html[data-app-theme] .projectActionsOverlay,
+html[data-app-theme] .stentoreDialogOverlay {
+  font-family: var(--pk-font) !important;
+}
+
+html[data-app-theme] .appShell :is(h1, h2, h3, h4),
+html[data-app-theme] .projectActionsOverlay :is(h1, h2, h3, h4),
+html[data-app-theme] .stentoreDialogOverlay :is(h1, h2, h3, h4) {
+  letter-spacing: normal !important;
+}
+
+html[data-app-theme] .appShell h1 { letter-spacing: -0.01em !important; font-weight: 700 !important; }
+
+html[data-app-theme] .appShell strong,
+html[data-app-theme] .appShell .stentorSidebar span,
+html[data-app-theme] .appShell .stentorSidebarProjectMeta,
+html[data-app-theme] .appShell .desktopProjectCard h3,
+html[data-app-theme] .appShell .projectDetailsPanel h3 {
+  letter-spacing: normal !important;
+}
+
+html[data-app-theme] .appShell .liteEditableCueList :is(.liteEditableCueBody > span, .liteCueSpeaker, textarea.liteInlineCueText) {
+  letter-spacing: normal !important;
+}
+
+/* Impostazioni compatte: colonna più stretta, card più basse, icona allineata al titolo in ogni card. */
+html[data-app-theme] .appShell .settingsPage .settingsOverviewGrid.settingsOverviewGridCompact {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  max-width: 760px !important;
+  margin-top: 18px !important;
+}
+html[data-app-theme] .appShell .settingsPage .settingsOverviewGrid > .darkPanel + .darkPanel { margin-top: 0 !important; }
+html[data-app-theme] .appShell .settingsPage .settingsUnifiedPanel {
+  padding: 16px 18px !important;
+  gap: 10px !important;
+  min-height: 0 !important;
+}
+html[data-app-theme] .appShell .settingsPage .settingsPanelTitleWithIcon {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+}
+html[data-app-theme] .appShell .settingsPage .settingsPanelTitleWithIcon svg {
+  width: 17px !important;
+  height: 17px !important;
+  margin: 0 !important;
+  flex: none !important;
+}
+html[data-app-theme] .appShell .settingsPage .settingsUnifiedPanel h2 {
+  margin: 0 !important;
+  font-size: 15px !important;
+  line-height: 1.3 !important;
+}
+html[data-app-theme] .appShell .settingsPage .settingsUnifiedPanel p {
+  margin: 0 !important;
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+html[data-app-theme] .appShell .settingsPage .appLanguagePanel .settingsControlGrid {
+  margin: 2px 0 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+html[data-app-theme] .appShell .settingsPage .appLanguagePanel .appLanguageControl { gap: 6px !important; max-width: 320px !important; }
+html[data-app-theme] .appShell .settingsPage .settingsUnifiedPanel .stateLine {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+html[data-app-theme] .appShell .settingsPage .settingsFeedbackRow {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+}
+html[data-app-theme] .appShell .settingsPage .settingsFeedbackRow .settingsFeedbackButton {
+  margin: 0 !important;
+  flex: none !important;
+}
+
+/* Messaggi con più paragrafi (es. riepilogo importazione): gli a capo restano visibili. */
+html[data-app-theme] .appShell .stentoreDialog .dialogHeader p { white-space: pre-line !important; }
+
+/* Lingua interfaccia: 23 lingue su tre colonne, righe più basse; l'elenco scorre se lo schermo è basso. */
+html[data-app-theme] .interfaceLanguageDialog { width: min(880px, 94vw) !important; }
+html[data-app-theme] .interfaceLanguageGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  max-height: calc(100vh - 340px) !important;
+  overflow-y: auto !important;
+  padding: 2px !important;
+}
+html[data-app-theme] .interfaceLanguageChoice {
+  min-height: 48px !important;
+  grid-template-columns: 38px minmax(0, 1fr) 18px !important;
+  gap: 10px !important;
+  padding: 7px 10px !important;
+  border-radius: 12px !important;
+}
+html[data-app-theme] .interfaceLanguageShort { width: 38px !important; height: 30px !important; border-radius: 9px !important; font-size: 11px !important; }
+html[data-app-theme] .interfaceLanguageName { font-size: 14px !important; }
+@media (max-width: 760px) {
+  html[data-app-theme] .interfaceLanguageGrid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+
+/* Lingue con parole lunghe (greco, finlandese, russo…): i tre modi dei Tempi dividono lo spazio
+   secondo la lunghezza delle parole, senza allargare la card. */
+html[data-app-theme] .appShell .liteTimeCard,
+html[data-app-theme] .appShell .liteTimeCues { min-width: 0 !important; max-width: 100% !important; }
+html[data-app-theme] .appShell .liteTimeCues { grid-template-columns: minmax(0, 1fr) !important; }
+html[data-app-theme] .appShell .liteTimeModes { display: flex !important; }
+html[data-app-theme] .appShell .liteRegiaRightColumn .liteTimeModes button {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  padding-left: 3px !important;
+  padding-right: 3px !important;
+  font-size: 11px !important;
+}

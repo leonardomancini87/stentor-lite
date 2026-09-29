@@ -1,0 +1,36 @@
+{
+  "name": "stentor",
+  "version": "0.7.0",
+  "description": "Sténtor Lite — sopratitoli per il teatro dal vivo",
+  "license": "EUPL-1.2",
+  "author": "Leonardo Mancini",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "test": "node --test",
+    "dev:desktop": "node scripts/desktop-vite.mjs dev",
+    "build:web": "vite build",
+    "build:desktop": "node scripts/desktop-vite.mjs build",
+    "desktop:dev": "tauri dev",
+    "desktop:build": "tauri build",
+    "desktop:preflight": "node --version && npm --version && cargo --version",
+    "desktop:build:mac-arm64": "tauri build --target aarch64-apple-darwin",
+    "desktop:build:windows": "tauri build --target x86_64-pc-windows-msvc",
+    "desktop:build:linux": "tauri build --target x86_64-unknown-linux-gnu"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "2.11.0",
+    "@vitejs/plugin-react": "6.0.2",
+    "lucide-react": "1.16.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "vite": "8.0.14"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.11.2"
+  }
+}
