@@ -7,6 +7,7 @@
 # controllala e premi "Publish release".
 #
 # Beta NON firmata: al primo avvio macOS e Windows mostrano un avviso di sicurezza.
+# Senza certificato l'app Mac è firmata "ad hoc" (vedi signingIdentity in tauri.conf.json).
 # Per firmare e notarizzare su Mac aggiungi in Settings → Secrets and variables → Actions:
 #   APPLE_CERTIFICATE, APPLE_CERTIFICATE_PASSWORD, APPLE_SIGNING_IDENTITY,
 #   APPLE_ID, APPLE_PASSWORD (password specifica per app), APPLE_TEAM_ID
@@ -66,23 +67,41 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Compila e allega alla Release
-        uses: tauri-apps/tauri-action@v0
+      # Firma Apple solo se i segreti esistono: se passano vuoti, la compilazione Mac
+      # prova a importare un certificato inesistente e si ferma.
+      - name: Firma Apple (solo se configurata)
+        if: runner.os == 'macOS'
+        shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -z "$APPLE_CERTIFICATE" ]; then
+            echo "Nessun certificato Apple: l'app Mac sarà firmata ad hoc (non notarizzata)."
+            exit 0
+          fi
+          for name in APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_SIGNING_IDENTITY APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID; do
+            if [ -n "${!name}" ]; then
+              delimiter="EOF_$(uuidgen)"
+              { echo "$name<<$delimiter"; echo "${!name}"; echo "$delimiter"; } >> "$GITHUB_ENV"
+            fi
+          done
+
+      - name: Compila e allega alla Release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: v__VERSION__
           releaseName: 'Sténtor Lite __VERSION__'
           releaseBody: |
             Beta di Sténtor Lite __VERSION__.
 
-            **Mac**: scarica il file `.dmg` (`aarch64` per i Mac con chip Apple M1/M2/M3/M4, `x64` per i Mac Intel), trascina Sténtor Lite in Applicazioni. La prima volta: clic destro sull'app → Apri → Apri.
+            **Mac**: scarica il file `.dmg` (`aarch64` per i Mac con chip Apple M1/M2/M3/M4, `x64` per i Mac Intel), trascina Sténtor Lite in Applicazioni. La prima volta macOS la blocca perché non è notarizzata: apri Impostazioni di Sistema → Privacy e sicurezza e premi «Apri comunque» (sulle versioni meno recenti: clic destro sull'app → Apri → Apri).
             **Windows**: scarica l'installatore `.exe`. Se compare "Windows ha protetto il PC": Ulteriori informazioni → Esegui comunque.
           releaseDraft: true
           prerelease: true

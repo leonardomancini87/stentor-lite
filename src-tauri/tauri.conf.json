@@ -43,6 +43,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "license": "EUPL-1.2"
+    "license": "EUPL-1.2",
+    "macOS": {
+      "signingIdentity": "-"
+    }
   }
 }
