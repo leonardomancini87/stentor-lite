@@ -16,7 +16,7 @@ export function getStageWindowName(screenId) {
   return `stentore-public-stage-${screenId}`;
 }
 
-// Finestre degli schermi di proiezione: apertura, prova e aggiornamento del testo proiettato.
+// Finestre degli schermi di proiezione: apertura e aggiornamento del testo proiettato.
 // Il testo arriva alla finestra in tre modi (chiamata diretta, postMessage, localStorage),
 // così resta aggiornato anche se la finestra è stata ricaricata.
 export function useProjection({ project, cue, language, blackout, onBlocked }) {
@@ -78,20 +78,11 @@ export function useProjection({ project, cue, language, blackout, onBlocked }) {
     return stageWindow;
   }, [activeScreen, onBlocked, publish]);
 
-  // Prova: apre lo schermo e mostra un testo di esempio finché non cambia la battuta.
-  const testScreen = useCallback((screen, text) => {
-    if (!openScreen(screen)) return;
-    const payload = buildPayload(screen, { text, textSpans: [], blackout: false, cueStyle: 'normal', updatedAt: Date.now() });
-    [150, 500, 1200].forEach((delay) => {
-      window.setTimeout(() => publish(screen, payload), delay);
-    });
-  }, [buildPayload, openScreen, publish]);
-
   // Ogni cambio di battuta, lingua, buio o stile arriva a tutti gli schermi: anche una finestra
   // ricaricata, o aperta da sé con il suo indirizzo, legge il testo aggiornato dalla memoria locale.
   useEffect(() => {
     screens.forEach((screen) => publish(screen));
   }, [publish, project.settings]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { openScreen, testScreen, activeScreen, screens };
+  return { openScreen, activeScreen, screens };
 }

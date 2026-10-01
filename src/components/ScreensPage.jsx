@@ -37,7 +37,7 @@ export default function ScreensPage({
 }) {
   const { t } = useI18n();
   const canvasRef = useRef(null);
-  const { screens, activeScreen, openScreen, testScreen } = projection;
+  const { screens, activeScreen, openScreen } = projection;
   const activeSettings = screenToPublicSettings(activeScreen);
   const activeAspect = getScreenAspectOption(activeSettings.publicAspectRatio);
   const activeScreenLanguage = getScreenLanguage(activeScreen, language, project.languages);
@@ -124,7 +124,6 @@ export default function ScreensPage({
         <div className="desktopScreensToolbarActions">
           <button type="button" onClick={addScreen}>{t('screens.add')}</button>
           <button type="button" onClick={() => openScreen(activeScreen)}>{t('screens.open')}</button>
-          <button type="button" onClick={() => testScreen(activeScreen, t('screens.testText'))}>{t('screens.test')}</button>
           <button type="button" onClick={toggleCanvasFullscreen}>{t('screens.fullscreen')}</button>
           <button type="button" className={blackout ? 'isActive' : ''} onClick={() => setBlackout(!blackout)}>
             {blackout ? t('screens.showText') : t('screens.blackout')}

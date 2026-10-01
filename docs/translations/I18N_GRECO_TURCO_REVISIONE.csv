@@ -387,7 +387,6 @@ screens.eyebrow,Schermi,Screens,Οθόνες,Ekranlar
 screens.heading,Proiezione sopratitoli,Surtitle projection,Προβολή υπέρτιτλων,Üstyazı yansıtma
 screens.add,+ Aggiungi schermo,+ Add screen,+ Προσθήκη οθόνης,+ Ekran ekle
 screens.open,Apri schermo,Open screen,Άνοιγμα οθόνης,Ekranı aç
-screens.test,Test,Test,Δοκιμή,Test
 screens.fullscreen,Schermo intero,Fullscreen,Πλήρης οθόνη,Tam ekran
 screens.blackout,Buio,Blackout,Μαύρο,Karartma
 screens.showText,Mostra testo,Show text,Εμφάνιση κειμένου,Metni göster
@@ -421,7 +420,6 @@ screens.aspect.4:3,4:3 classico,4:3 classic,4:3 κλασική,4:3 klasik
 screens.aspect.free,Libero,Free,Ελεύθερη,Serbest
 screens.font.system,Sistema sans,System sans,Sans συστήματος,Sistem sans
 screens.previewText.empty,Schermo pulito,Empty screen,Καθαρή οθόνη,Boş ekran
-screens.testText,TEST SCHERMO,SCREEN TEST,ΔΟΚΙΜΗ ΟΘΟΝΗΣ,EKRAN TESTİ
 screens.dialog.new.title,Nuovo schermo,New screen,Νέα οθόνη,Yeni ekran
 screens.dialog.new.message,Dai un nome al nuovo schermo.,Give the new screen a name.,Δώστε ένα όνομα στη νέα οθόνη.,Yeni ekrana bir ad verin.
 screens.dialog.new.label,Nome schermo,Screen name,Όνομα οθόνης,Ekran adı
