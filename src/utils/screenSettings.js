@@ -51,7 +51,7 @@ export function clampScreenOffset(value, axis = 'x') {
   if (!Number.isFinite(parsed)) return 0;
   const limit = SCREEN_OFFSET_LIMITS[axis] || SCREEN_OFFSET_LIMITS.x;
   const clamped = Math.max(-limit, Math.min(limit, parsed));
-  return Math.round(clamped * 2) / 2;
+  return Math.round(clamped);
 }
 
 // Schermi dimostrativi delle prime versioni («Studio Torino», «Pannello Lione»): se sono rimasti

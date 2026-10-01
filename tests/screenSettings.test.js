@@ -34,7 +34,7 @@ test('gli schermi rinominati dall\'utente restano come sono', () => {
 });
 
 test('lo spostamento del testo resta nei limiti e arriva alla finestra di proiezione', () => {
-  assert.equal(clampScreenOffset('12.3'), 12.5);
+  assert.equal(clampScreenOffset('12.6'), 13);
   assert.equal(clampScreenOffset(80, 'x'), 50);
   assert.equal(clampScreenOffset(-80, 'y'), -80);
   assert.equal(clampScreenOffset(-180, 'y'), -100);

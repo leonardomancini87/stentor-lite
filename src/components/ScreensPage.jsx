@@ -382,14 +382,14 @@ export default function ScreensPage({
             <label>
               {t('screens.field.offsetX')}
               <div className="desktopRange">
-                <input type="range" min={-SCREEN_OFFSET_LIMITS.x} max={SCREEN_OFFSET_LIMITS.x} step="0.5" value={activeSettings.publicOffsetX} onChange={(event) => patchLive({ publicOffsetX: clampScreenOffset(event.target.value, 'x') })} onPointerUp={endLive} onKeyUp={endLive} />
+                <input type="range" min={-SCREEN_OFFSET_LIMITS.x} max={SCREEN_OFFSET_LIMITS.x} step="1" value={activeSettings.publicOffsetX} onChange={(event) => patchLive({ publicOffsetX: clampScreenOffset(event.target.value, 'x') })} onPointerUp={endLive} onKeyUp={endLive} />
                 <strong>{formatOffset(activeSettings.publicOffsetX, 'x')}</strong>
               </div>
             </label>
             <label>
               {t('screens.field.offsetY')}
               <div className="desktopRange">
-                <input type="range" min={-SCREEN_OFFSET_LIMITS.y} max={SCREEN_OFFSET_LIMITS.y} step="0.5" value={activeSettings.publicOffsetY} onChange={(event) => patchLive({ publicOffsetY: clampScreenOffset(event.target.value, 'y') })} onPointerUp={endLive} onKeyUp={endLive} />
+                <input type="range" min={-SCREEN_OFFSET_LIMITS.y} max={SCREEN_OFFSET_LIMITS.y} step="1" value={activeSettings.publicOffsetY} onChange={(event) => patchLive({ publicOffsetY: clampScreenOffset(event.target.value, 'y') })} onPointerUp={endLive} onKeyUp={endLive} />
                 <strong>{formatOffset(activeSettings.publicOffsetY, 'y')}</strong>
               </div>
             </label>

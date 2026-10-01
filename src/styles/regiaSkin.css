@@ -1957,3 +1957,7 @@ html[data-app-theme] .appShell .liteScreenOffsetRow button:disabled { opacity: .
    così la posizione del testo nell'anteprima è quella che si vede in sala. */
 html[data-app-theme] .appShell .liteScreensWorkspace .desktopScreenStageFrame { height: auto !important; min-height: 0 !important; aspect-ratio: var(--stage-aspect-ratio, 16 / 9) !important; align-self: start; }
 html[data-app-theme] .appShell .liteScreensWorkspace .desktopScreenCanvasShell:fullscreen .desktopScreenStageFrame { width: 100% !important; height: 100% !important; aspect-ratio: auto !important; }
+
+/* Valori dei cursori: sempre su una riga e di larghezza fissa, così il pannello non salta mentre li si muove. */
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopRange { grid-template-columns: minmax(0, 1fr) 64px !important; }
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopRange strong { white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
