@@ -390,6 +390,7 @@ export default {
   'screens.aria': 'Zasloni Sténtor Lite',
   'screens.toolbar.aria': 'Kontrole zaslona',
   'screens.eyebrow': 'Zasloni',
+  'screens.subtitle': 'Kako nadnaslovi izgledaju u dvorani.',
   'screens.add': '+ Dodaj zaslon',
   'screens.open': 'Otvori zaslon',
   'screens.fullscreen': 'Cijeli zaslon',

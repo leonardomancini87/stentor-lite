@@ -383,6 +383,7 @@ export default {
   'screens.aria': 'Sténtor Lite-skærme',
   'screens.toolbar.aria': 'Skærmstyring',
   'screens.eyebrow': 'Skærme',
+  'screens.subtitle': 'Sådan vises overteksterne i salen.',
   'screens.add': '+ Tilføj skærm',
   'screens.open': 'Åbn skærm',
   'screens.fullscreen': 'Fuld skærm',

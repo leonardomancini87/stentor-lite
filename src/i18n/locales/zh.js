@@ -392,6 +392,7 @@ export default {
   'screens.aria': 'Sténtor Lite 屏幕',
   'screens.toolbar.aria': '屏幕控制',
   'screens.eyebrow': '屏幕',
+  'screens.subtitle': '字幕在剧场中的显示效果。',
   'screens.add': '+ 添加屏幕',
   'screens.open': '打开屏幕',
   'screens.fullscreen': '全屏',

@@ -392,6 +392,7 @@ export default {
   'screens.aria': 'Pantallas de Sténtor Lite',
   'screens.toolbar.aria': 'Controles de pantallas',
   'screens.eyebrow': 'Pantallas',
+  'screens.subtitle': 'Cómo aparecen los sobretítulos en la sala.',
   'screens.add': '+ Añadir pantalla',
   'screens.open': 'Abrir pantalla',
   'screens.fullscreen': 'Pantalla completa',

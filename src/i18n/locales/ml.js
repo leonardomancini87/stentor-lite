@@ -405,6 +405,7 @@ export default {
   'screens.aria': 'Sténtor Lite സ്ക്രീനുകൾ',
   'screens.toolbar.aria': 'സ്ക്രീൻ നിയന്ത്രണങ്ങൾ',
   'screens.eyebrow': 'സ്ക്രീനുകൾ',
+  'screens.subtitle': 'ഹാളിൽ സർടൈറ്റിലുകൾ എങ്ങനെ കാണപ്പെടുന്നു.',
   'screens.add': '+ സ്ക്രീൻ ചേർക്കുക',
   'screens.open': 'സ്ക്രീൻ തുറക്കുക',
   'screens.fullscreen': 'പൂർണ്ണ സ്ക്രീൻ',

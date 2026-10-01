@@ -411,6 +411,7 @@ export default {
   'screens.aria': 'شاشات Sténtor Lite',
   'screens.toolbar.aria': 'عناصر التحكم في الشاشات',
   'screens.eyebrow': 'الشاشات',
+  'screens.subtitle': 'كيف تظهر الترجمات الفوقية في القاعة.',
   'screens.add': '+ إضافة شاشة',
   'screens.open': 'فتح الشاشة',
   'screens.fullscreen': 'ملء الشاشة',

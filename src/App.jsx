@@ -92,6 +92,7 @@ import StentoreDialog from './components/StentoreDialog.jsx';
 import StentoreErrorBoundary from './components/StentoreErrorBoundary.jsx';
 import DesktopDashboard from './components/DesktopDashboard.jsx';
 import DesktopPreferences from './components/DesktopPreferences.jsx';
+import PageHeader from './components/PageHeader.jsx';
 
 const RIGHT_SIDEBAR_STORAGE_KEY = 'stentor.rightSidebar.collapsed.v1';
 const SHOW_TIMER_STORAGE_KEY = 'stentor.showTimer.v1';
@@ -1387,6 +1388,10 @@ export default function App() {
           <>
             <div className="workspace liteRegiaWorkspace">
               <main className="liteRegiaEditorMain">
+                <PageHeader
+                  title={ui('nav.cues')}
+                  subtitle={`${project.title || ui('langs.thisProject')} · ${ui('count.cues', { count: (project.cues || []).filter((item) => item?.type !== 'marker').length })}`}
+                />
                 <div className="liteRegiaTopStack">
                   <div className="r11Previews r11PreviewsSingle">
                   <section className="liteRegiaEditorPreview" aria-label={ui('cues.current')}>

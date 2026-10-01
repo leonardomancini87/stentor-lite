@@ -397,6 +397,7 @@ export default {
   'screens.aria': 'Екрани Sténtor Lite',
   'screens.toolbar.aria': 'Керування екранами',
   'screens.eyebrow': 'Екрани',
+  'screens.subtitle': 'Як супертитри виглядають у залі.',
   'screens.add': '+ Додати екран',
   'screens.open': 'Відкрити екран',
   'screens.fullscreen': 'На весь екран',

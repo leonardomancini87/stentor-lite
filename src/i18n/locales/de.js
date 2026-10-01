@@ -392,6 +392,7 @@ export default {
   'screens.aria': 'Sténtor-Lite-Bildschirme',
   'screens.toolbar.aria': 'Bildschirmsteuerung',
   'screens.eyebrow': 'Bildschirme',
+  'screens.subtitle': 'Wie die Übertitel im Saal erscheinen.',
   'screens.add': '+ Bildschirm hinzufügen',
   'screens.open': 'Bildschirm öffnen',
   'screens.fullscreen': 'Vollbild',

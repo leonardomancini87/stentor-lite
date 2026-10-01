@@ -383,6 +383,7 @@ export default {
   'screens.aria': 'Οθόνες Sténtor Lite',
   'screens.toolbar.aria': 'Χειριστήρια οθονών',
   'screens.eyebrow': 'Οθόνες',
+  'screens.subtitle': 'Πώς εμφανίζονται οι υπέρτιτλοι στην αίθουσα.',
   'screens.add': '+ Προσθήκη οθόνης',
   'screens.open': 'Άνοιγμα οθόνης',
   'screens.fullscreen': 'Πλήρης οθόνη',

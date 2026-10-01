@@ -383,6 +383,7 @@ export default {
   'screens.aria': 'Екрани на Sténtor Lite',
   'screens.toolbar.aria': 'Управление на екраните',
   'screens.eyebrow': 'Екрани',
+  'screens.subtitle': 'Как изглеждат надписите в залата.',
   'screens.add': '+ Добави екран',
   'screens.open': 'Отвори екрана',
   'screens.fullscreen': 'Цял екран',

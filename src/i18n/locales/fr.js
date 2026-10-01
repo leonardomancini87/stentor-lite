@@ -392,6 +392,7 @@ export default {
   'screens.aria': 'Écrans Sténtor Lite',
   'screens.toolbar.aria': 'Commandes des écrans',
   'screens.eyebrow': 'Écrans',
+  'screens.subtitle': 'Comment les surtitres apparaissent dans la salle.',
   'screens.add': '+ Ajouter un écran',
   'screens.open': 'Ouvrir l’écran',
   'screens.fullscreen': 'Plein écran',

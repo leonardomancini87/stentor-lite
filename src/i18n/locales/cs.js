@@ -397,6 +397,7 @@ export default {
   'screens.aria': 'Obrazovky Sténtor Lite',
   'screens.toolbar.aria': 'Ovládání obrazovek',
   'screens.eyebrow': 'Obrazovky',
+  'screens.subtitle': 'Jak titulky vypadají v sále.',
   'screens.add': '+ Přidat obrazovku',
   'screens.open': 'Otevřít obrazovku',
   'screens.fullscreen': 'Celá obrazovka',

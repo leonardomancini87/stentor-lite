@@ -404,6 +404,7 @@ export default {
   'screens.aria': 'Sténtor Lite स्क्रीन',
   'screens.toolbar.aria': 'स्क्रीन नियंत्रण',
   'screens.eyebrow': 'स्क्रीन',
+  'screens.subtitle': 'हॉल में सरटाइटल कैसे दिखते हैं।',
   'screens.add': '+ स्क्रीन जोड़ें',
   'screens.open': 'स्क्रीन खोलें',
   'screens.fullscreen': 'पूर्ण स्क्रीन',

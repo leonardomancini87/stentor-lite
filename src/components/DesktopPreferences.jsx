@@ -4,6 +4,7 @@ import { Check, ChevronDown, Globe2, Info, MessageSquareHeart, X } from 'lucide-
 import FeedbackDialog from './FeedbackDialog.jsx';
 import { APP_LANGUAGES, getAppLanguageMeta } from '../utils/appLanguage.js';
 import { useI18n } from '../i18n/index.js';
+import PageHeader from './PageHeader.jsx';
 
 // Le risorse di public/ stanno sotto il percorso base dell'app (es. /stentore-browser/).
 const STENTOR_BASE_PATH = ((BASE) => (BASE.endsWith('/') ? BASE : `${BASE}/`))((typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/');
@@ -115,14 +116,7 @@ export default function DesktopPreferences({ appLanguage = 'it', setAppLanguage,
 
   return (
     <div className="desktopDashboard darkDesktopDashboard settingsPage refinedSettingsPage operationalSettingsPage">
-      <header className="dashboardTopbar darkDashboardTopbar compactPageHeader refinedSettingsHeader">
-        <div>
-          <div className="dashboardTitleRow">
-            <h1>{t('settings.title')}</h1>
-          </div>
-          <p className="dashboardSubtitle">{t('settings.subtitle')}</p>
-        </div>
-      </header>
+      <PageHeader title={t('settings.title')} subtitle={t('settings.subtitle')} />
 
       <section className="settingsOverviewGrid settingsOverviewGridCompact">
         <article className="darkPanel projectStatePanel appLanguagePanel settingsUnifiedPanel">

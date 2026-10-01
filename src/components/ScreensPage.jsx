@@ -22,6 +22,7 @@ import {
   updateActiveScreenSettings,
   updateScreenSettings,
 } from '../utils/screenSettings.js';
+import PageHeader from './PageHeader.jsx';
 
 function classNames(...items) {
   return items.filter(Boolean).join(' ');
@@ -227,17 +228,21 @@ export default function ScreensPage({
 
   return (
     <section className="desktopScreensWorkspace liteScreensWorkspace" aria-label={t('screens.aria')}>
-      <header className="desktopScreensToolbar liteScreensToolbar" aria-label={t('screens.toolbar.aria')}>
-        <h1 className="liteScreensTitle">{t('screens.eyebrow')}</h1>
-        <div className="desktopScreensToolbarActions">
-          <button type="button" onClick={addScreen}>{t('screens.add')}</button>
-          <button type="button" onClick={() => openScreen(activeScreen)}>{t('screens.open')}</button>
-          <button type="button" onClick={toggleCanvasFullscreen}>{t('screens.fullscreen')}</button>
-          <button type="button" className={blackout ? 'isActive' : ''} onClick={() => setBlackout(!blackout)}>
-            {blackout ? t('screens.showText') : t('screens.blackout')}
-          </button>
-        </div>
-      </header>
+      <PageHeader
+        title={t('screens.eyebrow')}
+        subtitle={t('screens.subtitle')}
+        actionsClassName="desktopScreensToolbarActions"
+        actions={(
+          <>
+            <button type="button" className="isPrimary" onClick={() => openScreen(activeScreen)}>{t('screens.open')}</button>
+            <button type="button" onClick={addScreen}>{t('screens.add')}</button>
+            <button type="button" onClick={toggleCanvasFullscreen}>{t('screens.fullscreen')}</button>
+            <button type="button" className={blackout ? 'isActive' : ''} onClick={() => setBlackout(!blackout)}>
+              {blackout ? t('screens.showText') : t('screens.blackout')}
+            </button>
+          </>
+        )}
+      />
 
       <div className="liteScreensBody">
         <aside className="liteScreenPicker" aria-label={t('screens.list.aria')}>
@@ -312,7 +317,6 @@ export default function ScreensPage({
         <aside className="desktopScreenInspector liteScreenInspector" aria-label={t('screens.inspector.aria')}>
           <div className="desktopPanelTitle inspectorTitle">
             <span>{t('screens.inspector.title')}</span>
-            <strong>{activeScreen.name}</strong>
           </div>
 
           <section className="desktopInspectorSection">

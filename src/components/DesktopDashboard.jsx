@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useI18n } from '../i18n/index.js';
 import { IMPORT_ACCEPT } from '../utils/fileImport.js';
 import { Copy, Download, Edit3, FolderOpen, Grid2X2, ImagePlus, Languages, List, MoreHorizontal, Play, Plus, Search, Trash2, Upload, X } from 'lucide-react';
+import PageHeader from './PageHeader.jsx';
 
 function getLanguageLabel(project, code) {
   return project.languageNames?.[code] || String(code || '').toUpperCase();
@@ -247,12 +248,13 @@ export default function DesktopDashboard({
   return (
     <div className="stentorWorkspace projectsWorkspace">
       <section className="projectsMainPanel">
-        <header className="workspaceHeader projectsHeader">
-          <div>
-            <h1>{t('projects.title')}</h1>
-            <p>{t('projects.subtitle')}</p>
-          </div>
-          <div className="workspaceToolbar projectsToolbar">
+        <PageHeader
+          className="projectsPageHeader"
+          title={t('projects.title')}
+          subtitle={t('projects.subtitle')}
+          actionsClassName="workspaceToolbar projectsToolbar"
+          actions={(
+            <>
             <button type="button" className="primaryDesktopAction" onClick={createNewProject}>
               <Plus size={17} /> {t('projects.new')}
             </button>
@@ -276,8 +278,9 @@ export default function DesktopDashboard({
             <button type="button" className="secondaryImportAction" onClick={() => saveProjectFile?.({ saveAs: true })}>
               {t('projects.saveAs')}
             </button>
-          </div>
-        </header>
+            </>
+          )}
+        />
 
         <div className="projectsControlRow">
           <label className="dashboardSearch proSearch">

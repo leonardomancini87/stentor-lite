@@ -383,6 +383,7 @@ export default {
   'screens.aria': 'Sténtor Lite ekranları',
   'screens.toolbar.aria': 'Ekran denetimleri',
   'screens.eyebrow': 'Ekranlar',
+  'screens.subtitle': 'Üstyazıların salonda nasıl göründüğü.',
   'screens.add': '+ Ekran ekle',
   'screens.open': 'Ekranı aç',
   'screens.fullscreen': 'Tam ekran',

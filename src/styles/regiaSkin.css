@@ -1964,3 +1964,104 @@ html[data-app-theme] .appShell .liteScreensWorkspace .desktopRange strong { whit
 
 /* Schermi: un solo titolo grande, come nelle Impostazioni, con i comandi sulla stessa riga. */
 html[data-app-theme] .appShell .liteScreensWorkspace .liteScreensTitle { margin: 0; color: var(--pk-ink) !important; font-size: 28px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.1; }
+
+/* ===== Intestazione comune delle pagine (PageHeader) =====
+   Stesso titolo, stessa riga grigia, comandi a destra e stessi margini in Progetti,
+   Sopratitoli, Schermi e Impostazioni. */
+html[data-app-theme] .appShell {
+  --lite-page-gutter: 20px;
+}
+html[data-app-theme] .appShell .litePageHeader {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  min-height: 58px;
+  margin: 0 0 16px !important;
+  padding: 6px 2px 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  box-sizing: border-box;
+}
+html[data-app-theme] .appShell .litePageHeaderText { min-width: 0; }
+html[data-app-theme] .appShell .litePageHeader h1 {
+  margin: 0 !important;
+  color: var(--pk-ink) !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.15 !important;
+}
+html[data-app-theme] .appShell .litePageHeader p {
+  margin: 4px 0 0 !important;
+  color: var(--pk-muted) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+html[data-app-theme] .appShell .litePageHeaderActions {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+html[data-app-theme] .appShell .litePageHeaderActions button {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 13px !important;
+  border-radius: 9px !important;
+  border: 1px solid var(--pk-line) !important;
+  background: var(--pk-row) !important;
+  color: var(--pk-ink) !important;
+  font-size: 14px !important;
+  font-weight: 650 !important;
+  box-shadow: none !important;
+  white-space: nowrap;
+}
+html[data-app-theme] .appShell .litePageHeaderActions button:hover { background: var(--pk-row-hover) !important; }
+html[data-app-theme] .appShell .litePageHeaderActions button.isPrimary,
+html[data-app-theme] .appShell .litePageHeaderActions button.primaryDesktopAction {
+  background: var(--pk-accent) !important;
+  border-color: var(--pk-accent) !important;
+  color: #fff !important;
+}
+html[data-app-theme] .appShell .litePageHeaderActions button.isPrimary:hover,
+html[data-app-theme] .appShell .litePageHeaderActions button.primaryDesktopAction:hover { background: var(--pk-accent-hover) !important; }
+html[data-app-theme] .appShell .litePageHeaderActions button.isActive { background: var(--pk-ink) !important; border-color: var(--pk-ink) !important; color: #fff !important; }
+
+/* Stesso margine dal bordo in tutte le pagine. */
+html[data-app-theme] .appShell .liteRegiaWorkspace { padding: var(--lite-page-gutter) !important; }
+html[data-app-theme] .appShell .desktopLiveWorkspace { padding: var(--lite-page-gutter) !important; }
+html[data-app-theme] .appShell .settingsPage { padding: var(--lite-page-gutter) !important; }
+html[data-app-theme] .appShell .projectsMainPanel > .litePageHeader { padding: calc(var(--lite-page-gutter) + 6px) calc(var(--lite-page-gutter) + 2px) 0 !important; }
+html[data-app-theme] .appShell .projectsMainPanel > .projectsControlRow { padding: 0 var(--lite-page-gutter) 16px !important; }
+html[data-app-theme] .appShell .projectsMainPanel > .desktopProjectsGrid { padding: 4px var(--lite-page-gutter) 24px !important; }
+/* Stessa distanza fra intestazione e contenuto (16px), anche dove la pagina ha già uno spazio fra i blocchi. */
+html[data-app-theme] .appShell .liteRegiaEditorMain > .litePageHeader { margin-bottom: 4px !important; }
+html[data-app-theme] .appShell .settingsPage > .litePageHeader { margin-bottom: 2px !important; }
+html[data-app-theme] .appShell .settingsPage > .litePageHeader + .settingsOverviewGrid { margin-top: 0 !important; }
+/* Progetti: le schede si adattano alla larghezza disponibile invece di uscire a destra. */
+html[data-app-theme] .appShell .desktopProjectsGrid:not(.desktopProjectsList) { grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)) !important; }
+
+/* Titoletti interni: tutti nello stesso maiuscoletto piccolo grigio (come «Anteprima», «Mappa»). */
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeader > .liteSequenceHeaderCopy > span:first-child,
+html[data-app-theme] .appShell .projectDetailsPanel > h2 {
+  margin: 0 !important;
+  color: var(--pk-muted) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  line-height: 1.3 !important;
+}
+html[data-app-theme] .appShell .projectDetailsPanel > h2 { margin-bottom: 8px !important; }

@@ -383,6 +383,7 @@ export default {
   'screens.aria': 'Sténtor Lite -näytöt',
   'screens.toolbar.aria': 'Näyttöjen säätimet',
   'screens.eyebrow': 'Näytöt',
+  'screens.subtitle': 'Miltä tekstitys näyttää salissa.',
   'screens.add': '+ Lisää näyttö',
   'screens.open': 'Avaa näyttö',
   'screens.fullscreen': 'Koko näyttö',

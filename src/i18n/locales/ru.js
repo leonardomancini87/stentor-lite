@@ -397,6 +397,7 @@ export default {
   'screens.aria': 'Экраны Sténtor Lite',
   'screens.toolbar.aria': 'Управление экранами',
   'screens.eyebrow': 'Экраны',
+  'screens.subtitle': 'Как титры выглядят в зале.',
   'screens.add': '+ Добавить экран',
   'screens.open': 'Открыть экран',
   'screens.fullscreen': 'Полный экран',

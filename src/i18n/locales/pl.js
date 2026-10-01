@@ -397,6 +397,7 @@ export default {
   'screens.aria': 'Ekrany Sténtor Lite',
   'screens.toolbar.aria': 'Sterowanie ekranami',
   'screens.eyebrow': 'Ekrany',
+  'screens.subtitle': 'Jak napisy wyglądają na sali.',
   'screens.add': '+ Dodaj ekran',
   'screens.open': 'Otwórz ekran',
   'screens.fullscreen': 'Pełny ekran',

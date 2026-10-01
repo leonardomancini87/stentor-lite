@@ -392,6 +392,7 @@ export default {
   'screens.aria': 'Ecrãs do Sténtor Lite',
   'screens.toolbar.aria': 'Comandos dos ecrãs',
   'screens.eyebrow': 'Ecrãs',
+  'screens.subtitle': 'Como as legendas aparecem na sala.',
   'screens.add': '+ Adicionar ecrã',
   'screens.open': 'Abrir ecrã',
   'screens.fullscreen': 'Ecrã inteiro',
