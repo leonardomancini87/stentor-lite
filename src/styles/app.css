@@ -273,7 +273,7 @@ body,
   flex-shrink: 1;
 }
 
-/* Lione renderer fix: manual line breaks must stay as real separate rows.
+/* Renderer fix: manual line breaks must stay as real separate rows.
    No JS autofit, no text balancing, no inline span concatenation. */
 
 .stageSubtitle {
@@ -306,7 +306,7 @@ body,
   max-width: min(88vw, 100%);
 }
 
-/* Lione pixel-perfect stage: preview and public window use the same virtual panel. */
+/* Pixel-perfect stage: preview and public window use the same virtual panel. */
 
 .stageFrame {
   position: relative !important;

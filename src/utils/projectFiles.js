@@ -16,7 +16,7 @@ export function createBlankProject(title = 'Nuovo progetto') {
     },
     settings: {
       ...demoProject.settings,
-      activeScreenId: demoProject.settings?.activeScreenId || 'studio-torino',
+      activeScreenId: demoProject.settings?.activeScreenId || 'schermo-1',
     },
     cues: [
       {

@@ -22,8 +22,8 @@ export function getScreenAspectOption(value) {
 
 export const DEFAULT_SCREENS = [
   {
-    id: 'studio-torino',
-    name: 'Studio Torino',
+    id: 'schermo-1',
+    name: 'Schermo 1',
     publicBackground: '#000000',
     publicTextColor: '#F3E7B3',
     publicFontSize: '72px',
@@ -35,22 +35,6 @@ export const DEFAULT_SCREENS = [
     publicFadeOutMs: 120,
     publicBlackoutFadeMs: 160,
     publicLanguage: 'active',
-    publicAspectRatio: '16:9',
-  },
-  {
-    id: 'pannello-lione',
-    name: 'Pannello Lione',
-    publicBackground: '#000000',
-    publicTextColor: '#F3E7B3',
-    publicFontSize: '58px',
-    publicVerticalAlign: 'center',
-    publicPaddingTop: '0vh',
-    publicMaxWidth: '88%',
-    publicFontFamily: 'Helvetica, Arial, sans-serif',
-    publicFadeInMs: 120,
-    publicFadeOutMs: 120,
-    publicBlackoutFadeMs: 160,
-    publicLanguage: 'en',
     publicAspectRatio: '16:9',
   },
 ];
@@ -84,13 +68,13 @@ export function screenToPublicSettings(screen) {
 
 function normalizeScreen(screen, fallback, index) {
   const base = fallback || DEFAULT_SCREENS[index] || DEFAULT_SCREENS[0];
-  const id = screen?.id || base.id || `schermo-${index + 1}`;
+  const id = screen?.id || (index === 0 ? base.id : `schermo-${index + 1}`);
 
   return {
     ...cloneScreen(base),
     ...(screen || {}),
     id,
-    name: screen?.name || base.name || `Schermo ${index + 1}`,
+    name: screen?.name || (index === 0 ? base.name : `Schermo ${index + 1}`),
   };
 }
 

@@ -9,11 +9,11 @@ export const demoProject = {
     en: 'Inglese'
   },
   settings: {
-    activeScreenId: 'studio-torino',
+    activeScreenId: 'schermo-1',
     screens: [
       {
-        id: 'studio-torino',
-        name: 'Studio Torino',
+        id: 'schermo-1',
+        name: 'Schermo 1',
         publicFontSize: '72px',
         publicFontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
         publicTextColor: '#F3E7B3',
@@ -21,19 +21,7 @@ export const demoProject = {
         publicMaxWidth: '90%',
         publicVerticalAlign: 'top',
         publicPaddingTop: '6vh',
-        publicLanguage: 'it'
-      },
-      {
-        id: 'pannello-lione',
-        name: 'Pannello Lione',
-        publicFontSize: '58px',
-        publicFontFamily: 'Helvetica, Arial, sans-serif',
-        publicTextColor: '#F3E7B3',
-        publicBackground: '#000000',
-        publicMaxWidth: '88%',
-        publicVerticalAlign: 'center',
-        publicPaddingTop: '0vh',
-        publicLanguage: 'en'
+        publicLanguage: 'active'
       }
     ],
     publicFontSize: '72px',
