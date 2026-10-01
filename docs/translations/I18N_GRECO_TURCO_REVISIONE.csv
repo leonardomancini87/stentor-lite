@@ -384,14 +384,12 @@ app.shortcuts.message,"Le scorciatoie si vedono e si cambiano nella card “Scor
 screens.aria,Schermi Sténtor Lite,Sténtor Lite screens,Οθόνες Sténtor Lite,Sténtor Lite ekranları
 screens.toolbar.aria,Controlli Schermi,Screen controls,Χειριστήρια οθονών,Ekran denetimleri
 screens.eyebrow,Schermi,Screens,Οθόνες,Ekranlar
-screens.heading,Proiezione sopratitoli,Surtitle projection,Προβολή υπέρτιτλων,Üstyazı yansıtma
 screens.add,+ Aggiungi schermo,+ Add screen,+ Προσθήκη οθόνης,+ Ekran ekle
 screens.open,Apri schermo,Open screen,Άνοιγμα οθόνης,Ekranı aç
 screens.fullscreen,Schermo intero,Fullscreen,Πλήρης οθόνη,Tam ekran
 screens.blackout,Buio,Blackout,Μαύρο,Karartma
 screens.showText,Mostra testo,Show text,Εμφάνιση κειμένου,Metni göster
 screens.list.aria,Schermi configurati,Configured screens,Διαμορφωμένες οθόνες,Yapılandırılmış ekranlar
-screens.list.title,Schermi,Screens,Οθόνες,Ekranlar
 screens.preview,Anteprima,Preview,Προεπισκόπηση,Önizleme
 screens.inspector.aria,Impostazioni schermo,Screen settings,Ρυθμίσεις οθόνης,Ekran ayarları
 screens.inspector.title,Impostazioni,Settings,Ρυθμίσεις,Ayarlar

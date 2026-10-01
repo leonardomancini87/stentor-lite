@@ -1961,3 +1961,6 @@ html[data-app-theme] .appShell .liteScreensWorkspace .desktopScreenCanvasShell:f
 /* Valori dei cursori: sempre su una riga e di larghezza fissa, così il pannello non salta mentre li si muove. */
 html[data-app-theme] .appShell .liteScreensWorkspace .desktopRange { grid-template-columns: minmax(0, 1fr) 64px !important; }
 html[data-app-theme] .appShell .liteScreensWorkspace .desktopRange strong { white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
+
+/* Schermi: un solo titolo grande, come nelle Impostazioni, con i comandi sulla stessa riga. */
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreensTitle { margin: 0; color: var(--pk-ink) !important; font-size: 28px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.1; }

@@ -228,10 +228,7 @@ export default function ScreensPage({
   return (
     <section className="desktopScreensWorkspace liteScreensWorkspace" aria-label={t('screens.aria')}>
       <header className="desktopScreensToolbar liteScreensToolbar" aria-label={t('screens.toolbar.aria')}>
-        <div className="desktopScreensToolbarTitle">
-          <span>{t('screens.eyebrow')}</span>
-          <strong>{t('screens.heading')}</strong>
-        </div>
+        <h1 className="liteScreensTitle">{t('screens.eyebrow')}</h1>
         <div className="desktopScreensToolbarActions">
           <button type="button" onClick={addScreen}>{t('screens.add')}</button>
           <button type="button" onClick={() => openScreen(activeScreen)}>{t('screens.open')}</button>
@@ -244,10 +241,6 @@ export default function ScreensPage({
 
       <div className="liteScreensBody">
         <aside className="liteScreenPicker" aria-label={t('screens.list.aria')}>
-          <div className="desktopPanelTitle">
-            <span>{t('screens.list.title')}</span>
-            <strong>{screens.length}</strong>
-          </div>
           <div className="desktopOutputRows">
             {screens.map((screen) => {
               const rowStatus = statusOf(screen);
