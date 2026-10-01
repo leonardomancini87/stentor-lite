@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Monitor } from 'lucide-react';
 
 import StageFrame from './StageFrame.jsx';
@@ -20,6 +20,7 @@ import {
   screenToPublicSettings,
   setActiveScreen,
   updateActiveScreenSettings,
+  updateScreenSettings,
 } from '../utils/screenSettings.js';
 
 function classNames(...items) {
@@ -34,6 +35,7 @@ export default function ScreensPage({
   blackout,
   setBlackout,
   updateProject,
+  setProject,
   dialogs,
   projection,
 }) {
@@ -41,8 +43,15 @@ export default function ScreensPage({
   const canvasRef = useRef(null);
   const dragRef = useRef(null);
   const [dragging, setDragging] = useState(false);
+  // Valori dei cursori (e del trascinamento) mentre li si muove: si vedono subito, mentre il
+  // progetto e lo schermo in sala si aggiornano al massimo una volta per fotogramma.
+  const [draft, setDraft] = useState(null);
+  const liveRef = useRef({ pending: null, frame: 0, idle: 0, inGesture: false });
   const { screens, activeScreen, openScreen } = projection;
-  const activeSettings = screenToPublicSettings(activeScreen);
+  const activeSettings = {
+    ...screenToPublicSettings(activeScreen),
+    ...(draft?.screenId === activeScreen.id ? draft.values : {}),
+  };
   const activeAspect = getScreenAspectOption(activeSettings.publicAspectRatio);
   const activeScreenLanguage = getScreenLanguage(activeScreen, language, project.languages);
 
@@ -52,6 +61,59 @@ export default function ScreensPage({
 
   function updateActiveScreen(patch) {
     updateSettings(updateActiveScreenSettings(project.settings, patch));
+  }
+
+  useEffect(() => () => {
+    window.cancelAnimationFrame(liveRef.current.frame);
+    window.clearTimeout(liveRef.current.idle);
+  }, []);
+
+  function flushLive() {
+    const live = liveRef.current;
+    if (live.frame) {
+      window.cancelAnimationFrame(live.frame);
+      live.frame = 0;
+    }
+    const pending = live.pending;
+    live.pending = null;
+    if (!pending) return;
+    // Un solo passo di Annulla per tutto il gesto: il primo aggiornamento entra nella cronologia, gli altri no.
+    const skipHistory = live.inGesture;
+    live.inGesture = true;
+    const apply = (current) => ({
+      ...current,
+      settings: updateScreenSettings(current.settings, pending.screenId, pending.values),
+    });
+    if (setProject) setProject(apply, { skipHistory });
+    else updateProject(apply(project));
+  }
+
+  function endLive() {
+    const live = liveRef.current;
+    window.clearTimeout(live.idle);
+    flushLive();
+    live.inGesture = false;
+    setDraft(null);
+  }
+
+  function patchLive(values) {
+    const screenId = activeScreen.id;
+    const live = liveRef.current;
+    const base = live.pending?.screenId === screenId ? live.pending.values : {};
+    live.pending = { screenId, values: { ...base, ...values } };
+    setDraft((current) => ({
+      screenId,
+      values: { ...(current?.screenId === screenId ? current.values : {}), ...values },
+    }));
+    if (!live.frame) {
+      live.frame = window.requestAnimationFrame(() => {
+        live.frame = 0;
+        flushLive();
+      });
+    }
+    // Il gesto finisce quando si lascia il cursore o dopo una breve pausa (anche con le frecce).
+    window.clearTimeout(live.idle);
+    live.idle = window.setTimeout(endLive, 500);
   }
 
   function statusOf(screen) {
@@ -135,7 +197,7 @@ export default function ScreensPage({
     const offsetX = clampScreenOffset(drag.offsetX + ((event.clientX - drag.startX) / drag.width) * 100);
     const offsetY = clampScreenOffset(drag.offsetY + ((event.clientY - drag.startY) / drag.height) * 100, 'y');
     if (offsetX !== activeSettings.publicOffsetX || offsetY !== activeSettings.publicOffsetY) {
-      updateActiveScreen({ publicOffsetX: offsetX, publicOffsetY: offsetY });
+      patchLive({ publicOffsetX: offsetX, publicOffsetY: offsetY });
     }
   }
 
@@ -143,6 +205,7 @@ export default function ScreensPage({
     if (dragRef.current?.pointerId !== event.pointerId) return;
     dragRef.current = null;
     setDragging(false);
+    endLive();
   }
 
   function formatOffset(value, axis) {
@@ -297,14 +360,14 @@ export default function ScreensPage({
             <label>
               {t('screens.field.size')}
               <div className="desktopRange">
-                <input type="range" min="28" max="120" value={fontSize} onChange={(event) => updateActiveScreen({ publicFontSize: `${event.target.value}px` })} />
+                <input type="range" min="28" max="120" value={fontSize} onChange={(event) => patchLive({ publicFontSize: `${event.target.value}px` })} onPointerUp={endLive} onKeyUp={endLive} />
                 <strong>{fontSize}px</strong>
               </div>
             </label>
             <label>
               {t('screens.field.width')}
               <div className="desktopRange">
-                <input type="range" min="45" max="100" value={maxWidth} onChange={(event) => updateActiveScreen({ publicMaxWidth: `${event.target.value}%` })} />
+                <input type="range" min="45" max="100" value={maxWidth} onChange={(event) => patchLive({ publicMaxWidth: `${event.target.value}%` })} onPointerUp={endLive} onKeyUp={endLive} />
                 <strong>{maxWidth}%</strong>
               </div>
             </label>
@@ -319,14 +382,14 @@ export default function ScreensPage({
             <label>
               {t('screens.field.offsetX')}
               <div className="desktopRange">
-                <input type="range" min={-SCREEN_OFFSET_LIMITS.x} max={SCREEN_OFFSET_LIMITS.x} step="0.5" value={activeSettings.publicOffsetX} onChange={(event) => updateActiveScreen({ publicOffsetX: clampScreenOffset(event.target.value, 'x') })} />
+                <input type="range" min={-SCREEN_OFFSET_LIMITS.x} max={SCREEN_OFFSET_LIMITS.x} step="0.5" value={activeSettings.publicOffsetX} onChange={(event) => patchLive({ publicOffsetX: clampScreenOffset(event.target.value, 'x') })} onPointerUp={endLive} onKeyUp={endLive} />
                 <strong>{formatOffset(activeSettings.publicOffsetX, 'x')}</strong>
               </div>
             </label>
             <label>
               {t('screens.field.offsetY')}
               <div className="desktopRange">
-                <input type="range" min={-SCREEN_OFFSET_LIMITS.y} max={SCREEN_OFFSET_LIMITS.y} step="0.5" value={activeSettings.publicOffsetY} onChange={(event) => updateActiveScreen({ publicOffsetY: clampScreenOffset(event.target.value, 'y') })} />
+                <input type="range" min={-SCREEN_OFFSET_LIMITS.y} max={SCREEN_OFFSET_LIMITS.y} step="0.5" value={activeSettings.publicOffsetY} onChange={(event) => patchLive({ publicOffsetY: clampScreenOffset(event.target.value, 'y') })} onPointerUp={endLive} onKeyUp={endLive} />
                 <strong>{formatOffset(activeSettings.publicOffsetY, 'y')}</strong>
               </div>
             </label>

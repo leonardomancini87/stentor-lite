@@ -1635,6 +1635,7 @@ export default function App() {
               blackout={blackout}
               setBlackout={setBlackout}
               updateProject={updateProject}
+              setProject={setProject}
               dialogs={dialogs}
               projection={projection}
             />

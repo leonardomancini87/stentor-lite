@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { buildProjectionPayload } from '../src/utils/projectionTargets.js';
-import { clampScreenOffset, getScreens, screenToPublicSettings } from '../src/utils/screenSettings.js';
+import { clampScreenOffset, getScreens, screenToPublicSettings, updateScreenSettings } from '../src/utils/screenSettings.js';
 
 test('un progetto nuovo ha un solo schermo, «Schermo 1»', () => {
   const screens = getScreens({});
@@ -45,4 +45,15 @@ test('lo spostamento del testo resta nei limiti e arriva alla finestra di proiez
   const payload = buildProjectionPayload({ cue: { id: 1, original: 'Ciao' }, screen, activeLanguage: 'it', languages: ['it'] });
   assert.equal(payload.settings.offsetX, 10);
   assert.equal(payload.settings.offsetY, -20);
+});
+
+test('si può aggiornare uno schermo che non è quello attivo', () => {
+  const settings = {
+    activeScreenId: 'a',
+    screens: [{ id: 'a', name: 'A' }, { id: 'b', name: 'B' }],
+  };
+  const next = updateScreenSettings(settings, 'b', { publicOffsetX: 5 });
+  assert.equal(next.activeScreenId, 'a');
+  assert.equal(next.screens.find((screen) => screen.id === 'b').publicOffsetX, 5);
+  assert.equal(next.screens.find((screen) => screen.id === 'a').publicOffsetX, 0);
 });

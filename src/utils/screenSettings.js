@@ -174,6 +174,16 @@ export function updateActiveScreenSettings(settings = {}, patch = {}) {
   };
 }
 
+// Aggiorna uno schermo preciso (anche se non è quello attivo).
+export function updateScreenSettings(settings = {}, screenId, patch = {}) {
+  const current = withScreensInitialized(settings);
+  if (!screenId || screenId === current.activeScreenId) return updateActiveScreenSettings(current, patch);
+  return {
+    ...current,
+    screens: current.screens.map((screen) => (screen.id === screenId ? { ...screen, ...patch } : screen)),
+  };
+}
+
 export function setActiveScreen(settings = {}, screenId) {
   const current = withScreensInitialized(settings);
   const activeScreen = current.screens.find((screen) => screen.id === screenId) || current.screens[0];
