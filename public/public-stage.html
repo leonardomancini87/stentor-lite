@@ -35,7 +35,7 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      overflow: hidden;
+      overflow: visible;
       background: #000000;
     }
 
@@ -108,6 +108,7 @@
       const canvas = document.getElementById('canvas');
       const subtitle = document.getElementById('subtitle');
       let lastPayloadText = '';
+      let lastRawText = null;
       let lastUpdatedAt = 0;
       let transitionTimer = null;
 
@@ -140,6 +141,11 @@
       function parseVh(value, fallback = 0) {
         const parsed = parseFloat(String(value || '').replace('vh', ''));
         return Number.isFinite(parsed) ? parsed : fallback;
+      }
+
+      function parseOffset(value) {
+        const parsed = Number.parseFloat(value);
+        return Number.isFinite(parsed) ? Math.max(-100, Math.min(100, parsed)) : 0;
       }
 
       function getCenterY(verticalAlign, paddingTop) {
@@ -241,23 +247,25 @@
         const fontPx = parsePixels(settings.fontSize || settings.publicFontSize, 58);
         const widthPercent = parsePercent(settings.maxWidth || settings.publicMaxWidth, 90);
         const clipWidth = DESIGN_WIDTH * (widthPercent / 100);
-        const clipX = (DESIGN_WIDTH - clipWidth) / 2;
+        const shiftX = (parseOffset(settings.offsetX ?? settings.publicOffsetX) / 100) * DESIGN_WIDTH;
+        const clipX = (DESIGN_WIDTH - clipWidth) / 2 + shiftX;
         const lineHeight = fontPx * 1.12;
-        const centerY = getCenterY(settings.verticalAlign || settings.publicVerticalAlign, settings.paddingTop || settings.publicPaddingTop);
+        const centerY = getCenterY(settings.verticalAlign || settings.publicVerticalAlign, settings.paddingTop || settings.publicPaddingTop)
+          + (parseOffset(settings.offsetY ?? settings.publicOffsetY) / 100) * DESIGN_HEIGHT;
         const fill = settings.color || settings.publicTextColor || '#F3E7B3';
         const fontFamily = settings.fontFamily || settings.publicFontFamily || 'Helvetica, Arial, sans-serif';
         const fontStyle = cueStyle === 'italic' ? 'italic' : 'normal';
         const fontWeight = cueTextStyle.bold === false ? '400' : '800';
         const alignment = 'center'; // Sténtor Lite: sopratitoli sempre centrati
         const textAnchor = alignment === 'left' ? 'start' : alignment === 'right' ? 'end' : 'middle';
-        const textX = alignment === 'left' ? clipX : alignment === 'right' ? clipX + clipWidth : DESIGN_WIDTH / 2;
+        const textX = alignment === 'left' ? clipX : alignment === 'right' ? clipX + clipWidth : DESIGN_WIDTH / 2 + shiftX;
 
         subtitle.replaceChildren();
         subtitle.setAttribute('aria-label', value);
 
         const defs = createSvgElement('defs');
         const clipPath = createSvgElement('clipPath', { id: 'stageTextClip' });
-        clipPath.appendChild(createSvgElement('rect', { x: clipX, y: 0, width: clipWidth, height: DESIGN_HEIGHT }));
+        clipPath.appendChild(createSvgElement('rect', { x: clipX, y: -DESIGN_HEIGHT, width: clipWidth, height: DESIGN_HEIGHT * 3 }));
         defs.appendChild(clipPath);
         subtitle.appendChild(defs);
 
@@ -317,6 +325,9 @@
         const shouldFadeOut = previousText && previousText !== nextText && fadeOutMs > 0;
 
         window.clearTimeout(transitionTimer);
+        // Stesso testo con stile o posizione diversi (es. mentre lo si sposta): si ridisegna senza dissolvenza.
+        const sameText = nextText === lastRawText && Boolean(nextText);
+        lastRawText = nextText;
         stage.style.background = settings.background || '#000000';
         canvas.style.background = settings.background || '#000000';
         subtitle.style.transition = `opacity ${shouldFadeOut ? fadeOutMs : fadeInMs}ms ease-out`;
@@ -327,14 +338,17 @@
           lastUpdatedAt = payload.updatedAt || Date.now();
           document.body.classList.toggle('debug-empty', !lastPayloadText && !payload.blackout);
           subtitle.style.transition = `opacity ${fadeInMs}ms ease-out`;
-          subtitle.style.opacity = nextText && fadeInMs > 0 ? '0' : '1';
+          subtitle.style.opacity = nextText && fadeInMs > 0 && !sameText ? '0' : '1';
           updateScale();
           requestAnimationFrame(() => {
             subtitle.style.opacity = '1';
           });
         };
 
-        if (shouldFadeOut) {
+        if (sameText) {
+          subtitle.style.transition = 'none';
+          finishRender();
+        } else if (shouldFadeOut) {
           subtitle.style.opacity = '0';
           transitionTimer = window.setTimeout(finishRender, fadeOutMs);
         } else {

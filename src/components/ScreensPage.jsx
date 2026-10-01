@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Monitor } from 'lucide-react';
 
 import StageFrame from './StageFrame.jsx';
@@ -11,6 +11,8 @@ import {
   DEFAULT_SCREENS,
   FONT_FAMILY_OPTIONS,
   SCREEN_ASPECT_OPTIONS,
+  SCREEN_OFFSET_LIMITS,
+  clampScreenOffset,
   createScreen,
   deleteActiveScreen,
   getScreenAspectOption,
@@ -37,6 +39,8 @@ export default function ScreensPage({
 }) {
   const { t } = useI18n();
   const canvasRef = useRef(null);
+  const dragRef = useRef(null);
+  const [dragging, setDragging] = useState(false);
   const { screens, activeScreen, openScreen } = projection;
   const activeSettings = screenToPublicSettings(activeScreen);
   const activeAspect = getScreenAspectOption(activeSettings.publicAspectRatio);
@@ -100,7 +104,51 @@ export default function ScreensPage({
       publicFadeOutMs: fallback.publicFadeOutMs,
       publicBlackoutFadeMs: fallback.publicBlackoutFadeMs,
       publicAspectRatio: fallback.publicAspectRatio,
+      publicOffsetX: 0,
+      publicOffsetY: 0,
     });
+  }
+
+  // Trascinando il testo nell'anteprima lo si sposta; lo schermo in sala segue in diretta.
+  function startDrag(event) {
+    if (event.button !== 0 || document.fullscreenElement) return;
+    const stage = event.currentTarget.querySelector('.stageDesignCanvas');
+    const rect = stage?.getBoundingClientRect();
+    if (!rect?.width || !rect?.height) return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      width: rect.width,
+      height: rect.height,
+      offsetX: activeSettings.publicOffsetX,
+      offsetY: activeSettings.publicOffsetY,
+    };
+    setDragging(true);
+  }
+
+  function moveDrag(event) {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    const offsetX = clampScreenOffset(drag.offsetX + ((event.clientX - drag.startX) / drag.width) * 100);
+    const offsetY = clampScreenOffset(drag.offsetY + ((event.clientY - drag.startY) / drag.height) * 100, 'y');
+    if (offsetX !== activeSettings.publicOffsetX || offsetY !== activeSettings.publicOffsetY) {
+      updateActiveScreen({ publicOffsetX: offsetX, publicOffsetY: offsetY });
+    }
+  }
+
+  function endDrag(event) {
+    if (dragRef.current?.pointerId !== event.pointerId) return;
+    dragRef.current = null;
+    setDragging(false);
+  }
+
+  function formatOffset(value, axis) {
+    if (!value) return '0';
+    const arrow = axis === 'x' ? (value > 0 ? '→' : '←') : (value > 0 ? '↓' : '↑');
+    return `${arrow} ${Math.abs(value)}%`;
   }
 
   function toggleCanvasFullscreen() {
@@ -172,7 +220,15 @@ export default function ScreensPage({
             </div>
           </div>
 
-          <div className="desktopScreenCanvasShell" ref={canvasRef}>
+          <div
+            className={classNames('desktopScreenCanvasShell', 'liteScreenDragArea', dragging && 'isDragging')}
+            ref={canvasRef}
+            onPointerDown={startDrag}
+            onPointerMove={moveDrag}
+            onPointerUp={endDrag}
+            onPointerCancel={endDrag}
+            title={t('screens.offset.hint')}
+          >
             <StageFrame id={`desktop-screen-canvas-${activeScreen.id}`} settings={activeSettings} className="desktopScreenStageFrame">
               {blackout ? null : (
                 <StageSubtitle
@@ -183,6 +239,8 @@ export default function ScreensPage({
                   maxWidth={activeSettings.publicMaxWidth || '90%'}
                   verticalAlign={activeSettings.publicVerticalAlign || 'center'}
                   paddingTop={activeSettings.publicPaddingTop || '0vh'}
+                  offsetX={activeSettings.publicOffsetX}
+                  offsetY={activeSettings.publicOffsetY}
                   fadeInMs={activeSettings.publicFadeInMs ?? 120}
                   style={{
                     color: activeSettings.publicTextColor,
@@ -258,6 +316,30 @@ export default function ScreensPage({
                 <option value="bottom">{t('screens.position.bottom')}</option>
               </select>
             </label>
+            <label>
+              {t('screens.field.offsetX')}
+              <div className="desktopRange">
+                <input type="range" min={-SCREEN_OFFSET_LIMITS.x} max={SCREEN_OFFSET_LIMITS.x} step="0.5" value={activeSettings.publicOffsetX} onChange={(event) => updateActiveScreen({ publicOffsetX: clampScreenOffset(event.target.value, 'x') })} />
+                <strong>{formatOffset(activeSettings.publicOffsetX, 'x')}</strong>
+              </div>
+            </label>
+            <label>
+              {t('screens.field.offsetY')}
+              <div className="desktopRange">
+                <input type="range" min={-SCREEN_OFFSET_LIMITS.y} max={SCREEN_OFFSET_LIMITS.y} step="0.5" value={activeSettings.publicOffsetY} onChange={(event) => updateActiveScreen({ publicOffsetY: clampScreenOffset(event.target.value, 'y') })} />
+                <strong>{formatOffset(activeSettings.publicOffsetY, 'y')}</strong>
+              </div>
+            </label>
+            <div className="liteScreenOffsetRow">
+              <small>{t('screens.offset.hint')}</small>
+              <button
+                type="button"
+                onClick={() => updateActiveScreen({ publicOffsetX: 0, publicOffsetY: 0 })}
+                disabled={!activeSettings.publicOffsetX && !activeSettings.publicOffsetY}
+              >
+                {t('screens.offset.center')}
+              </button>
+            </div>
             <div className="desktopColorGrid">
               <label>
                 {t('screens.field.text')}

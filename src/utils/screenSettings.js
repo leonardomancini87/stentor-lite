@@ -36,8 +36,41 @@ export const DEFAULT_SCREENS = [
     publicBlackoutFadeMs: 160,
     publicLanguage: 'active',
     publicAspectRatio: '16:9',
+    publicOffsetX: 0,
+    publicOffsetY: 0,
   },
 ];
+
+// Spostamento del testo sullo schermo, in percentuale della larghezza (X) e dell'altezza
+// della fascia del testo (Y); 0 è la posizione normale, X positivo verso destra, Y verso il basso.
+// In verticale si può uscire dalla fascia fino ai bordi di uno schermo 16:9 o 4:3.
+export const SCREEN_OFFSET_LIMITS = { x: 50, y: 100 };
+
+export function clampScreenOffset(value, axis = 'x') {
+  const parsed = Number.parseFloat(value);
+  if (!Number.isFinite(parsed)) return 0;
+  const limit = SCREEN_OFFSET_LIMITS[axis] || SCREEN_OFFSET_LIMITS.x;
+  const clamped = Math.max(-limit, Math.min(limit, parsed));
+  return Math.round(clamped * 2) / 2;
+}
+
+// Schermi dimostrativi delle prime versioni («Studio Torino», «Pannello Lione»): se sono rimasti
+// come erano, nei progetti già salvati diventano un solo schermo, «Schermo 1».
+const LEGACY_DEMO_SCREENS = { 'studio-torino': 'Studio Torino', 'pannello-lione': 'Pannello Lione' };
+
+function isLegacyDemoScreen(screen) {
+  return Boolean(screen?.id) && LEGACY_DEMO_SCREENS[screen.id] === screen.name;
+}
+
+function migrateLegacyDemoScreens(screens) {
+  if (!screens.some(isLegacyDemoScreen)) return screens;
+  const kept = screens.filter((screen) => screen.id !== 'pannello-lione' || !isLegacyDemoScreen(screen));
+  return kept.map((screen) => (
+    screen.id === 'studio-torino' && isLegacyDemoScreen(screen)
+      ? { ...screen, name: DEFAULT_SCREENS[0].name, publicLanguage: 'active' }
+      : screen
+  ));
+}
 
 function cloneScreen(screen) {
   return { ...screen };
@@ -63,6 +96,8 @@ export function screenToPublicSettings(screen) {
     publicBlackoutFadeMs: clampTransitionMs(screen.publicBlackoutFadeMs, 160),
     publicLanguage: screen.publicLanguage || 'active',
     publicAspectRatio: getScreenAspectOption(screen.publicAspectRatio).value,
+    publicOffsetX: clampScreenOffset(screen.publicOffsetX),
+    publicOffsetY: clampScreenOffset(screen.publicOffsetY, 'y'),
   };
 }
 
@@ -80,7 +115,7 @@ function normalizeScreen(screen, fallback, index) {
 
 export function getScreens(settings = {}) {
   if (Array.isArray(settings.screens) && settings.screens.length > 0) {
-    return settings.screens.map((screen, index) =>
+    return migrateLegacyDemoScreens(settings.screens).map((screen, index) =>
       normalizeScreen(screen, DEFAULT_SCREENS[index], index)
     );
   }

@@ -5,7 +5,7 @@ const DESIGN_HEIGHT = 800;
 
 function resolveAspectRatio(value) {
   if (value === '4:3') return '4 / 3';
-  if (value === 'free') return 'auto';
+  if (value === 'free') return '16 / 9';
   return '16 / 9';
 }
 

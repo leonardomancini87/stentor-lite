@@ -37,6 +37,8 @@ export function buildProjectionPayload({
       maxWidth: settings.publicMaxWidth || '90%',
       verticalAlign: settings.publicVerticalAlign || 'center',
       paddingTop: settings.publicPaddingTop || '0vh',
+      offsetX: settings.publicOffsetX || 0,
+      offsetY: settings.publicOffsetY || 0,
       fadeInMs: settings.publicFadeInMs ?? 120,
       fadeOutMs: settings.publicFadeOutMs ?? 120,
       blackoutFadeMs: settings.publicBlackoutFadeMs ?? 160,

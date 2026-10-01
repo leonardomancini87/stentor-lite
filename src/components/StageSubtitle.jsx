@@ -19,6 +19,11 @@ function parseVh(value, fallback = 0) {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+function parseOffset(value) {
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? Math.max(-100, Math.min(100, parsed)) : 0;
+}
+
 function getCenterY(verticalAlign, paddingTop) {
   const offset = (parseVh(paddingTop, 0) / 100) * DESIGN_HEIGHT;
   if (verticalAlign === 'top') return DESIGN_HEIGHT * 0.26 + offset;
@@ -32,6 +37,8 @@ export default function StageSubtitle({
   maxWidth,
   verticalAlign = 'center',
   paddingTop = '0vh',
+  offsetX = 0,
+  offsetY = 0,
   style,
   spans = [],
   className = '',
@@ -43,16 +50,17 @@ export default function StageSubtitle({
   const fontPx = parsePixels(fontSize, 58);
   const widthPercent = parsePercent(maxWidth || style?.maxWidth, 90);
   const clipWidth = DESIGN_WIDTH * (widthPercent / 100);
-  const clipX = (DESIGN_WIDTH - clipWidth) / 2;
+  const shiftX = (parseOffset(offsetX) / 100) * DESIGN_WIDTH;
+  const clipX = (DESIGN_WIDTH - clipWidth) / 2 + shiftX;
   const lineHeight = fontPx * 1.12;
-  const centerY = getCenterY(verticalAlign, paddingTop);
+  const centerY = getCenterY(verticalAlign, paddingTop) + (parseOffset(offsetY) / 100) * DESIGN_HEIGHT;
   const fill = style?.color || '#F3E7B3';
   const fontFamily = style?.fontFamily || 'Helvetica, Arial, sans-serif';
   const fontStyle = style?.fontStyle || 'normal';
   const fontWeight = style?.fontWeight ?? 800;
   const alignment = ['left', 'right'].includes(style?.textAlign) ? style.textAlign : 'center';
   const anchor = alignment === 'left' ? 'start' : alignment === 'right' ? 'end' : 'middle';
-  const textX = alignment === 'left' ? clipX : alignment === 'right' ? clipX + clipWidth : DESIGN_WIDTH / 2;
+  const textX = alignment === 'left' ? clipX : alignment === 'right' ? clipX + clipWidth : DESIGN_WIDTH / 2 + shiftX;
 
   return (
     <svg
@@ -65,7 +73,7 @@ export default function StageSubtitle({
     >
       <defs>
         <clipPath id={clipId}>
-          <rect x={clipX} y="0" width={clipWidth} height={DESIGN_HEIGHT} />
+          <rect x={clipX} y={-DESIGN_HEIGHT} width={clipWidth} height={DESIGN_HEIGHT * 3} />
         </clipPath>
       </defs>
 

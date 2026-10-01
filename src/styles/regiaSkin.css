@@ -1939,3 +1939,21 @@ html[data-app-theme] .appShell .liteLanguageMenuSeparator { height: 1px; margin:
 html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls .liteLanguageSwitcher .liteLanguageOption.menuOpen:not(.active) {
   box-shadow: inset 0 0 0 1.5px var(--pk-accent) !important;
 }
+
+
+/* Schermi: spostamento del testo (trascinamento nell'anteprima e cursori X/Y). */
+html[data-app-theme] .appShell .liteScreenDragArea { cursor: grab; touch-action: none; user-select: none; }
+html[data-app-theme] .appShell .liteScreenDragArea.isDragging { cursor: grabbing; }
+html[data-app-theme] .appShell .liteScreenDragArea:fullscreen { cursor: default; }
+html[data-app-theme] .appShell .liteScreenOffsetRow { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: -2px; }
+html[data-app-theme] .appShell .liteScreenOffsetRow small { color: var(--pk-muted, #6b7280); font-size: 11px; line-height: 1.35; }
+html[data-app-theme] .appShell .liteScreenOffsetRow button { flex: none; min-height: 26px; padding: 0 12px; font-size: 12px; font-weight: 700; border-radius: 7px; }
+html[data-app-theme] .appShell .liteScreenOffsetRow button:disabled { opacity: .45; cursor: default; }
+
+/* Il testo spostato in verticale può uscire dalla fascia di 2360×800: lo taglia solo il bordo dello schermo. */
+.stageFrame .stageDesignCanvas { overflow: visible !important; }
+
+/* Anteprima degli schermi con le proporzioni vere (16:9 o 4:3), come la finestra di proiezione:
+   così la posizione del testo nell'anteprima è quella che si vede in sala. */
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopScreenStageFrame { height: auto !important; min-height: 0 !important; aspect-ratio: var(--stage-aspect-ratio, 16 / 9) !important; align-self: start; }
+html[data-app-theme] .appShell .liteScreensWorkspace .desktopScreenCanvasShell:fullscreen .desktopScreenStageFrame { width: 100% !important; height: 100% !important; aspect-ratio: auto !important; }
