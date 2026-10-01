@@ -1887,3 +1887,55 @@ html[data-app-theme] .appShell .liteRegiaRightColumn .liteTimeModes button {
   padding-right: 3px !important;
   font-size: 11px !important;
 }
+
+/* Menu del tasto destro sulle lingue della lista battute. */
+html[data-app-theme] .appShell .liteLanguageMenu {
+  position: fixed;
+  z-index: 1000;
+  min-width: 220px;
+  padding: 5px;
+  border-radius: 10px;
+  background: var(--pk-window) !important;
+  border: 1px solid var(--pk-line) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18), 0 2px 6px rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 1px;
+}
+html[data-app-theme] .appShell .liteLanguageMenuTitle {
+  padding: 6px 10px 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pk-faint) !important;
+  white-space: nowrap;
+}
+html[data-app-theme] .appShell .liteLanguageMenu button {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 30px;
+  padding: 6px 10px !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  color: var(--pk-ink) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  text-align: left;
+  cursor: pointer;
+}
+html[data-app-theme] .appShell .liteLanguageMenu button:hover:not(:disabled),
+html[data-app-theme] .appShell .liteLanguageMenu button:focus-visible {
+  background: var(--pk-accent) !important;
+  color: #fff !important;
+  outline: none;
+}
+html[data-app-theme] .appShell .liteLanguageMenu button.danger { color: #b3261e !important; }
+html[data-app-theme] .appShell .liteLanguageMenu button.danger:hover:not(:disabled),
+html[data-app-theme] .appShell .liteLanguageMenu button.danger:focus-visible { background: #b3261e !important; color: #fff !important; }
+html[data-app-theme] .appShell .liteLanguageMenu button:disabled { opacity: .45; cursor: default; }
+html[data-app-theme] .appShell .liteLanguageMenuSeparator { height: 1px; margin: 4px 6px; background: var(--pk-line); }
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeaderControls .liteLanguageSwitcher .liteLanguageOption.menuOpen:not(.active) {
+  box-shadow: inset 0 0 0 1.5px var(--pk-accent) !important;
+}

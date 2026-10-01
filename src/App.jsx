@@ -4,6 +4,7 @@ import { convertStentorProProject, isStentorProProject } from './utils/stentorPr
 import ShowMap from './components/ShowMap.jsx';
 import LanguagesDialog from './components/LanguagesDialog.jsx';
 import LanguageSwitcher from './components/LanguageSwitcher.jsx';
+import { getLanguageName, removeProjectLanguage, setPrimaryProjectLanguage } from './utils/projectLanguages.js';
 import ToolsCard from './components/ToolsCard.jsx';
 import TimeCard from './components/TimeCard.jsx';
 import {
@@ -606,6 +607,21 @@ export default function App() {
       setArchivedLanguagesProject(null);
     }
     setLanguagesDialogProjectId(targetId);
+  }
+
+  // Tasto destro su una lingua nella lista battute: elimina con conferma (si può annullare).
+  async function deleteProjectLanguage(code) {
+    if ((project.languages || []).length <= 1) return;
+    const confirmed = await dialogs.confirm({
+      title: ui('langs.delete.title'),
+      message: `${ui('langs.delete.message', { language: getLanguageName(project, code), project: project.title || ui('langs.thisProject') })} ${ui('common.undoHint')}`,
+      confirmLabel: ui('common.delete'),
+      cancelLabel: ui('common.cancel'),
+      variant: 'danger',
+      trapFocus: true,
+    });
+    if (!confirmed) return;
+    setProject((current) => removeProjectLanguage(current, code).project);
   }
 
   function closeLanguagesDialog() {
@@ -1394,6 +1410,8 @@ export default function App() {
                         language={language}
                         onChange={(code) => updateProject({ activeLanguage: code })}
                         onManage={() => openLanguagesDialog(project.id)}
+                        onMakePrimary={(code) => setProject((current) => setPrimaryProjectLanguage(current, code))}
+                        onDelete={deleteProjectLanguage}
                       />
                       <CueStructuralToolbar
                         onAddAfter={() => structuralCue && addCueAfter(structuralCue.id)}
