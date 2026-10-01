@@ -1,0 +1,52 @@
+name: Segnala un errore · Report a bug
+description: Qualcosa non funziona come dovrebbe. · Something doesn't work as it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Grazie! Puoi scrivere in italiano o in inglese. · Thank you! You can write in Italian or English.
+  - type: textarea
+    id: cosa
+    attributes:
+      label: Cosa è successo? · What happened?
+      description: Descrivi il problema e cosa ti aspettavi. · Describe the problem and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: passi
+    attributes:
+      label: Come riprodurlo · Steps to reproduce
+      placeholder: |
+        1. Apri la pagina Schermi…
+        2. …
+    validations:
+      required: true
+  - type: input
+    id: versione
+    attributes:
+      label: Versione di Sténtor Lite · Version
+      description: La trovi in Impostazioni → Informazioni. · You'll find it in Settings → About.
+      placeholder: "0.8.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: dove
+    attributes:
+      label: Dove lo usi? · Where are you using it?
+      options:
+        - App per macOS · macOS app
+        - App per Windows · Windows app
+        - Browser
+    validations:
+      required: true
+  - type: input
+    id: sistema
+    attributes:
+      label: Sistema e browser · System and browser
+      placeholder: "macOS 15, Safari 18 · Windows 11"
+  - type: textarea
+    id: allegati
+    attributes:
+      label: Screenshot o file · Screenshots or files
+      description: Se puoi, allega uno screenshot o un progetto di prova (senza testi riservati). · If you can, attach a screenshot or a test project (no confidential text).

@@ -1,6 +1,6 @@
 [package]
 name = "stentor"
-version = "0.7.0"
+version = "0.8.0"
 description = "Sténtor Lite — sopratitoli per il teatro dal vivo"
 authors = ["Leonardo Mancini"]
 license = "EUPL-1.2"

@@ -1,0 +1,29 @@
+name: Correggi una traduzione · Fix a translation
+description: Un testo dell'interfaccia è sbagliato o suona strano nella tua lingua. · An interface text is wrong or sounds odd in your language.
+body:
+  - type: input
+    id: lingua
+    attributes:
+      label: Lingua · Language
+      placeholder: "Deutsch, Polski, Ελληνικά…"
+    validations:
+      required: true
+  - type: textarea
+    id: dove
+    attributes:
+      label: Dove compare il testo? · Where does the text appear?
+      description: Pagina, pulsante o finestra; uno screenshot aiuta molto. · Page, button or dialog; a screenshot helps a lot.
+    validations:
+      required: true
+  - type: textarea
+    id: ora
+    attributes:
+      label: Testo attuale · Current text
+    validations:
+      required: true
+  - type: textarea
+    id: proposta
+    attributes:
+      label: Testo proposto · Suggested text
+    validations:
+      required: true

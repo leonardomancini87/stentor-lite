@@ -2,7 +2,7 @@
 #
 # Come si usa:
 #   - da GitHub: Actions → "Pubblica Sténtor Lite" → Run workflow (sceglie il ramo), oppure
-#   - dal Terminale: git tag v0.7.0 && git push origin v0.7.0
+#   - dal Terminale: git tag v0.8.0 && git push pubblico v0.8.0
 # Alla fine, in Releases trovi una bozza con il .dmg (Mac) e gli installatori .exe/.msi (Windows):
 # controllala e premi "Publish release".
 #
@@ -103,6 +103,8 @@ jobs:
 
             **Mac**: scarica il file `.dmg` (`aarch64` per i Mac con chip Apple M1/M2/M3/M4, `x64` per i Mac Intel), trascina Sténtor Lite in Applicazioni. La prima volta macOS la blocca perché non è notarizzata: apri Impostazioni di Sistema → Privacy e sicurezza e premi «Apri comunque» (sulle versioni meno recenti: clic destro sull'app → Apri → Apri).
             **Windows**: scarica l'installatore `.exe`. Se compare "Windows ha protetto il PC": Ulteriori informazioni → Esegui comunque.
+
+            Novità di questa versione: [CHANGELOG.md](https://github.com/leonardomancini87/stentor-lite/blob/main/CHANGELOG.md).
           releaseDraft: true
           prerelease: true
           args: ${{ matrix.args }}

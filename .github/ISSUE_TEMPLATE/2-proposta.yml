@@ -1,0 +1,19 @@
+name: Proponi un'idea · Suggest an idea
+description: Una funzione nuova o un miglioramento. · A new feature or an improvement.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: bisogno
+    attributes:
+      label: Di cosa avresti bisogno? · What do you need?
+      description: Racconta la situazione in sala o in prova in cui ti servirebbe. · Describe the situation in the theatre or in rehearsal where you'd need it.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Come te lo immagini? · How do you picture it?
+  - type: textarea
+    id: alternative
+    attributes:
+      label: Come fai oggi? · How do you manage today?
