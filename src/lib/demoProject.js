@@ -245,7 +245,7 @@ export const demoProject = {
       "note": "Ingresso del Coro, luce piena",
       "startTime": 85.8,
       "endTime": null,
-      "renderStyle": "italic"
+      "renderStyle": "normal"
     },
     {
       "id": 16,
@@ -259,7 +259,7 @@ export const demoProject = {
       "note": "",
       "startTime": 92.7,
       "endTime": null,
-      "renderStyle": "italic"
+      "renderStyle": "normal"
     },
     {
       "id": 17,
