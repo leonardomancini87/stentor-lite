@@ -3,6 +3,15 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
+## In preparazione
+
+**Sopratitoli**
+- Il carattere predefinito dei sopratitoli è ora Atkinson Hyperlegible, incluso nell'app: il testo è identico su macOS, Windows e Linux. I progetti esistenti mantengono il carattere che avevano.
+- Atkinson Hyperlegible e OpenDyslexic funzionano anche senza essere installati sul computer.
+
+**Demo**
+- L'Antigone usa un solo stile: tolto il corsivo dalle battute del Coro.
+
 ## 0.8.1 — 5 ottobre 2026 · beta
 
 **Installazione su Windows**

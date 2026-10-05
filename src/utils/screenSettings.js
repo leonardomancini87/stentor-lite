@@ -1,12 +1,12 @@
 export const FONT_FAMILY_OPTIONS = [
-  { label: 'Sistema sans', value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' },
+  { label: 'Atkinson Hyperlegible', value: '"Atkinson Hyperlegible", Arial, sans-serif' },
+  { label: 'Sistema sans', system: true, value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' },
   { label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
   { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
   { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
   { label: 'Georgia', value: 'Georgia, "Times New Roman", serif' },
   { label: 'Times New Roman', value: '"Times New Roman", Times, serif' },
   { label: 'Courier New', value: '"Courier New", Courier, monospace' },
-  { label: 'Atkinson Hyperlegible', value: '"Atkinson Hyperlegible", Arial, sans-serif' },
   { label: 'OpenDyslexic', value: 'OpenDyslexic, Arial, sans-serif' },
 ];
 
@@ -30,7 +30,7 @@ export const DEFAULT_SCREENS = [
     publicVerticalAlign: 'top',
     publicPaddingTop: '6vh',
     publicMaxWidth: '90%',
-    publicFontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    publicFontFamily: '"Atkinson Hyperlegible", Arial, sans-serif',
     publicFadeInMs: 120,
     publicFadeOutMs: 120,
     publicBlackoutFadeMs: 160,

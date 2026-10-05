@@ -349,8 +349,8 @@ export default function ScreensPage({
             <label>
               {t('screens.field.font')}
               <select value={activeSettings.publicFontFamily || FONT_FAMILY_OPTIONS[0].value} onChange={(event) => updateActiveScreen({ publicFontFamily: event.target.value })}>
-                {FONT_FAMILY_OPTIONS.map((font, index) => (
-                  <option key={font.value} value={font.value}>{index === 0 ? t('screens.font.system') : font.label}</option>
+                {FONT_FAMILY_OPTIONS.map((font) => (
+                  <option key={font.value} value={font.value}>{font.system ? t('screens.font.system') : font.label}</option>
                 ))}
               </select>
             </label>

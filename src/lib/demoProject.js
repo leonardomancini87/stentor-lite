@@ -21,7 +21,7 @@ export const demoProject = {
         id: 'schermo-1',
         name: 'Schermo 1',
         publicFontSize: '72px',
-        publicFontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        publicFontFamily: '"Atkinson Hyperlegible", Arial, sans-serif',
         publicTextColor: '#F3E7B3',
         publicBackground: '#000000',
         publicMaxWidth: '90%',
@@ -31,7 +31,7 @@ export const demoProject = {
       }
     ],
     publicFontSize: '72px',
-    publicFontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    publicFontFamily: '"Atkinson Hyperlegible", Arial, sans-serif',
     publicTextColor: '#F3E7B3',
     publicBackground: '#000000',
     publicMaxWidth: '90%',
