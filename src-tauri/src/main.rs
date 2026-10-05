@@ -112,15 +112,45 @@ fn emit_menu_action(app: &tauri::AppHandle, id: &str) {
     let _ = app.emit("stentor-menu-action", json!({ "id": id }));
 }
 
+// Porta la finestra a occupare l'area libera dello schermo (senza barra dei menu, Dock o
+// barra delle applicazioni), tenendo conto dell'altezza della barra del titolo.
+fn fill_work_area(window: &tauri::WebviewWindow) {
+    let monitor = window
+        .current_monitor()
+        .ok()
+        .flatten()
+        .or_else(|| window.primary_monitor().ok().flatten());
+    let Some(monitor) = monitor else { return };
+    let area = monitor.work_area();
+    let area_position = area.position;
+    let area_size = area.size;
+
+    let (extra_width, extra_height) = match (window.outer_size(), window.inner_size()) {
+        (Ok(outer), Ok(inner)) => (
+            outer.width.saturating_sub(inner.width),
+            outer.height.saturating_sub(inner.height),
+        ),
+        _ => (0, 0),
+    };
+    let size = tauri::PhysicalSize::new(
+        area_size.width.saturating_sub(extra_width),
+        area_size.height.saturating_sub(extra_height),
+    );
+
+    let _ = window.set_position(area_position);
+    let _ = window.set_size(size);
+}
+
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
             if let Some(window) = app.get_webview_window("regia") {
                 let _ = window.set_title("Sténtor Lite");
-                // La finestra nasce nascosta ("visible": false in tauri.conf.json): la si porta
-                // alla dimensione finale e solo dopo la si mostra, così all'avvio non si vede
-                // la finestra piccola che si ingrandisce.
-                let _ = window.maximize();
+                // La finestra nasce nascosta ("visible": false in tauri.conf.json): le si dà
+                // subito la dimensione finale, cioè tutta l'area libera dello schermo, e solo dopo
+                // la si mostra. Niente "ingrandisci" (zoom) di sistema: su macOS è un interruttore
+                // animato, e all'avvio si vedeva la finestra cambiare dimensione.
+                fill_work_area(&window);
                 let _ = window.show();
                 let _ = window.set_focus();
             }
