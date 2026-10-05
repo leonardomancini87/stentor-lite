@@ -9,6 +9,9 @@ Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténto
 - Il carattere predefinito dei sopratitoli è ora Atkinson Hyperlegible, incluso nell'app: il testo è identico su macOS, Windows e Linux. I progetti esistenti mantengono il carattere che avevano.
 - Atkinson Hyperlegible e OpenDyslexic funzionano anche senza essere installati sul computer.
 
+**Windows**
+- Icona più nitida sulla barra delle applicazioni: versione a tinte nette per le dimensioni piccole, con una misura esatta per ogni scala dello schermo.
+
 **Demo**
 - L'Antigone usa un solo stile: tolto il corsivo dalle battute del Coro.
 
