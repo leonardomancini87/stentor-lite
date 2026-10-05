@@ -51,7 +51,12 @@
       "nsis": {
         "installerIcon": "icons/icon.ico",
         "sidebarImage": "windows/installer-sidebar.bmp",
-        "languages": ["Italian", "English"],
+        "languages": [
+          "English", "Italian", "French", "German", "Spanish", "SpanishInternational",
+          "Portuguese", "PortugueseBR", "Dutch", "Swedish", "Norwegian", "Russian",
+          "Ukrainian", "Bulgarian", "Turkish", "Arabic", "Persian", "Japanese",
+          "Korean", "SimpChinese", "TradChinese"
+        ],
         "displayLanguageSelector": false
       }
     }
