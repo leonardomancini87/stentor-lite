@@ -51,7 +51,7 @@ Le versioni per Mac (Apple Silicon e Intel) e Windows sono nella pagina [**Relea
 
 ### I tuoi progetti
 
-Sténtor Lite salva da solo i progetti **dentro l'app** (nel browser, se lo usi lì). Se disinstalli l'app, cancelli i dati del browser o cambi computer, quei progetti non ci sono più.
+Sténtor Lite salva da solo i progetti **in uno spazio interno dell'app** sul tuo computer (nel browser, se lo usi lì), non come file in Documenti. Quando installi una versione nuova i progetti restano al loro posto. Non li ritrovi però se cambi computer, se cancelli i dati del browser o se, disinstallando su Windows, scegli di eliminare anche i dati dell'applicazione.
 Per avere una copia sicura usa **Salva** o **Salva con nome…** nella pagina Progetti: ottieni un file `.stentore.json` che puoi conservare, mandare ai colleghi e riaprire con **Importa**. Prima di ogni spettacolo salva una copia aggiornata.
 
 <p align="center">
@@ -144,7 +144,7 @@ Mac (Apple Silicon and Intel) and Windows builds are on this repository's [**Rel
 
 ### Your projects
 
-Sténtor Lite saves your projects automatically **inside the app** (in the browser, if you use it there). If you uninstall the app, clear the browser data or change computer, those projects are gone.
+Sténtor Lite saves your projects automatically **in the app's own storage** on your computer (in the browser, if you use it there), not as files in Documents. Installing a new version keeps your projects where they are. They are gone, however, if you change computer, clear the browser data or, when uninstalling on Windows, choose to delete the application data as well.
 To keep a safe copy use **Save** or **Save as…** on the Projects page: you get a `.stentore.json` file that you can keep, send to colleagues and reopen with **Import**. Save an up-to-date copy before every performance.
 
 ### Run from source
