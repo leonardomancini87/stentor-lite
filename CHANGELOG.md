@@ -9,6 +9,9 @@ Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténto
 - L'installatore ha la grafica e l'icona di Sténtor Lite ed è in italiano o in inglese, secondo la lingua di Windows.
 - L'icona sulla barra delle applicazioni è più grande: il medaglione occupa tutto lo spazio disponibile.
 
+**Linux**
+- Prima versione per Linux, in prova: pacchetti `.deb`, `.rpm` e `.AppImage`, per processori Intel/AMD e ARM.
+
 ## 0.8.0 — 1 ottobre 2026 · beta
 
 **Schermi**
