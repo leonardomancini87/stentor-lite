@@ -3,6 +3,12 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
+## 0.8.1 — 5 ottobre 2026 · beta
+
+**Installazione su Windows**
+- L'installatore ha la grafica e l'icona di Sténtor Lite ed è in italiano o in inglese, secondo la lingua di Windows.
+- L'icona sulla barra delle applicazioni è più grande: il medaglione occupa tutto lo spazio disponibile.
+
 ## 0.8.0 — 1 ottobre 2026 · beta
 
 **Schermi**
