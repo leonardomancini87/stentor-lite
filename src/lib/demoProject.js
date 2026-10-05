@@ -4,6 +4,8 @@
 // traduzioni pubblicate. I tempi registrati servono a provare la card Tempi.
 export const demoProject = {
   id: 'demo-antigone',
+  // Da aumentare quando la demo cambia: all'avvio la copia salvata viene sostituita (vedi refreshBuiltInDemo).
+  demoVersion: 2,
   title: 'Antigone (demo)',
   author: 'da Sofocle',
   languages: ['it', 'en', 'fr'],
@@ -50,6 +52,7 @@ export const demoProject = {
       "note": "",
       "startTime": null,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -64,6 +67,7 @@ export const demoProject = {
       "note": "Alba. Antigone ha portato Ismene fuori dal palazzo",
       "startTime": 3.0,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -78,6 +82,7 @@ export const demoProject = {
       "note": "",
       "startTime": 10.6,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -92,6 +97,7 @@ export const demoProject = {
       "note": "",
       "startTime": 18.1,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -106,6 +112,7 @@ export const demoProject = {
       "note": "",
       "startTime": 25.5,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -120,6 +127,7 @@ export const demoProject = {
       "note": "",
       "startTime": 32.3,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -134,6 +142,7 @@ export const demoProject = {
       "note": "",
       "startTime": 39.4,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -148,6 +157,7 @@ export const demoProject = {
       "note": "",
       "startTime": 46.2,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -162,6 +172,7 @@ export const demoProject = {
       "note": "",
       "startTime": 51.3,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -176,6 +187,7 @@ export const demoProject = {
       "note": "",
       "startTime": 56.5,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -190,6 +202,7 @@ export const demoProject = {
       "note": "Pausa. Ismene si allontana di un passo",
       "startTime": 63.6,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -204,6 +217,7 @@ export const demoProject = {
       "note": "",
       "startTime": 70.6,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -218,6 +232,7 @@ export const demoProject = {
       "note": "Antigone esce. Ismene rientra nel palazzo",
       "startTime": 76.3,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -231,6 +246,7 @@ export const demoProject = {
       "note": "",
       "startTime": null,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -245,6 +261,7 @@ export const demoProject = {
       "note": "Ingresso del Coro, luce piena",
       "startTime": 85.8,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -259,6 +276,7 @@ export const demoProject = {
       "note": "",
       "startTime": 92.7,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -272,6 +290,7 @@ export const demoProject = {
       "note": "",
       "startTime": null,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -286,6 +305,7 @@ export const demoProject = {
       "note": "Entra Creonte con le guardie",
       "startTime": 102.1,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -300,6 +320,7 @@ export const demoProject = {
       "note": "",
       "startTime": 109.2,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -314,6 +335,7 @@ export const demoProject = {
       "note": "",
       "startTime": 115.5,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -328,6 +350,7 @@ export const demoProject = {
       "note": "Entra la Guardia, esitante",
       "startTime": 122.7,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -342,6 +365,7 @@ export const demoProject = {
       "note": "",
       "startTime": 129.0,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -356,6 +380,7 @@ export const demoProject = {
       "note": "",
       "startTime": 136.6,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -370,6 +395,7 @@ export const demoProject = {
       "note": "",
       "startTime": 141.6,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     },
     {
@@ -384,6 +410,7 @@ export const demoProject = {
       "note": "",
       "startTime": 147.7,
       "endTime": null,
+      "textStyle": { "bold": false },
       "renderStyle": "normal"
     }
   ]

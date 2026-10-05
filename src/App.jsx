@@ -32,6 +32,7 @@ import {
   loadProject,
   loadProjectArchive,
   loadProjectById,
+  refreshBuiltInDemo,
   saveProject,
   updateArchivedProject,
 } from './utils/projectPersistence.js';
@@ -148,7 +149,10 @@ async function invokeTauriCommand(command, args = {}) {
 
 export default function App() {
   const initialProject = useMemo(
-    () => loadProject() || demoProject,
+    () => {
+      refreshBuiltInDemo(demoProject);
+      return loadProject() || demoProject;
+    },
     []
   );
   const [projects, setProjects] = useState(() => loadProjectArchive());

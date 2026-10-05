@@ -38,6 +38,41 @@ function writeArchiveRaw(projects) {
   localStorage.setItem(PROJECT_ARCHIVE_KEY, JSON.stringify(projects));
 }
 
+const DEMO_VERSION_KEY = 'stentor.demoVersion.v1';
+
+// La demo inclusa nell'app viene salvata come un progetto qualsiasi. Quando una versione nuova
+// porta una demo aggiornata (demoVersion più alto), la copia salvata viene sostituita:
+// altrimenti chi aveva già aperto l'app continuerebbe a vedere la demo vecchia.
+// Le modifiche fatte alla demo si perdono solo in quel momento; gli altri progetti non si toccano.
+export function refreshBuiltInDemo(demo) {
+  try {
+    const current = Number(demo?.demoVersion) || 0;
+    const saved = Number(localStorage.getItem(DEMO_VERSION_KEY)) || 0;
+    if (!demo?.id || saved >= current) return false;
+
+    const fresh = { ...demo, updatedAt: now() };
+    let replaced = false;
+
+    const archive = readArchiveRaw();
+    if (archive.some((project) => project?.id === demo.id)) {
+      writeArchiveRaw(archive.map((project) => (project?.id === demo.id ? fresh : project)));
+      replaced = true;
+    }
+
+    const rawCurrent = localStorage.getItem(PROJECT_KEY);
+    if (rawCurrent && JSON.parse(rawCurrent)?.id === demo.id) {
+      localStorage.setItem(PROJECT_KEY, JSON.stringify(fresh));
+      replaced = true;
+    }
+
+    localStorage.setItem(DEMO_VERSION_KEY, String(current));
+    return replaced;
+  } catch (error) {
+    console.warn('Demo refresh failed:', error);
+    return false;
+  }
+}
+
 export function createProjectSignature(project) {
   return JSON.stringify(project);
 }

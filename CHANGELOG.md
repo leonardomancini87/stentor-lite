@@ -13,7 +13,12 @@ Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténto
 - Icona più nitida sulla barra delle applicazioni: versione a tinte nette per le dimensioni piccole, con una misura esatta per ogni scala dello schermo.
 
 **Demo**
-- L'Antigone usa un solo stile: tolto il corsivo dalle battute del Coro.
+- L'Antigone usa un solo stile: peso normale per tutte le battute, senza grassetti né corsivi.
+- Chi aveva già aperto l'app trova la demo aggiornata: la copia salvata viene sostituita quando la demo inclusa cambia.
+
+**Avvio**
+- La finestra compare solo a interfaccia pronta, senza il lampo iniziale.
+- Su Windows la finestra si apre ingrandita, senza margini ai bordi.
 
 ## 0.8.1 — 5 ottobre 2026 · beta
 

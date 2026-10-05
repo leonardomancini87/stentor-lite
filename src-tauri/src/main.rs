@@ -114,6 +114,7 @@ fn emit_menu_action(app: &tauri::AppHandle, id: &str) {
 
 // Porta la finestra a occupare l'area libera dello schermo (senza barra dei menu, Dock o
 // barra delle applicazioni), tenendo conto dell'altezza della barra del titolo.
+#[cfg_attr(target_os = "windows", allow(dead_code))]
 fn fill_work_area(window: &tauri::WebviewWindow) {
     let monitor = window
         .current_monitor()
@@ -141,19 +142,46 @@ fn fill_work_area(window: &tauri::WebviewWindow) {
     let _ = window.set_size(size);
 }
 
+// La finestra principale nasce nascosta e si mostra quando l'interfaccia ha finito di disegnarsi
+// (comando chiamato da src/main.jsx): così all'avvio non si vede il lampo della pagina vuota.
+fn show_main_window(app: &tauri::AppHandle) {
+    if let Some(window) = app.get_webview_window("regia") {
+        if !window.is_visible().unwrap_or(false) {
+            let _ = window.show();
+            let _ = window.set_focus();
+        }
+    }
+}
+
+#[tauri::command]
+fn stentor_window_ready(app: tauri::AppHandle) {
+    show_main_window(&app);
+}
+
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
             if let Some(window) = app.get_webview_window("regia") {
                 let _ = window.set_title("Sténtor Lite");
                 // La finestra nasce nascosta ("visible": false in tauri.conf.json): le si dà
-                // subito la dimensione finale, cioè tutta l'area libera dello schermo, e solo dopo
-                // la si mostra. Niente "ingrandisci" (zoom) di sistema: su macOS è un interruttore
-                // animato, e all'avvio si vedeva la finestra cambiare dimensione.
+                // subito la dimensione finale e la si mostra solo quando l'interfaccia è pronta
+                // (vedi show_main_window). Su macOS e Linux niente "ingrandisci" di sistema, che
+                // su macOS è un interruttore animato: si occupa tutta l'area libera dello schermo.
+                // Su Windows invece si ingrandisce davvero, altrimenti restano margini ai bordi.
+                #[cfg(target_os = "windows")]
+                {
+                    let _ = window.maximize();
+                }
+                #[cfg(not(target_os = "windows"))]
                 fill_work_area(&window);
-                let _ = window.show();
-                let _ = window.set_focus();
             }
+            // Riserva: se l'interfaccia non avvisa (per esempio per un errore), la finestra
+            // compare comunque dopo poco.
+            let handle = app.handle().clone();
+            std::thread::spawn(move || {
+                std::thread::sleep(std::time::Duration::from_millis(2500));
+                show_main_window(&handle);
+            });
             if let Ok(menu) = build_macos_menu(app) {
                 let _ = app.set_menu(menu);
             }
@@ -182,7 +210,7 @@ fn main() {
                 _ => emit_menu_action(app, &id),
             }
         })
-        .invoke_handler(tauri::generate_handler![stentor_save_project_file, stentor_open_project_file])
+        .invoke_handler(tauri::generate_handler![stentor_save_project_file, stentor_open_project_file, stentor_window_ready])
         .run(tauri::generate_context!())
         .expect("error while running Sténtor Lite");
 }
