@@ -3,7 +3,7 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
-## In preparazione
+## 0.8.2 — in preparazione · beta
 
 **Sopratitoli**
 - Il carattere predefinito dei sopratitoli è ora Atkinson Hyperlegible, incluso nell'app: il testo è identico su macOS, Windows e Linux. I progetti esistenti mantengono il carattere che avevano.
