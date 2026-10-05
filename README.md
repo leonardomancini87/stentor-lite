@@ -46,10 +46,8 @@ Sténtor Lite è un programma gratuito e open source per gestire i sopratitoli d
 
 Le versioni per Mac (Apple Silicon e Intel) e Windows sono nella pagina [**Releases**](../../releases) di questo repository.
 
-Le app non sono ancora firmate da Apple e Microsoft, quindi al primo avvio compare un avviso di sicurezza:
-
-- **Mac**: apri il file `.dmg` e trascina Sténtor Lite in Applicazioni. Al primo avvio macOS lo blocca: vai in **Impostazioni di Sistema → Privacy e sicurezza**, scorri in fondo e scegli **Apri comunque**, poi conferma. Serve solo la prima volta.
-- **Windows**: se compare «Windows ha protetto il PC», scegli **Ulteriori informazioni → Esegui comunque**.
+- **Mac**: scarica il file `.dmg` (`aarch64` per i Mac con chip Apple, `x64` per i Mac Intel), aprilo e trascina Sténtor Lite in Applicazioni. L'app è firmata e verificata da Apple (notarizzata): al primo avvio macOS chiede solo di confermare che vuoi aprire un'app scaricata da internet.
+- **Windows**: l'app non è ancora firmata da Microsoft. Se compare «Windows ha protetto il PC», scegli **Ulteriori informazioni → Esegui comunque**.
 
 ### I tuoi progetti
 
@@ -141,10 +139,8 @@ Sténtor Lite is a free, open-source application for managing surtitles in live 
 
 Mac (Apple Silicon and Intel) and Windows builds are on this repository's [**Releases**](../../releases) page.
 
-The apps are not yet signed by Apple and Microsoft, so a security warning appears on first launch:
-
-- **Mac**: open the `.dmg` file and drag Sténtor Lite to Applications. On first launch macOS blocks it: go to **System Settings → Privacy & Security**, scroll to the bottom and choose **Open Anyway**, then confirm. You only need to do this once.
-- **Windows**: if "Windows protected your PC" appears, choose **More info → Run anyway**.
+- **Mac**: download the `.dmg` file (`aarch64` for Apple-chip Macs, `x64` for Intel Macs), open it and drag Sténtor Lite to Applications. The app is signed and checked by Apple (notarised): on first launch macOS only asks you to confirm that you want to open an app downloaded from the internet.
+- **Windows**: the app is not yet signed by Microsoft. If "Windows protected your PC" appears, choose **More info → Run anyway**.
 
 ### Your projects
 

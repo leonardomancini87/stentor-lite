@@ -6,12 +6,13 @@
 # Alla fine, in Releases trovi una bozza con il .dmg (Mac) e gli installatori .exe/.msi (Windows):
 # controllala e premi "Publish release".
 #
-# Beta NON firmata: al primo avvio macOS e Windows mostrano un avviso di sicurezza.
-# Senza certificato l'app Mac è firmata "ad hoc" (vedi signingIdentity in tauri.conf.json).
-# Per firmare e notarizzare su Mac aggiungi in Settings → Secrets and variables → Actions:
+# Mac: l'app viene firmata e notarizzata con i segreti del repository
+# (Settings → Secrets and variables → Actions):
 #   APPLE_CERTIFICATE, APPLE_CERTIFICATE_PASSWORD, APPLE_SIGNING_IDENTITY,
 #   APPLE_ID, APPLE_PASSWORD (password specifica per app), APPLE_TEAM_ID
-# e il workflow li userà da solo (le variabili qui sotto restano vuote finché non esistono).
+# Se mancano (per esempio in una copia del repository), l'app Mac è firmata "ad hoc"
+# (vedi signingIdentity in tauri.conf.json) e macOS mostra un avviso di sicurezza.
+# Windows: l'installatore non è firmato, quindi SmartScreen mostra un avviso.
 
 name: Pubblica Sténtor Lite
 
@@ -101,7 +102,7 @@ jobs:
           releaseBody: |
             Beta di Sténtor Lite __VERSION__.
 
-            **Mac**: scarica il file `.dmg` (`aarch64` per i Mac con chip Apple M1/M2/M3/M4, `x64` per i Mac Intel), trascina Sténtor Lite in Applicazioni. La prima volta macOS la blocca perché non è notarizzata: apri Impostazioni di Sistema → Privacy e sicurezza e premi «Apri comunque» (sulle versioni meno recenti: clic destro sull'app → Apri → Apri).
+            **Mac**: scarica il file `.dmg` (`aarch64` per i Mac con chip Apple M1/M2/M3/M4, `x64` per i Mac Intel), trascina Sténtor Lite in Applicazioni. L'app è firmata e notarizzata da Apple: al primo avvio macOS chiede solo di confermare l'apertura.
             **Windows**: scarica l'installatore `.exe`. Se compare "Windows ha protetto il PC": Ulteriori informazioni → Esegui comunque.
 
             Novità di questa versione: [CHANGELOG.md](https://github.com/leonardomancini87/stentor-lite/blob/main/CHANGELOG.md).
