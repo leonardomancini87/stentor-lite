@@ -54,7 +54,7 @@
         "languages": [
           "English", "Italian", "French", "German", "Spanish", "SpanishInternational",
           "Portuguese", "PortugueseBR", "Dutch", "Swedish", "Norwegian", "Russian",
-          "Ukrainian", "Bulgarian", "Turkish", "Arabic", "Persian", "Japanese",
+          "Ukrainian", "Bulgarian", "Turkish", "Arabic", "Japanese",
           "Korean", "SimpChinese", "TradChinese"
         ],
         "displayLanguageSelector": false

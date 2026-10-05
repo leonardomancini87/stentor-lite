@@ -6,7 +6,7 @@ Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténto
 ## 0.8.1 — 5 ottobre 2026 · beta
 
 **Installazione su Windows**
-- L'installatore ha la grafica e l'icona di Sténtor Lite e si presenta nella lingua di Windows (21 lingue; in inglese per le altre).
+- L'installatore ha la grafica e l'icona di Sténtor Lite e si presenta nella lingua di Windows (20 lingue; in inglese per le altre).
 - L'icona sulla barra delle applicazioni è più grande: il medaglione occupa tutto lo spazio disponibile.
 
 **Linux**
