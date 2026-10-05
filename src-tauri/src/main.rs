@@ -117,7 +117,12 @@ fn main() {
         .setup(|app| {
             if let Some(window) = app.get_webview_window("regia") {
                 let _ = window.set_title("Sténtor Lite");
+                // La finestra nasce nascosta ("visible": false in tauri.conf.json): la si porta
+                // alla dimensione finale e solo dopo la si mostra, così all'avvio non si vede
+                // la finestra piccola che si ingrandisce.
                 let _ = window.maximize();
+                let _ = window.show();
+                let _ = window.set_focus();
             }
             if let Ok(menu) = build_macos_menu(app) {
                 let _ = app.set_menu(menu);

@@ -20,6 +20,7 @@ Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténto
 
 **Installazione**
 - L'app per Mac è firmata e notarizzata da Apple: non compare più il blocco di sicurezza al primo avvio.
+- All'avvio la finestra compare subito alla dimensione finale, senza ridimensionarsi sotto gli occhi.
 
 **Demo**
 - La demo è ora «Antigone (demo)»: 22 battute da tre parti dell'Antigone di Sofocle, con cinque personaggi, coro, note di regia e tempi registrati, in italiano, inglese e francese. La traduzione è stata fatta per Sténtor Lite dal testo greco.
