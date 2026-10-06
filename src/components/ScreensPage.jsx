@@ -44,6 +44,7 @@ export default function ScreensPage({
   setBlackout,
   testPattern = false,
   setTestPattern,
+  cardText = '',
   updateProject,
   setProject,
   dialogs,
@@ -141,13 +142,14 @@ export default function ScreensPage({
 
   function previewText() {
     if (testPattern) return getTestPatternText(activeScreen);
+    if (cardText) return cardText;
     if (blackout) return '';
     const text = cue && !isMarkerCue(cue) ? getCueText(cue, activeScreenLanguage) : '';
     return text || t('screens.previewText.empty');
   }
 
   function previewSecondText() {
-    if (testPattern || blackout || !cue || isMarkerCue(cue) || !getCueText(cue, activeScreenLanguage).trim()) return '';
+    if (testPattern || cardText || blackout || !cue || isMarkerCue(cue) || !getCueText(cue, activeScreenLanguage).trim()) return '';
     return getSecondProjectionText(cue, activeSecondLanguage, project.primaryLanguage);
   }
 
@@ -322,14 +324,14 @@ export default function ScreensPage({
           >
             <StageFrame id={`desktop-screen-canvas-${activeScreen.id}`} settings={activeSettings} className="desktopScreenStageFrame">
               <StageTransition
-                transitionKey={`${testPattern ? 'test' : blackout ? 'blackout' : cue?.id || 'empty'}-${activeScreen.id}-${activeScreenLanguage}-${activeSecondLanguage}-${transitionTry}`}
+                transitionKey={`${testPattern ? 'test' : cardText ? `card-${cardText}` : blackout ? 'blackout' : cue?.id || 'empty'}-${activeScreen.id}-${activeScreenLanguage}-${activeSecondLanguage}-${transitionTry}`}
                 effect={activeSettings.publicTransition}
                 ms={getScreenTransitionMs(activeSettings)}
               >
-              {blackout && !testPattern ? null : (
+              {blackout && !testPattern && !cardText ? null : (
                 <StageSubtitle
                   text={previewText()}
-                  spans={testPattern ? [] : getCueTextSpans(cue, activeScreenLanguage)}
+                  spans={testPattern || cardText ? [] : getCueTextSpans(cue, activeScreenLanguage)}
                   secondText={previewSecondText()}
                   secondSpans={activeSecondLanguage ? getCueTextSpans(cue, activeSecondLanguage) : []}
                   secondScale={activeSettings.publicSecondScale}
@@ -343,7 +345,7 @@ export default function ScreensPage({
                   style={{
                     color: activeSettings.publicTextColor,
                     fontFamily: activeSettings.publicFontFamily || FONT_FAMILY_OPTIONS[0].value,
-                    ...(testPattern ? {} : getCueTypography(cue)),
+                    ...(testPattern || cardText ? {} : getCueTypography(cue)),
                   }}
                 />
               )}

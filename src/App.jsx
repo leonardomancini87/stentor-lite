@@ -94,6 +94,8 @@ import StentoreDialog from './components/StentoreDialog.jsx';
 import StentoreErrorBoundary from './components/StentoreErrorBoundary.jsx';
 import DesktopDashboard from './components/DesktopDashboard.jsx';
 import DesktopPreferences from './components/DesktopPreferences.jsx';
+import CardsCard from './components/CardsCard.jsx';
+import { addCard, getCards, removeCard, updateCard } from './utils/showCards.js';
 import useAppUpdates from './hooks/useAppUpdates.js';
 import { getWindowTitle } from './utils/windowTitle.js';
 import PageHeader from './components/PageHeader.jsx';
@@ -223,6 +225,8 @@ export default function App() {
   const [expandedCueId, setExpandedCueId] = useState(null);
   // Schermata di prova per il proiettore (Schermi): non fa parte del progetto, non si salva.
   const [testPattern, setTestPattern] = useState(false);
+  // Cartello in onda al posto della battuta (card «Cartelli»): non si salva.
+  const [activeCardId, setActiveCardId] = useState(null);
   // Blocco spettacolo: a lucchetto chiuso il copione non si può modificare (testo, note, struttura).
   // Resta attivo anche dopo un riavvio dell'app, finché non lo si riapre.
   const [editLocked, setEditLocked] = useState(() => {
@@ -490,16 +494,19 @@ export default function App() {
       message: ui('screens.dialog.blocked.message'),
     });
   }, [dialogs, ui]);
+  const showCards = useMemo(() => getCards(project.settings), [project.settings]);
+  const activeCard = showCards.find((card) => card.id === activeCardId) || null;
   const projection = useProjection({
     project,
     cue: projectedCue,
     language,
     blackout,
     testPattern,
+    cardText: activeCard?.text || '',
     onBlocked: showProjectionBlocked,
   });
-  // La schermata di prova si spegne da sola appena si manda in onda una battuta o si va al buio.
-  useEffect(() => { setTestPattern(false); }, [projectedIndex, blackout]);
+  // Schermata di prova e cartello si tolgono da soli appena si manda in onda una battuta o si va al buio.
+  useEffect(() => { setTestPattern(false); setActiveCardId(null); }, [projectedIndex, blackout]);
 
 
   async function createNewProject() {
@@ -1358,6 +1365,8 @@ export default function App() {
   const projectedText = blackout
     ? ''
     : (getCueText(projectedCue, language) || ui('cues.empty'));
+  // Con un cartello in onda l'anteprima della regia mostra il cartello, come lo schermo.
+  const liveText = activeCard ? activeCard.text : projectedText;
   // Seconda lingua dello schermo attivo, come in sala (sotto, più piccola).
   const projectedSecondLanguage = getScreenSecondLanguage(getActiveScreen(project.settings), language, project.languages);
   const projectedSecondText = blackout || projectedSecondLanguage === language || !getCueText(projectedCue, language).trim()
@@ -1458,7 +1467,7 @@ export default function App() {
                   <div className="r11PreviewLabel live"><span className="r11Dot" aria-hidden="true" />{!blackout ? ui('cues.current') : ui('cues.blackout')} · {cueNumberLabel(projectedIndex)}</div>
                   <article className="regiaLiveCueCard regiaLiveCueCardCurrent">
                     <div className="regiaLiveCueText liteScreenPreviewHost">
-                      <ScreenPreview cue={projectedCue} text={projectedText} spans={getCueTextSpans(projectedCue, language)} secondText={projectedSecondText} secondSpans={projectedSecondText ? getCueTextSpans(projectedCue, projectedSecondLanguage) : []} settings={publicSettings} empty={blackout} />
+                      <ScreenPreview cue={projectedCue} text={liveText} spans={activeCard ? [] : getCueTextSpans(projectedCue, language)} secondText={activeCard ? '' : projectedSecondText} secondSpans={!activeCard && projectedSecondText ? getCueTextSpans(projectedCue, projectedSecondLanguage) : []} settings={publicSettings} empty={blackout && !activeCard} />
                     </div>
                   </article>
                 </section>
@@ -1688,6 +1697,15 @@ export default function App() {
                   onPlay={startPlayback}
                   onPausePlayback={pauseSemiAuto}
                 />
+                <CardsCard
+                  cards={showCards}
+                  activeCardId={activeCard?.id || null}
+                  onToggle={(cardId) => setActiveCardId((current) => (current === cardId ? null : cardId))}
+                  onAdd={(text) => updateProject({ settings: addCard(project.settings, text) })}
+                  onUpdate={(cardId, text) => updateProject({ settings: updateCard(project.settings, cardId, text) })}
+                  onRemove={(cardId) => updateProject({ settings: removeCard(project.settings, cardId) })}
+                  locked={editLocked}
+                />
                 <ToolsCard
                   project={project}
                   language={language}
@@ -1717,6 +1735,7 @@ export default function App() {
               setBlackout={setBlackout}
               testPattern={testPattern}
               setTestPattern={setTestPattern}
+              cardText={activeCard?.text || ''}
               updateProject={updateProject}
               setProject={setProject}
               dialogs={dialogs}

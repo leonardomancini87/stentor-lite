@@ -19,7 +19,7 @@ export function getStageWindowName(screenId) {
 // Finestre degli schermi di proiezione: apertura e aggiornamento del testo proiettato.
 // Il testo arriva alla finestra in tre modi (chiamata diretta, postMessage, localStorage),
 // così resta aggiornato anche se la finestra è stata ricaricata.
-export function useProjection({ project, cue, language, blackout, testPattern = false, onBlocked }) {
+export function useProjection({ project, cue, language, blackout, testPattern = false, cardText = '', onBlocked }) {
   const windowsRef = useRef({});
   // Vero finché almeno una finestra di proiezione è aperta: aperta da qui, oppure viva per conto
   // suo (segnale di presenza), per esempio dopo che la regia è stata ricaricata.
@@ -36,10 +36,11 @@ export function useProjection({ project, cue, language, blackout, testPattern = 
       primaryLanguage: project.primaryLanguage,
       blackout,
       testPattern,
+      cardText,
     }),
     projectTitle: project.title || '',
     ...overrides,
-  }), [cue, language, blackout, testPattern, project.languages, project.primaryLanguage, project.title]);
+  }), [cue, language, blackout, testPattern, cardText, project.languages, project.primaryLanguage, project.title]);
 
   const publish = useCallback((screen, payload = buildPayload(screen)) => {
     const screenId = screen?.id || payload.screenId;

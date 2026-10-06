@@ -32,6 +32,7 @@ export function buildProjectionPayload({
   primaryLanguage = languages[0],
   blackout = false,
   testPattern = false,
+  cardText = '',
 }) {
   const targetLanguage = getScreenLanguage(screen, activeLanguage, languages);
   const secondLanguage = getScreenSecondLanguage(screen, activeLanguage, languages);
@@ -43,6 +44,12 @@ export function buildProjectionPayload({
     // La prova sostituisce battuta e buio finché resta accesa.
     const base = buildProjectionPayload({ cue: null, screen, activeLanguage, languages, primaryLanguage });
     return { ...base, text: getTestPatternText(screen), testPattern: true };
+  }
+
+  if (String(cardText || '').trim()) {
+    // Cartello («Intervallo», titolo…): stesso testo su ogni schermo, al posto di battuta e buio.
+    const base = buildProjectionPayload({ cue: null, screen, activeLanguage, languages, primaryLanguage });
+    return { ...base, text: String(cardText), card: true };
   }
 
   return {
