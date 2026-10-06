@@ -55,7 +55,10 @@ con un messaggio che rimanda a questa pagina.
    `src-tauri/Cargo.toml`, `src/lib/appVersion.js`) e `CHANGELOG.md`.
 2. `git tag v0.9.1 && git push origin v0.9.1` (oppure Actions → «Pubblica Sténtor Lite»).
 3. Controlla la bozza in Releases: oltre agli installatori deve esserci `latest.json`.
-4. Premi **Publish release**: da quel momento le app installate trovano l'aggiornamento.
+4. Lascia «Release label» su **None** (non «Pre-release») e la casella **Set as the latest release**
+   attiva, poi premi **Publish release**: da quel momento le app installate trovano l'aggiornamento.
+   Se GitHub indica ancora come ultima una versione precedente, l'app non vede quella nuova:
+   si corregge con `gh release edit vX.Y.Z --latest`.
 
 ## Compilare in locale
 
