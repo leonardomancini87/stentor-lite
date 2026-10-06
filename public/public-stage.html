@@ -574,14 +574,14 @@
       });
 
       // Comandi da tastiera anche nella finestra dello schermo: gli stessi tasti della regia
-      // (card "Scorciatoie"; predefiniti Spazio/→ avanti, Maiusc+Spazio/← indietro, B buio, F schermo intero).
+      // (card "Scorciatoie"; predefiniti Spazio/→/Pag↓ avanti, Maiusc+Spazio/←/Pag↑ indietro, B buio, F schermo intero).
       // Il comando va alla finestra di regia sia con postMessage sia con localStorage, con lo stesso id:
       // la regia lo esegue una volta sola.
       var CONTROL_TYPE = 'STENTORE_CONTROL';
       var CONTROL_STORAGE_KEY = 'stentore-control-command-v1';
       var DEFAULT_KEYS = {
-        next: [{ code: 'Space' }, { code: 'ArrowRight' }],
-        previous: [{ code: 'Space', shift: true }, { code: 'ArrowLeft' }],
+        next: [{ code: 'Space' }, { code: 'ArrowRight' }, { code: 'PageDown' }],
+        previous: [{ code: 'Space', shift: true }, { code: 'ArrowLeft' }, { code: 'PageUp' }],
         blackout: [{ code: 'KeyB' }],
         fullscreen: [{ code: 'KeyF' }],
       };
