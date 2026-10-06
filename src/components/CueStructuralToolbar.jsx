@@ -1,4 +1,4 @@
-import { BookmarkPlus, Plus, Scissors, Trash2 } from 'lucide-react';
+import { BookmarkPlus, Lock, LockOpen, Plus, Scissors, Trash2 } from 'lucide-react';
 import { useI18n } from '../i18n/index.js';
 
 function MergeNextIcon({ size = 18 }) {
@@ -33,6 +33,9 @@ export default function CueStructuralToolbar({
   canSplit = false,
   canMergeNext = false,
   canDelete = false,
+  // Blocco spettacolo: a lucchetto chiuso gli altri comandi sono disattivati.
+  locked = false,
+  onToggleLock,
 }) {
   const { t } = useI18n();
   return (
@@ -85,6 +88,19 @@ export default function CueStructuralToolbar({
       >
         <Trash2 size={17} />
       </button>
+      {onToggleLock ? (
+        <button
+          type="button"
+          className={locked ? 'lockToggle locked' : 'lockToggle'}
+          title={t(locked ? 'toolbar.unlock' : 'toolbar.lock')}
+          aria-label={t(locked ? 'toolbar.unlock' : 'toolbar.lock')}
+          aria-pressed={locked}
+          onClick={onToggleLock}
+        >
+          {locked ? <Lock size={16} /> : <LockOpen size={16} />}
+          {locked ? <span>{t('toolbar.locked')}</span> : null}
+        </button>
+      ) : null}
     </div>
   );
 }

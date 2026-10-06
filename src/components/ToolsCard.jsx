@@ -42,7 +42,7 @@ function checkDetail(t, id, limit) {
   return t(`check.${id}.detail`, { limit, total: limit * 2 });
 }
 
-function CleanupPanel({ project, activeCue, activeNumber, setProject }) {
+function CleanupPanel({ project, activeCue, activeNumber, setProject, locked = false }) {
   const [scope, setScope] = useState('cue');
   const [options, setOptions] = useState(DEFAULT_CLEANUP);
   const [result, setResult] = useState('');
@@ -96,7 +96,7 @@ function CleanupPanel({ project, activeCue, activeNumber, setProject }) {
       </div>
       <p className="liteToolsFootnote">{t('clean.footnote')}</p>
 
-      <button type="button" className="liteToolsPrimary" onClick={apply}>
+      <button type="button" className="liteToolsPrimary" onClick={apply} disabled={locked} title={locked ? t('toolbar.locked') : undefined}>
         {effectiveScope === 'cue' ? t('clean.apply.cue', { number: activeNumber }) : t('clean.apply.all')}
       </button>
       {result ? <p className="liteToolsResult" role="status">{result}</p> : null}
@@ -216,7 +216,7 @@ function CheckPanel({ project, language, activeIndex, screenColors, onRevealCue,
 }
 
 // Card "Strumenti" nella colonna destra di Sopratitoli: Verifica e Pulizia del copione.
-export default function ToolsCard({ project, language, activeIndex, setProject, screenColors, onRevealCue }) {
+export default function ToolsCard({ project, language, activeIndex, setProject, screenColors, onRevealCue, locked = false }) {
   const [tab, setTab] = useState(loadTab);
   const numbers = useMemo(() => getCueNumbers(project.cues), [project.cues]);
   const activeCue = project.cues[activeIndex] || null;
@@ -273,6 +273,7 @@ export default function ToolsCard({ project, language, activeIndex, setProject, 
           activeCue={activeCue}
           activeNumber={formatCueNumber(numbers[activeIndex])}
           setProject={setProject}
+          locked={locked}
         />
       )}
     </section>

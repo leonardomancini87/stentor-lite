@@ -125,6 +125,9 @@ function classNames(...items) {
   return items.filter(Boolean).join(' ');
 }
 
+const SHOW_LOCK_STORAGE_KEY = 'stentor.showLock.v1';
+const noop = () => {};
+
 function getClickCaretOffset(event) {
   const { clientX: x, clientY: y } = event;
   let node = null;
@@ -218,6 +221,22 @@ export default function App() {
   const [projectedIndex, setProjectedIndex] = useState(0);
   const [editingCue, setEditingCue] = useState(null);
   const [expandedCueId, setExpandedCueId] = useState(null);
+  // Blocco spettacolo: a lucchetto chiuso il copione non si può modificare (testo, note, struttura).
+  // Resta attivo anche dopo un riavvio dell'app, finché non lo si riapre.
+  const [editLocked, setEditLocked] = useState(() => {
+    try { return window.localStorage.getItem(SHOW_LOCK_STORAGE_KEY) === '1'; } catch { return false; }
+  });
+  function toggleEditLock() {
+    setEditLocked((locked) => {
+      const next = !locked;
+      try { window.localStorage.setItem(SHOW_LOCK_STORAGE_KEY, next ? '1' : '0'); } catch { /* memoria locale non disponibile */ }
+      if (next) {
+        setEditingCue(null);
+        setExpandedCueId(null);
+      }
+      return next;
+    });
+  }
   const cueListRef = useRef(null);
   // Tasto G: porta il cursore nel campo Vai a (mai mentre si scrive).
   useEffect(() => {
@@ -1113,8 +1132,9 @@ export default function App() {
 
   useKeyboardShortcuts({
     shortcuts: keyboardShortcuts,
-    undo,
-    redo,
+    // A copione bloccato anche Annulla e Ripeti restano fermi.
+    undo: editLocked ? noop : undo,
+    redo: editLocked ? noop : redo,
     goNext: goNextCue,
     goPrevious: goPreviousCue,
     browseNext: browseNextCue,
@@ -1449,21 +1469,23 @@ export default function App() {
                         project={project}
                         language={language}
                         onChange={(code) => updateProject({ activeLanguage: code })}
-                        onManage={() => openLanguagesDialog(project.id)}
-                        onMakePrimary={(code) => setProject((current) => setPrimaryProjectLanguage(current, code))}
-                        onDelete={deleteProjectLanguage}
+                        onManage={editLocked ? undefined : () => openLanguagesDialog(project.id)}
+                        onMakePrimary={editLocked ? undefined : (code) => setProject((current) => setPrimaryProjectLanguage(current, code))}
+                        onDelete={editLocked ? undefined : deleteProjectLanguage}
                       />
                       <CueStructuralToolbar
                         onAddAfter={() => structuralCue && addCueAfter(structuralCue.id)}
                         onSplit={() => structuralCue && splitCueAtSelection(structuralCue.id, structuralSplitSelection)}
                         onMergeNext={() => structuralCue && mergeWithNext(structuralCue.id)}
                         onDelete={() => structuralCue && deleteCueWithConfirm(structuralCue.id)}
-                        canAddAfter={Boolean(structuralCue)}
-                        canSplit={canSplitStructuralCue}
-                        canMergeNext={canMergeStructuralCue}
-                        canDelete={canDeleteStructuralCue}
+                        canAddAfter={!editLocked && Boolean(structuralCue)}
+                        canSplit={!editLocked && canSplitStructuralCue}
+                        canMergeNext={!editLocked && canMergeStructuralCue}
+                        canDelete={!editLocked && canDeleteStructuralCue}
                         onAddMarker={() => addMarker(activeIndex)}
-                        canAddMarker={project.cues.length > 0}
+                        canAddMarker={!editLocked && project.cues.length > 0}
+                        locked={editLocked}
+                        onToggleLock={toggleEditLock}
                       />
                       <em>{cueNumbers[projectedIndex] || 1} / {playableCueCount || 1}</em>
                     </div>
@@ -1478,11 +1500,11 @@ export default function App() {
                             className={classNames('r11SceneHeader', 'liteMarkerRow', currentMapSection?.markerIndex === index && 'current')}
                             role="listitem"
                             data-marker-index={index}
-                            onDoubleClick={() => editMarker(cue.id)}
-                            title={ui('marker.row.title')}
+                            onDoubleClick={editLocked ? undefined : () => editMarker(cue.id)}
+                            title={editLocked ? undefined : ui('marker.row.title')}
                           >
                             <span className="liteMarkerRowTitle">{getMarkerTitle(cue)}</span>
-                            <span className="liteMarkerRowActions">
+                            <span className="liteMarkerRowActions" hidden={editLocked}>
                               <button type="button" onClick={() => editMarker(cue.id)} aria-label={ui('marker.edit.aria', { title: getMarkerTitle(cue) })} title={ui('marker.edit')}><Pencil size={13} /></button>
                               <button type="button" className="danger" onClick={() => deleteMarker(cue.id)} aria-label={ui('marker.delete.aria', { title: getMarkerTitle(cue) })} title={ui('marker.delete')}><Trash2 size={13} /></button>
                             </span>
@@ -1495,6 +1517,8 @@ export default function App() {
                       const isEditing = editingCue?.index === index;
                       const isExpanded = expandedCueId === cue.id;
                       const panelId = `lite-cue-editor-${index}`;
+                      // Un clic sul testo lo modifica solo a proiezione chiusa e a copione non bloccato.
+                      const canClickEditText = !projection.isOpen && !editLocked;
                       const startInlineEdit = (event) => {
                         const offset = getClickCaretOffset(event);
                         const leading = text.length - text.trimStart().length;
@@ -1513,13 +1537,13 @@ export default function App() {
                             isSelected && 'selected',
                             hasNextCue && index === nextCueIndex && !isProjected && 'next',
                             isEditing && 'editing',
-                            !projection.isOpen && 'textClickEdit'
+                            canClickEditText && 'textClickEdit'
                           )}
                           onClick={(event) => {
                             if (isEditing) return;
                             // A proiezione chiusa, un clic proprio sul testo lo modifica senza mandarlo in onda.
                             // Con uno schermo aperto il clic manda sempre in onda: in spettacolo niente sorprese.
-                            if (!projection.isOpen && event.target.closest?.('.liteEditableCueBody > span')) {
+                            if (canClickEditText && event.target.closest?.('.liteEditableCueBody > span')) {
                               startInlineEdit(event);
                               return;
                             }
@@ -1530,7 +1554,7 @@ export default function App() {
                           onDoubleClick={(event) => {
                             // Doppio clic: modifica il testo nel punto cliccato.
                             setActiveIndex(index);
-                            if (isEditing) return;
+                            if (isEditing || editLocked) return;
                             startInlineEdit(event);
                           }}
                         >
@@ -1552,14 +1576,14 @@ export default function App() {
                           {timingMode !== 'manual' && cueHasTime(cue) ? (
                             // Nota/etichetta e orario registrato nella stessa colonna, così la riga non si scompone.
                             <span className="liteCueAnnotationCell">
-                              <CueRowAnnotation cue={cue} isProjected={isProjected} isNext={hasNextCue && index === nextCueIndex} onEditNote={(value) => updateCue(cue.id, (current) => ({ ...current, note: value }))} />
+                              <CueRowAnnotation cue={cue} isProjected={isProjected} isNext={hasNextCue && index === nextCueIndex} onEditNote={editLocked ? undefined : (value) => updateCue(cue.id, (current) => ({ ...current, note: value }))} />
                               <span className="liteCueRecordedTime" title={ui('cues.recordedTime')}>{formatDuration(Number(cue.startTime) * 1000)}</span>
                             </span>
                           ) : (
-                            <CueRowAnnotation cue={cue} isProjected={isProjected} isNext={hasNextCue && index === nextCueIndex} onEditNote={(value) => updateCue(cue.id, (current) => ({ ...current, note: value }))} />
+                            <CueRowAnnotation cue={cue} isProjected={isProjected} isNext={hasNextCue && index === nextCueIndex} onEditNote={editLocked ? undefined : (value) => updateCue(cue.id, (current) => ({ ...current, note: value }))} />
                           )}
                           <button
-                            type="button" className="liteCueExpandButton"
+                            type="button" className="liteCueExpandButton" disabled={editLocked}
                             aria-label={ui(isExpanded ? 'cues.collapse' : 'cues.expand', { number: index + 1 })}
                             aria-expanded={isExpanded} aria-controls={panelId}
                             onClick={(event) => {
@@ -1637,7 +1661,7 @@ export default function App() {
                   currentSectionId={currentMapSection?.id ?? null}
                   onGoToSection={goToMapSection}
                   onAddMarker={() => addMarker(activeIndex)}
-                  canAddMarker={project.cues.length > 0}
+                  canAddMarker={!editLocked && project.cues.length > 0}
                 />
                 <TimeCard
                   timer={showTimer}
@@ -1666,6 +1690,7 @@ export default function App() {
                   setProject={setProject}
                   screenColors={toolsScreenColors}
                   onRevealCue={revealCueInList}
+                  locked={editLocked}
                 />
                 <ShortcutsCard
                   shortcuts={keyboardShortcuts}

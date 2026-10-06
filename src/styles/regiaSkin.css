@@ -1474,6 +1474,20 @@ html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueLis
   text-decoration: underline dotted; text-underline-offset: 1px; text-decoration-color: var(--pk-faint);
 }
 
+/* Blocco spettacolo: il lucchetto chiuso si vede bene, con la scritta accanto. */
+
+html[data-app-theme] .appShell .liteSequenceStructuralToolbar button.lockToggle.locked {
+  width: auto !important; min-width: 0 !important; flex: 0 0 auto !important; padding: 0 11px 0 9px !important; gap: 5px;
+  display: inline-flex !important; align-items: center; justify-content: center; border-radius: 999px !important;
+  background: var(--pk-accent) !important; border-color: var(--pk-accent) !important; color: #fff !important;
+}
+
+html[data-app-theme] .appShell .liteSequenceStructuralToolbar button.lockToggle.locked span {
+  font-size: 11px !important; font-weight: 600 !important; color: #fff !important; letter-spacing: normal !important; text-transform: none !important; white-space: nowrap;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteCueExpandButton:disabled { opacity: .35; cursor: default; }
+
 /* Nota operatore modificabile con un clic direttamente nella riga. */
 
 html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteCueOperatorNote[data-editable="true"] {
