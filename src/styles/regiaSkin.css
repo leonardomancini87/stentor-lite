@@ -2098,3 +2098,7 @@ html[data-app-theme] .stentoreDialog .dialogCheckbox {
   letter-spacing: normal !important; text-transform: none !important; cursor: pointer;
 }
 html[data-app-theme] .stentoreDialog .dialogCheckbox input { margin: 0 !important; }
+
+/* Meno spazio sotto la barra dei comandi (Indietro/Avanti…) e, allineata, sotto la firma della barra laterale. */
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace { padding-bottom: 10px !important; }
+html[data-app-theme] .appShell .stentorSidebar { padding-bottom: 14px !important; }

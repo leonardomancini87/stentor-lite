@@ -12,6 +12,9 @@ Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténto
 - Dopo aver eliminato una battuta si torna all'elenco: la battuta successiva è selezionata, ma il suo editor non si apre più da solo.
 - L'avviso di conferma dell'eliminazione ha la casella «Non mostrare questo avviso in futuro». Si può riattivare in Impostazioni → Interfaccia → «Chiedi conferma prima di eliminare una battuta». Una battuta eliminata si recupera sempre con Command/Ctrl+Z.
 
+**Interfaccia**
+- Meno spazio vuoto sotto la barra dei comandi (Indietro, Avanti…) e sotto la firma della barra laterale.
+
 ## 0.9.1 — 6 ottobre 2026 · beta
 
 **Schermi**
