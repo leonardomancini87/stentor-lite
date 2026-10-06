@@ -711,9 +711,35 @@ html[data-app-theme] .stentoreDialog .dialogChoiceList > * { background: var(--p
 html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeader span,
 html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteSequenceHeader small { font-family: var(--pk-font) !important; }
 
+/* «Prossima» ha lo stesso aspetto di «Attuale» e sta nello stesso punto, a destra della riga. */
 html[data-app-theme] .appShell .r11NextTag {
-  display: inline !important; color: var(--pk-live-ink) !important; background: var(--pk-live-badge);
-  padding: 2px 8px; border-radius: 999px; font-size: 10px !important;
+  flex: none; display: inline-block !important; margin-left: auto !important;
+  color: var(--pk-live-ink) !important; background: var(--pk-live-badge);
+  padding: 5px 9px; border-radius: 999px; line-height: 1.2;
+  font-size: 9px !important; font-weight: 700 !important; font-style: normal !important;
+  text-transform: none !important; letter-spacing: normal !important;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteCueOperatorNote.withNextTag {
+  display: flex; align-items: center; gap: 8px; overflow: visible;
+}
+
+html[data-app-theme] .appShell .liteCueOperatorNote.withNextTag > .liteCueNoteText {
+  flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: inherit !important; font: inherit !important;
+}
+
+/* Elenco stretto: le note spariscono, ma «Prossima» resta visibile nella colonna di «Attuale». */
+@container lite-cue-list (max-width: 640px) {
+  html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow > .liteCueOperatorNote.withNextTag {
+    display: flex; grid-column: 4;
+  }
+
+  html[data-app-theme] .appShell .liteCueOperatorNote.withNextTag > .liteCueNoteText { display: none; }
+
+  html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow:not(.live):has(> .withNextTag) > .liteEditableCueBody {
+    grid-column: 3 / 4;
+  }
 }
 
 /* ---------- Proprietà: Strumenti, Controlli, Stile — testi leggibili ---------- */
