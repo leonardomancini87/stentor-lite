@@ -2065,3 +2065,14 @@ html[data-app-theme] .appShell .projectDetailsPanel > h2 {
   line-height: 1.3 !important;
 }
 html[data-app-theme] .appShell .projectDetailsPanel > h2 { margin-bottom: 8px !important; }
+
+/* Aggiornamento disponibile: pallino accanto a "Impostazioni" (in alto a destra dell'icona se la barra è ridotta). */
+html[data-app-theme] .appShell .stentorSidebar .stentorNavItem { position: relative; }
+html[data-app-theme] .appShell .stentorSidebar .stentorNavItem .stentorNavBadge {
+  display: block !important;
+  width: 8px; height: 8px; margin-left: auto; flex: none;
+  border-radius: 50%; background: var(--pk-accent);
+}
+html[data-app-theme] .appShell .stentorSidebar .stentorNavItem.active .stentorNavBadge { background: #fff; }
+html[data-app-theme] .appShell .stentorSidebar.collapsed .stentorNavItem .stentorNavBadge { position: absolute; top: 9px; right: 12px; margin: 0; }
+html[data-app-theme] .appShell .settingsPage .settingsUpdatesPanel .settingsFeedbackRow p strong { font-weight: 600; color: var(--pk-ink); }

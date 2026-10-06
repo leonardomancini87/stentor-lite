@@ -14,6 +14,13 @@
 # Se mancano (per esempio in una copia del repository), l'app Mac è firmata "ad hoc"
 # (vedi signingIdentity in tauri.conf.json) e macOS mostra un avviso di sicurezza.
 # Windows: l'installatore non è firmato, quindi SmartScreen mostra un avviso.
+#
+# Aggiornamenti dall'app: ogni pacchetto è firmato con la chiave degli aggiornamenti
+# (segreti TAURI_SIGNING_PRIVATE_KEY e TAURI_SIGNING_PRIVATE_KEY_PASSWORD; la chiave pubblica
+# è in tauri.conf.json → plugins.updater.pubkey). La Release contiene anche latest.json:
+# appena premi "Publish release", le app installate trovano la nuova versione.
+# Le Release non sono più "pre-release": GitHub indica come "ultima versione" solo quelle
+# normali, ed è lì che l'app va a cercare gli aggiornamenti.
 
 name: Pubblica Sténtor Lite
 
@@ -108,10 +115,27 @@ jobs:
             fi
           done
 
+      # Senza chiave degli aggiornamenti la compilazione si fermerebbe a metà: meglio un messaggio chiaro subito.
+      - name: Chiave degli aggiornamenti
+        shell: bash
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if [ -z "$TAURI_SIGNING_PRIVATE_KEY" ]; then
+            echo "::error::Manca il segreto TAURI_SIGNING_PRIVATE_KEY (vedi docs/aggiornamenti.md)."
+            exit 1
+          fi
+          if ! node -e "process.exit(require('./src-tauri/tauri.conf.json').plugins.updater.pubkey ? 0 : 1)"; then
+            echo "::error::Manca la chiave pubblica in src-tauri/tauri.conf.json → plugins.updater.pubkey (vedi docs/aggiornamenti.md)."
+            exit 1
+          fi
+
       - name: Compila e allega alla Release
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: v__VERSION__
           releaseName: 'Sténtor Lite __VERSION__'
@@ -122,7 +146,9 @@ jobs:
             **Windows**: scarica l'installatore `.exe`. Se compare "Windows ha protetto il PC": Ulteriori informazioni → Esegui comunque.
             **Linux** (in prova): su Ubuntu e Debian scarica il file `.deb` (`amd64` per i computer Intel/AMD, `arm64` per quelli ARM) e aprilo con un doppio clic, oppure `sudo apt install ./nome-del-file.deb`. Per Fedora c'è il file `.rpm`; per le altre distribuzioni l'`.AppImage`.
 
+            **Hai già Sténtor Lite 0.9.0 o successiva?** Non serve scaricare nulla: Impostazioni → Aggiornamenti → Verifica aggiornamenti.
+
             Novità di questa versione: [CHANGELOG.md](https://github.com/leonardomancini87/stentor-lite/blob/main/CHANGELOG.md).
           releaseDraft: true
-          prerelease: true
+          prerelease: false
           args: ${{ matrix.args }}

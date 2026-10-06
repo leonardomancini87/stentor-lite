@@ -1,6 +1,6 @@
 {
   "name": "stentor",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "Sténtor Lite — sopratitoli per il teatro dal vivo",
   "license": "EUPL-1.2",
   "author": "Leonardo Mancini",
@@ -24,6 +24,8 @@
   },
   "dependencies": {
     "@tauri-apps/api": "2.11.0",
+    "@tauri-apps/plugin-process": "2.4.0",
+    "@tauri-apps/plugin-updater": "2.13.1",
     "@vitejs/plugin-react": "6.0.2",
     "lucide-react": "1.16.0",
     "react": "19.2.6",

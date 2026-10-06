@@ -160,6 +160,10 @@ fn stentor_window_ready(app: tauri::AppHandle) {
 
 fn main() {
     tauri::Builder::default()
+        // Aggiornamenti: verifica, download e installazione (src/hooks/useAppUpdates.js);
+        // "process" serve per riavviare l'app dopo l'installazione.
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .setup(|app| {
             if let Some(window) = app.get_webview_window("regia") {
                 let _ = window.set_title("Sténtor Lite");

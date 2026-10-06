@@ -1,6 +1,6 @@
 import { APP_VERSION } from '../lib/appVersion.js';
 import { useEffect, useState } from 'react';
-import { Check, ChevronDown, Globe2, Info, MessageSquareHeart, X } from 'lucide-react';
+import { Check, ChevronDown, Globe2, Info, MessageSquareHeart, RefreshCw, X } from 'lucide-react';
 import FeedbackDialog from './FeedbackDialog.jsx';
 import { APP_LANGUAGES, getAppLanguageMeta } from '../utils/appLanguage.js';
 import { useI18n } from '../i18n/index.js';
@@ -108,7 +108,46 @@ function InterfaceLanguageModal({ appLanguage, onChoose, onClose }) {
   );
 }
 
-export default function DesktopPreferences({ appLanguage = 'it', setAppLanguage, appTheme = 'night', setAppTheme }) {
+// Riquadro Aggiornamenti: stato della verifica a sinistra, un solo pulsante a destra.
+function UpdatesPanel({ updates }) {
+  const { t } = useI18n();
+  const { status, version, progress } = updates;
+  const busy = status === 'checking' || status === 'downloading' || status === 'installing';
+
+  const message = {
+    idle: t('settings.updates.current', { version: APP_VERSION }),
+    checking: t('settings.updates.checking'),
+    upToDate: t('settings.updates.upToDate', { version: APP_VERSION }),
+    available: t('settings.updates.available', { version }),
+    downloading: progress === null ? t('settings.updates.downloading') : t('settings.updates.downloadingPercent', { percent: progress }),
+    installing: t('settings.updates.installing'),
+    ready: t('settings.updates.ready', { version }),
+    checkError: t('settings.updates.checkError'),
+    installError: t('settings.updates.installError'),
+  }[status];
+
+  let action = { label: t('settings.updates.check'), onClick: () => updates.check() };
+  if (status === 'available' || status === 'installError') action = { label: t('settings.updates.install'), onClick: updates.install };
+  if (status === 'ready') action = { label: t('settings.updates.restart'), onClick: updates.restart };
+
+  return (
+    <article className="darkPanel projectStatePanel settingsUnifiedPanel settingsFeedbackPanel settingsUpdatesPanel">
+      <div className="settingsPanelTitleWithIcon">
+        <RefreshCw size={18} />
+        <h2>{t('settings.updates.title')}</h2>
+      </div>
+      <div className="settingsFeedbackRow">
+        <p role="status" aria-live="polite"><strong>{message}</strong></p>
+        <button type="button" className="interfaceLanguageConfirm settingsFeedbackButton" onClick={action.onClick} disabled={busy}>
+          {action.label}
+        </button>
+      </div>
+      <p>{t('settings.updates.help')}</p>
+    </article>
+  );
+}
+
+export default function DesktopPreferences({ appLanguage = 'it', setAppLanguage, appTheme = 'night', setAppTheme, updates }) {
   const { t } = useI18n();
   const [languageModalOpen, setLanguageModalOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
@@ -149,6 +188,8 @@ export default function DesktopPreferences({ appLanguage = 'it', setAppLanguage,
           </div>
           <div className="stateLine"><span>{t('settings.version')}</span><strong>Sténtor Lite {APP_VERSION}</strong></div>
         </article>
+
+        {updates?.supported && <UpdatesPanel updates={updates} />}
 
         <article className="darkPanel projectStatePanel settingsUnifiedPanel settingsFeedbackPanel">
           <div className="settingsPanelTitleWithIcon">

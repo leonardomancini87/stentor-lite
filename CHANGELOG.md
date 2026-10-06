@@ -3,6 +3,12 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
+## 0.9.0 — in preparazione · beta
+
+**Aggiornamenti**
+- Nuovo riquadro in Impostazioni → Aggiornamenti: «Verifica aggiornamenti» controlla se c'è una nuova versione, la scarica e la installa. Progetti e impostazioni restano al loro posto: dalle prossime versioni non serve più riscaricare l'app dal sito.
+- All'avvio l'app controlla da sola, in silenzio: se c'è una versione nuova compare un pallino accanto a «Impostazioni». L'installazione parte solo quando la scegli.
+
 ## 0.8.2 — 5 ottobre 2026 · beta
 
 **Sopratitoli**

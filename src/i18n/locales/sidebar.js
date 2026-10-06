@@ -18,6 +18,7 @@ export default {
     'nav.version': 'versione {version}',
     'nav.right.expand': 'Espandi barra destra',
     'nav.right.collapse': 'Comprimi barra destra',
+    'nav.updateAvailable': 'Aggiornamento disponibile',
   },
   en: {
     'nav.aria': 'Main navigation',
@@ -37,5 +38,6 @@ export default {
     'nav.version': 'version {version}',
     'nav.right.expand': 'Expand right sidebar',
     'nav.right.collapse': 'Collapse right sidebar',
+    'nav.updateAvailable': 'Update available',
   },
 };

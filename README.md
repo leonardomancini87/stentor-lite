@@ -49,6 +49,8 @@ Le versioni per Mac (Apple Silicon e Intel) e Windows sono nella pagina [**Relea
 - **Mac**: scarica il file `.dmg` (`aarch64` per i Mac con chip Apple, `x64` per i Mac Intel), aprilo e trascina Sténtor Lite in Applicazioni. L'app è firmata e verificata da Apple (notarizzata): al primo avvio macOS chiede solo di confermare che vuoi aprire un'app scaricata da internet.
 - **Windows**: l'app non è ancora firmata da Microsoft. Se compare «Windows ha protetto il PC», scegli **Ulteriori informazioni → Esegui comunque**.
 
+Dalla versione 0.9.0 non serve riscaricare l'app a ogni versione: **Impostazioni → Aggiornamenti → Verifica aggiornamenti** scarica e installa la nuova versione, e progetti e impostazioni restano al loro posto. Come funziona e come si pubblica un aggiornamento: [`docs/aggiornamenti.md`](docs/aggiornamenti.md).
+
 ### I tuoi progetti
 
 Sténtor Lite salva da solo i progetti **in uno spazio interno dell'app** sul tuo computer (nel browser, se lo usi lì), non come file in Documenti. Quando installi una versione nuova i progetti restano al loro posto. Non li ritrovi però se cambi computer, se cancelli i dati del browser o se, disinstallando su Windows, scegli di eliminare anche i dati dell'applicazione.
@@ -76,6 +78,8 @@ npm run desktop:dev     # app desktop in sviluppo
 npm run desktop:build   # pacchetto installabile per il tuo sistema
 npm test                # test automatici
 ```
+
+`desktop:build` firma anche i pacchetti di aggiornamento e chiede la chiave degli aggiornamenti; senza chiave aggiungi `-- --config '{"bundle":{"createUpdaterArtifacts":false}}'` (dettagli in [`docs/aggiornamenti.md`](docs/aggiornamenti.md)).
 
 ### Struttura
 
@@ -142,6 +146,8 @@ Mac (Apple Silicon and Intel) and Windows builds are on this repository's [**Rel
 - **Mac**: download the `.dmg` file (`aarch64` for Apple-chip Macs, `x64` for Intel Macs), open it and drag Sténtor Lite to Applications. The app is signed and checked by Apple (notarised): on first launch macOS only asks you to confirm that you want to open an app downloaded from the internet.
 - **Windows**: the app is not yet signed by Microsoft. If "Windows protected your PC" appears, choose **More info → Run anyway**.
 
+From version 0.9.0 there is no need to download the app again for each release: **Settings → Updates → Check for updates** downloads and installs the new version, keeping your projects and settings. How it works and how to publish an update (in Italian): [`docs/aggiornamenti.md`](docs/aggiornamenti.md).
+
 ### Your projects
 
 Sténtor Lite saves your projects automatically **in the app's own storage** on your computer (in the browser, if you use it there), not as files in Documents. Installing a new version keeps your projects where they are. They are gone, however, if you change computer, clear the browser data or, when uninstalling on Windows, choose to delete the application data as well.
@@ -165,6 +171,8 @@ npm run desktop:dev     # desktop app in development
 npm run desktop:build   # installable package for your system
 npm test                # automated tests
 ```
+
+`desktop:build` also signs the update packages and needs the update signing key; without it, add `-- --config '{"bundle":{"createUpdaterArtifacts":false}}'` (details in [`docs/aggiornamenti.md`](docs/aggiornamenti.md)).
 
 ### Translations
 

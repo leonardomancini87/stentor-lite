@@ -17,7 +17,7 @@ function normalizeNavLabel(label) {
   return label === 'TESTO' ? 'Testo' : label;
 }
 
-function NavItem({ icon, label, active, onClick, collapsed = false }) {
+function NavItem({ icon, label, active, onClick, collapsed = false, badge = null }) {
   const displayLabel = normalizeNavLabel(label);
   return (
     <button
@@ -29,6 +29,7 @@ function NavItem({ icon, label, active, onClick, collapsed = false }) {
     >
       {icon}
       <span>{displayLabel}</span>
+      {badge && <span className="stentorNavBadge" title={badge} aria-label={badge} />}
     </button>
   );
 }
@@ -40,6 +41,7 @@ export default function Sidebar({
   isDirty = false,
   appLanguage = 'it',
   collapsed = false,
+  updateAvailable = false,
   onToggleCollapsed,
 }) {
   const normalizedBasePath = import.meta.env.BASE_URL || '/';
@@ -122,6 +124,7 @@ export default function Sidebar({
           active={viewMode === 'preferences'}
           onClick={openPreferences}
           collapsed={collapsed}
+          badge={updateAvailable ? t('nav.updateAvailable') : null}
         />
       </nav>
 

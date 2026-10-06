@@ -93,6 +93,7 @@ import StentoreDialog from './components/StentoreDialog.jsx';
 import StentoreErrorBoundary from './components/StentoreErrorBoundary.jsx';
 import DesktopDashboard from './components/DesktopDashboard.jsx';
 import DesktopPreferences from './components/DesktopPreferences.jsx';
+import useAppUpdates from './hooks/useAppUpdates.js';
 import PageHeader from './components/PageHeader.jsx';
 
 const RIGHT_SIDEBAR_STORAGE_KEY = 'stentor.rightSidebar.collapsed.v1';
@@ -189,6 +190,7 @@ export default function App() {
   const editorStagePreviewRef = useRef(null);
   const [editorPreviewOpen, setEditorPreviewOpen] = useState(false);
   const [viewMode, setViewMode] = useState('dashboard');
+  const updates = useAppUpdates();
   const [appLanguage, setAppLanguage] = useState(getInitialAppLanguage);
   // Testi dell'interfaccia per chiave (vedi src/i18n).
   const ui = useCallback((key, vars) => translate(appLanguage, key, vars), [appLanguage]);
@@ -1355,6 +1357,7 @@ export default function App() {
         appLanguage={appLanguage}
         setAppLanguage={setAppLanguage}
         collapsed={leftSidebarCollapsed}
+        updateAvailable={updates.hasUpdate}
         onToggleCollapsed={() => setLeftSidebarCollapsed((value) => !value)}
       />
 
@@ -1385,6 +1388,7 @@ export default function App() {
             setAppLanguage={setAppLanguage}
             appTheme={appTheme}
             setAppTheme={setAppTheme}
+            updates={updates}
           />
         )}
 
