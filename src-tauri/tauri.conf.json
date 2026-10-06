@@ -30,7 +30,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDc2NzYwNTNEMTlGQTkwRkMKUldUOGtQb1pQUVYyZG1LdVQ3dWhpUERiaFIwYVBvSFJiY01ncUh0dDFJMk9URW40cEpnZ0VETXEK",
       "endpoints": [
         "https://github.com/leonardomancini87/stentor-lite/releases/latest/download/latest.json"
       ],
