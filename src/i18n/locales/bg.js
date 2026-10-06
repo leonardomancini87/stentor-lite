@@ -505,4 +505,6 @@ export default {
   'screens.secondLanguage.hint': 'Под първия, по-малък, след кратко тире. Непреведените реплики показват само първия език.',
   'screens.secondLanguage.needMore': 'За да прожектирате два езика, първо добавете още един език към проекта.',
   'screens.field.secondSize': 'Размер на втория език',
+  'cue.delete.dontAsk': 'Да не се показва повече това предупреждение',
+  'settings.confirmCueDelete': 'Искане на потвърждение преди изтриване на реплика',
 };

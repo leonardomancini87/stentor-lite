@@ -519,4 +519,6 @@ export default {
   'screens.secondLanguage.hint': 'Під першою, дрібніше, після короткого тире. Для неперекладених реплік показується лише перша мова.',
   'screens.secondLanguage.needMore': 'Щоб показувати дві мови, спершу додайте до проєкту ще одну мову.',
   'screens.field.secondSize': 'Розмір другої мови',
+  'cue.delete.dontAsk': 'Більше не показувати це попередження',
+  'settings.confirmCueDelete': 'Запитувати підтвердження перед видаленням репліки',
 };

@@ -505,4 +505,6 @@ export default {
   'screens.secondLanguage.hint': 'Birincinin altında, daha küçük, kısa bir çizgiden sonra. Çevrilmemiş replikler yalnızca birinci dili gösterir.',
   'screens.secondLanguage.needMore': 'İki dil yansıtmak için önce projeye başka bir dil ekleyin.',
   'screens.field.secondSize': 'İkinci dil boyutu',
+  'cue.delete.dontAsk': 'Bu uyarıyı bir daha gösterme',
+  'settings.confirmCueDelete': 'Bir repliği silmeden önce onay iste',
 };

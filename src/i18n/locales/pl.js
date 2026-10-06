@@ -519,4 +519,6 @@ export default {
   'screens.secondLanguage.hint': 'Pod pierwszym, mniejszy, po krótkiej kresce. Kwestie bez tłumaczenia pokazują tylko pierwszy język.',
   'screens.secondLanguage.needMore': 'Aby wyświetlać dwa języki, najpierw dodaj do projektu kolejny język.',
   'screens.field.secondSize': 'Rozmiar drugiego języka',
+  'cue.delete.dontAsk': 'Nie pokazuj więcej tego ostrzeżenia',
+  'settings.confirmCueDelete': 'Pytaj o potwierdzenie przed usunięciem kwestii',
 };

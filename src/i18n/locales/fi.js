@@ -505,4 +505,6 @@ export default {
   'screens.secondLanguage.hint': 'Ensimmäisen alla, pienempänä, lyhyen viivan jälkeen. Kääntämättömissä repliikeissä näkyy vain ensimmäinen kieli.',
   'screens.secondLanguage.needMore': 'Jos haluat heijastaa kaksi kieltä, lisää ensin projektiin toinen kieli.',
   'screens.field.secondSize': 'Toisen kielen koko',
+  'cue.delete.dontAsk': 'Älä näytä tätä varoitusta uudelleen',
+  'settings.confirmCueDelete': 'Kysy vahvistus ennen repliikin poistamista',
 };

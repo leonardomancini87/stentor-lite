@@ -519,4 +519,6 @@ export default {
   'screens.secondLanguage.hint': 'Pod prvním, menší, za krátkou čárkou. Nepřeložené repliky zobrazí jen první jazyk.',
   'screens.secondLanguage.needMore': 'Chcete-li promítat dva jazyky, nejprve do projektu přidejte další jazyk.',
   'screens.field.secondSize': 'Velikost druhého jazyka',
+  'cue.delete.dontAsk': 'Toto upozornění už nezobrazovat',
+  'settings.confirmCueDelete': 'Před odstraněním repliky požádat o potvrzení',
 };

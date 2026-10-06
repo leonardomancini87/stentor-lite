@@ -517,4 +517,6 @@ export default {
   'screens.secondLanguage.hint': 'Debajo del primero, más pequeño, tras un breve guion. Las réplicas sin traducir muestran solo el primer idioma.',
   'screens.secondLanguage.needMore': 'Para proyectar dos idiomas, añade primero otro idioma al proyecto.',
   'screens.field.secondSize': 'Tamaño del segundo idioma',
+  'cue.delete.dontAsk': 'No volver a mostrar este aviso',
+  'settings.confirmCueDelete': 'Pedir confirmación antes de eliminar una réplica',
 };

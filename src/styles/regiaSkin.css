@@ -2083,3 +2083,18 @@ html[data-app-theme] .appShell .liteScreenPreviewText .liteScreenPreviewSeparato
   background: currentColor; opacity: 0.6;
 }
 html[data-app-theme] .appShell .liteScreenPreviewText .liteScreenPreviewSecond { display: block; }
+/* Casella «Chiedi conferma…» in Impostazioni (stesso stile della casella nei dialoghi). */
+html[data-app-theme] .appShell .settingsPage .settingsCheckbox {
+  display: flex !important; align-items: flex-start !important; gap: 8px !important; margin-top: 6px !important;
+  color: var(--pk-ink) !important; font-size: 13px !important; font-weight: 500 !important;
+  letter-spacing: normal !important; text-transform: none !important; cursor: pointer;
+}
+html[data-app-theme] .appShell .settingsPage .settingsCheckbox input { margin: 2px 0 0 !important; flex: none; }
+html[data-app-theme] .appShell .settingsPage .settingsCheckbox small { display: block; margin-top: 2px; color: var(--pk-muted); font-size: 12px; font-weight: 400; }
+/* Casella «Non mostrare questo avviso in futuro»: testo normale, non un'etichetta di campo. */
+html[data-app-theme] .stentoreDialog .dialogCheckbox {
+  align-items: center !important; gap: 8px !important; margin-top: 4px;
+  color: var(--pk-ink, #1f2937) !important; font-size: 13px !important; font-weight: 500 !important;
+  letter-spacing: normal !important; text-transform: none !important; cursor: pointer;
+}
+html[data-app-theme] .stentoreDialog .dialogCheckbox input { margin: 0 !important; }

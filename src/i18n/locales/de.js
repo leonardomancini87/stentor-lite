@@ -517,4 +517,6 @@ export default {
   'screens.secondLanguage.hint': 'Unter der ersten, kleiner, nach einem kurzen Strich. Nicht übersetzte Repliken zeigen nur die erste Sprache.',
   'screens.secondLanguage.needMore': 'Um zwei Sprachen zu projizieren, füge dem Projekt zuerst eine weitere Sprache hinzu.',
   'screens.field.secondSize': 'Größe der zweiten Sprache',
+  'cue.delete.dontAsk': 'Diese Warnung nicht mehr anzeigen',
+  'settings.confirmCueDelete': 'Vor dem Löschen einer Replik nachfragen',
 };

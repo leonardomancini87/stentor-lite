@@ -530,4 +530,6 @@ export default {
   'screens.secondLanguage.hint': 'पहली के नीचे, छोटे आकार में, एक छोटी रेखा के बाद। जिन पंक्तियों का अनुवाद नहीं है, उनमें केवल पहली भाषा दिखती है।',
   'screens.secondLanguage.needMore': 'दो भाषाएँ प्रोजेक्ट करने के लिए, पहले प्रोजेक्ट में एक और भाषा जोड़ें।',
   'screens.field.secondSize': 'दूसरी भाषा का आकार',
+  'cue.delete.dontAsk': 'यह चेतावनी फिर न दिखाएँ',
+  'settings.confirmCueDelete': 'पंक्ति हटाने से पहले पुष्टि माँगें',
 };

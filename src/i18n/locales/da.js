@@ -505,4 +505,6 @@ export default {
   'screens.secondLanguage.hint': 'Under det første, mindre, efter en kort streg. Replikker uden oversættelse viser kun det første sprog.',
   'screens.secondLanguage.needMore': 'For at projicere to sprog skal du først tilføje et andet sprog til projektet.',
   'screens.field.secondSize': 'Størrelse på andet sprog',
+  'cue.delete.dontAsk': 'Vis ikke denne advarsel igen',
+  'settings.confirmCueDelete': 'Spørg før en replik slettes',
 };

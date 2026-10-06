@@ -31,6 +31,7 @@ export default {
     'settings.updates.checkError': 'Verifica non riuscita. Controlla la connessione a internet e riprova.',
     'settings.updates.installError': 'Installazione non riuscita. Riprova, oppure scarica la nuova versione da stentor.live.',
     'settings.updates.help': 'Sténtor Lite controlla all’avvio se c’è una nuova versione e la installa solo quando lo scegli. Progetti e impostazioni restano al loro posto. Non aggiornare durante uno spettacolo.',
+    'settings.confirmCueDelete': 'Chiedi conferma prima di eliminare una battuta',
   },
   en: {
     'settings.title': 'Settings',
@@ -63,5 +64,6 @@ export default {
     'settings.updates.checkError': 'Could not check for updates. Check your internet connection and try again.',
     'settings.updates.installError': 'The update could not be installed. Try again, or download the new version from stentor.live.',
     'settings.updates.help': 'Sténtor Lite checks for a new version at startup and installs it only when you choose. Projects and settings stay as they are. Don’t update during a performance.',
+    'settings.confirmCueDelete': 'Ask for confirmation before deleting a line',
   },
 };

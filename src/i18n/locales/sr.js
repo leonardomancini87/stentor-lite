@@ -512,4 +512,6 @@ export default {
   'screens.secondLanguage.hint': 'Испод првог, мањи, после кратке црте. Непреведене реплике приказују само први језик.',
   'screens.secondLanguage.needMore': 'Да бисте приказали два језика, прво додајте још један језик у пројекат.',
   'screens.field.secondSize': 'Величина другог језика',
+  'cue.delete.dontAsk': 'Не приказуј више ово упозорење',
+  'settings.confirmCueDelete': 'Тражи потврду пре брисања реплике',
 };

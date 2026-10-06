@@ -536,4 +536,6 @@ export default {
   'screens.secondLanguage.hint': 'أسفل الأولى، بحجم أصغر، بعد شرطة قصيرة. الجمل غير المترجمة تعرض اللغة الأولى فقط.',
   'screens.secondLanguage.needMore': 'لعرض لغتين، أضف أولًا لغة أخرى إلى المشروع.',
   'screens.field.secondSize': 'حجم اللغة الثانية',
+  'cue.delete.dontAsk': 'عدم إظهار هذا التنبيه مرة أخرى',
+  'settings.confirmCueDelete': 'طلب التأكيد قبل حذف سطر',
 };

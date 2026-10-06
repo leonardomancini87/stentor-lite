@@ -37,6 +37,7 @@ function getDefaultValues(dialog, typeLabel = getMarkerTypeLabel) {
 
   return {
     value: dialog.defaultValue || '',
+    dontAskAgain: false,
   };
 }
 
@@ -156,7 +157,8 @@ export default function StentoreDialog({ dialog, onCancel, onConfirm }) {
       return;
     }
 
-    onConfirm(true);
+    // Con la casella «Non mostrare questo avviso in futuro» la conferma porta anche la scelta.
+    onConfirm(dialog.dontAskAgainLabel ? { dontAskAgain: Boolean(values.dontAskAgain) } : true);
   }
 
   function renderBody() {
@@ -310,6 +312,19 @@ export default function StentoreDialog({ dialog, onCancel, onConfirm }) {
             placeholder={dialog.placeholder || ''}
             autoFocus
           />
+        </label>
+      );
+    }
+
+    if (dialog.kind === 'confirm' && dialog.dontAskAgainLabel) {
+      return (
+        <label className="dialogCheckbox">
+          <input
+            type="checkbox"
+            checked={Boolean(values.dontAskAgain)}
+            onChange={(event) => updateValue('dontAskAgain', event.target.checked)}
+          />
+          {dialog.dontAskAgainLabel}
         </label>
       );
     }

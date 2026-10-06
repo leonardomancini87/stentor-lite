@@ -517,4 +517,6 @@ export default {
   'screens.secondLanguage.hint': '显示在第一语言下方，字号较小，中间以短横线分隔。未翻译的台词只显示第一语言。',
   'screens.secondLanguage.needMore': '要投影两种语言，请先为项目添加另一种语言。',
   'screens.field.secondSize': '第二语言字号',
+  'cue.delete.dontAsk': '不再显示此提示',
+  'settings.confirmCueDelete': '删除台词前请求确认',
 };

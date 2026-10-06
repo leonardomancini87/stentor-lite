@@ -517,4 +517,6 @@ export default {
   'screens.secondLanguage.hint': 'Por baixo da primeira, mais pequena, depois de um breve traço. As falas não traduzidas mostram só a primeira língua.',
   'screens.secondLanguage.needMore': 'Para projetar duas línguas, adicione primeiro outra língua ao projeto.',
   'screens.field.secondSize': 'Tamanho da segunda língua',
+  'cue.delete.dontAsk': 'Não voltar a mostrar este aviso',
+  'settings.confirmCueDelete': 'Pedir confirmação antes de eliminar uma fala',
 };

@@ -8,6 +8,10 @@ Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténto
 **Schermi**
 - Seconda lingua un po' più distanziata dal trattino: lo spazio sopra e sotto il trattino ora appare uguale.
 
+**Battute**
+- Dopo aver eliminato una battuta si torna all'elenco: la battuta successiva è selezionata, ma il suo editor non si apre più da solo.
+- L'avviso di conferma dell'eliminazione ha la casella «Non mostrare questo avviso in futuro». Si può riattivare in Impostazioni → Interfaccia → «Chiedi conferma prima di eliminare una battuta». Una battuta eliminata si recupera sempre con Command/Ctrl+Z.
+
 ## 0.9.1 — 6 ottobre 2026 · beta
 
 **Schermi**

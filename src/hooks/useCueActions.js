@@ -8,6 +8,7 @@ import { useRef } from 'react';
 import { planVoiceChange, applyVoiceChange } from '../utils/cueVoices.js';
 import { voiceMessage } from '../utils/voiceMessages.js';
 import { translate } from '../i18n/index.js';
+import { setConfirmCueDelete, shouldConfirmCueDelete } from '../utils/confirmPreferences.js';
 
 // Messaggi di errore delle funzioni sul copione → chiavi di traduzione.
 const ERROR_KEYS = {
@@ -261,15 +262,19 @@ export function useCueActions({
       await dialogs.alert({ title: notPossible, message: ui('error.lastCue') });
       return;
     }
-    const confirmed = await dialogs.confirm({
-      title: ui('cue.delete.title'),
-      message: ui('cue.delete.message', { number: String(cueIndex + 1).padStart(3, '0') }),
-      confirmLabel: ui('common.delete'),
-      cancelLabel: ui('common.cancel'),
-      variant: 'danger',
-      trapFocus: true,
-    });
-    if (!confirmed) return;
+    if (shouldConfirmCueDelete()) {
+      const confirmed = await dialogs.confirm({
+        title: ui('cue.delete.title'),
+        message: ui('cue.delete.message', { number: String(cueIndex + 1).padStart(3, '0') }),
+        confirmLabel: ui('common.delete'),
+        cancelLabel: ui('common.cancel'),
+        variant: 'danger',
+        trapFocus: true,
+        dontAskAgainLabel: ui('cue.delete.dontAsk'),
+      });
+      if (!confirmed) return;
+      if (confirmed.dontAskAgain) setConfirmCueDelete(false);
+    }
 
     setProject((current) => {
       const result = deleteCueStructural(current, cueId);
@@ -281,7 +286,8 @@ export function useCueActions({
         if (index === result.deletedIndex) return nextIndex;
         return index;
       });
-      setExpandedCueId?.(result.project.cues[nextIndex]?.id ?? null);
+      // Si torna all'elenco: la battuta successiva è selezionata, ma il suo editor resta chiuso.
+      setExpandedCueId?.(null);
       setEditingCue?.(null);
       return result.project;
     });

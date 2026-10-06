@@ -517,4 +517,6 @@ export default {
   'screens.secondLanguage.hint': 'Sous la première, plus petite, après un court tiret. Les répliques non traduites n’affichent que la première langue.',
   'screens.secondLanguage.needMore': 'Pour projeter deux langues, ajoutez d’abord une autre langue au projet.',
   'screens.field.secondSize': 'Taille de la deuxième langue',
+  'cue.delete.dontAsk': 'Ne plus afficher cet avertissement',
+  'settings.confirmCueDelete': 'Demander une confirmation avant de supprimer une réplique',
 };

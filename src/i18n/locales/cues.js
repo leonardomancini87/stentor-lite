@@ -94,6 +94,7 @@ export default {
     'error.splitMarker': 'Non puoi dividere un marcatore.',
     'error.invalidChoice': 'Scelta non valida per le altre lingue.',
     'error.cursor': 'Metti il cursore nel punto in cui vuoi dividere il sopratitolo.',
+    'cue.delete.dontAsk': 'Non mostrare questo avviso in futuro',
   },
   en: {
     'cues.current': 'Live',
@@ -189,5 +190,6 @@ export default {
     'error.splitMarker': 'You cannot split a marker.',
     'error.invalidChoice': 'Invalid choice for the other languages.',
     'error.cursor': 'Place the cursor where you want to split the surtitle.',
+    'cue.delete.dontAsk': 'Don’t show this warning again',
   },
 };
