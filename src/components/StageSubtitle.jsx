@@ -29,7 +29,8 @@ function getCenterY(verticalAlign, paddingTop) {
   const offset = (parseVh(paddingTop, 0) / 100) * DESIGN_HEIGHT;
   if (verticalAlign === 'top') return DESIGN_HEIGHT * 0.26 + offset;
   if (verticalAlign === 'bottom') return DESIGN_HEIGHT * 0.74 + offset;
-  return DESIGN_HEIGHT * 0.5 + offset;
+  // «Centro» è il centro esatto: il margine dall'alto vale solo per le posizioni Alto e Basso.
+  return DESIGN_HEIGHT * 0.5;
 }
 
 export default function StageSubtitle({

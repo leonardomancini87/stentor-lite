@@ -449,8 +449,9 @@ export default function ScreensPage({
               <small>{t('screens.offset.hint')}</small>
               <button
                 type="button"
-                onClick={() => updateActiveScreen({ publicOffsetX: 0, publicOffsetY: 0 })}
-                disabled={!activeSettings.publicOffsetX && !activeSettings.publicOffsetY}
+                // Centro dello schermo in entrambe le direzioni: azzera gli spostamenti e porta la posizione su «Centro».
+                onClick={() => updateActiveScreen({ publicOffsetX: 0, publicOffsetY: 0, publicVerticalAlign: 'center' })}
+                disabled={!activeSettings.publicOffsetX && !activeSettings.publicOffsetY && activeSettings.publicVerticalAlign === 'center'}
               >
                 {t('screens.offset.center')}
               </button>
