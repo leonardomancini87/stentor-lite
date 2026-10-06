@@ -332,7 +332,7 @@ export default function ScreensPage({
         </main>
 
         <aside className="desktopScreenInspector liteScreenInspector" aria-label={t('screens.inspector.aria')}>
-          <div className="desktopPanelTitle inspectorTitle">
+          <div className="desktopPanelTitle inspectorTitle" data-right-toggle-anchor="">
             <span>{t('screens.inspector.title')}</span>
           </div>
 

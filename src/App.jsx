@@ -301,37 +301,48 @@ export default function App() {
       .catch(() => {});
   }, [windowTitle]);
 
-  // Allinea verticalmente la freccia destra alla firma Sténtor in fondo alla barra sinistra.
+  // La freccia destra sta in alto nella colonna destra, sulla riga indicata da
+  // [data-right-toggle-anchor]. A colonna ridotta resta alla stessa altezza, nella striscia laterale.
+  const rightToggleCenters = useRef({});
   useLayoutEffect(() => {
     if (!hasRightSidebar) return undefined;
-    const leftSidebar = document.querySelector('.stentorSidebar');
+    const rootStyle = document.documentElement.style;
     function alignRightToggle() {
-      const anchor = document.querySelector('.stentorSidebar .stentorSidebarFooter')
-        || document.querySelector('.stentorSidebar .stentorSidebarToggle');
-      if (!anchor) return;
-      const rect = anchor.getBoundingClientRect();
-      if (!rect.height) return;
-      const center = rect.top + rect.height / 2;
-      document.documentElement.style.setProperty('--stentor-right-toggle-center', `${Math.round(center)}px`);
+      const anchor = document.querySelector('[data-right-toggle-anchor]');
+      const rect = anchor?.getBoundingClientRect();
+      if (rect && rect.height) {
+        const paddingRight = parseFloat(window.getComputedStyle(anchor).paddingRight) || 0;
+        const center = Math.round(rect.top + rect.height / 2);
+        const right = Math.round(window.innerWidth - rect.right + Math.max(0, paddingRight - 6));
+        rightToggleCenters.current[viewMode] = center;
+        rootStyle.setProperty('--stentor-right-toggle-center', `${center}px`);
+        rootStyle.setProperty('--stentor-right-toggle-right', `${right}px`);
+        return;
+      }
+      // Colonna ridotta: la riga non è visibile, si riusa l'ultima altezza misurata in questa pagina.
+      rootStyle.removeProperty('--stentor-right-toggle-right');
+      const saved = rightToggleCenters.current[viewMode];
+      if (saved) rootStyle.setProperty('--stentor-right-toggle-center', `${saved}px`);
+      else rootStyle.removeProperty('--stentor-right-toggle-center');
     }
     alignRightToggle();
     const frame = window.requestAnimationFrame(alignRightToggle);
-    // Qualsiasi cambio di dimensione nella barra sinistra (testi, font, immagini) sposta la sua freccia.
-    const observer = typeof ResizeObserver === 'function' && leftSidebar ? new ResizeObserver(alignRightToggle) : null;
-    if (observer) {
-      observer.observe(leftSidebar);
-      Array.from(leftSidebar.children).forEach((child) => observer.observe(child));
-    }
+    // Qualsiasi cambio di dimensione nella pagina (testi, font, card ridotte) può spostare la riga.
+    const main = document.querySelector('.appShell > .main');
+    const observer = typeof ResizeObserver === 'function' && main ? new ResizeObserver(alignRightToggle) : null;
+    observer?.observe(main);
     document.fonts?.ready?.then(alignRightToggle).catch(() => {});
     const settle = window.setTimeout(alignRightToggle, 400);
     window.addEventListener('resize', alignRightToggle);
+    window.addEventListener('scroll', alignRightToggle, true);
     return () => {
       window.cancelAnimationFrame(frame);
       window.clearTimeout(settle);
       observer?.disconnect();
       window.removeEventListener('resize', alignRightToggle);
+      window.removeEventListener('scroll', alignRightToggle, true);
     };
-  }, [hasRightSidebar, leftSidebarCollapsed, viewMode]);
+  }, [hasRightSidebar, isRightSidebarCollapsed, leftSidebarCollapsed, viewMode]);
 
 
   useEffect(() => {
@@ -1610,6 +1621,7 @@ export default function App() {
               </main>
 
               <aside className="liteRegiaRightColumn" aria-label={ui('rightColumn.aria')}>
+                <div className="stentorRightToggleRow" data-right-toggle-anchor="" aria-hidden="true" />
                 <ShowMap
                   sections={showMapSections}
                   currentSectionId={currentMapSection?.id ?? null}

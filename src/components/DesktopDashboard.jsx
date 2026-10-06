@@ -336,7 +336,7 @@ export default function DesktopDashboard({
       </section>
 
       <aside className="projectDetailsPanel projectDetailsPanelMinimal">
-        <h2>{t('projects.details.title')}</h2>
+        <h2 data-right-toggle-anchor="">{t('projects.details.title')}</h2>
         <h3>{selectedProject?.title || t('projects.untitled')}</h3>
         <p>{String(selectedProject?.company || selectedProject?.companyName || t('projects.liveShow'))}</p>
         <dl>

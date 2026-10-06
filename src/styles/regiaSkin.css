@@ -786,8 +786,8 @@ html[data-app-theme] .appShell .stentorSidebar .stentorSidebarFooter small {
 
 html[data-app-theme] .appShell .stentorRightSidebarToggle {
   position: fixed !important;
-  right: calc((var(--stentor-right-rail) - 28px) / 2) !important;
-  top: calc(var(--stentor-right-toggle-center, calc(100vh - 120px)) - 14px) !important;
+  right: var(--stentor-right-toggle-right, calc((var(--stentor-right-rail) - 28px) / 2)) !important;
+  top: calc(var(--stentor-right-toggle-center, 40px) - 14px) !important;
   z-index: 40 !important;
   width: 28px !important; height: 28px !important; min-width: 28px !important; min-height: 28px !important;
   padding: 0 !important; margin: 0 !important; border-radius: 999px !important;
@@ -807,22 +807,18 @@ html[data-app-theme] .appShell .stentorRightSidebarToggle:hover {
 
 html[data-app-theme] .appShell .stentorRightSidebarToggle:focus-visible { outline: 2px solid var(--pk-accent) !important; outline-offset: 2px; }
 
-/* Le colonne destre finiscono sopra la freccia, così non ne coprono i contenuti */
+/* La freccia sta in alto nella colonna destra: in Sopratitoli ha una riga tutta sua sopra le card,
+   in Schermi e in Progetti sta sulla riga del titolo, che in Schermi resta ferma mentre si scorre. */
 
-html[data-app-theme] .appShell .projectDetailsPanel { padding-bottom: 72px !important; }
+html[data-app-theme] .appShell .liteRegiaRightColumn > .stentorRightToggleRow { flex: 0 0 28px; height: 28px; box-sizing: border-box; padding-right: 20px; }
 
-html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn {
-  margin-bottom: max(0px, calc(100vh - var(--stentor-right-toggle-center, calc(100vh - 120px)) + 22px)) !important;
-  min-height: 0 !important;
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenInspector > .inspectorTitle {
+  position: sticky; top: 0; z-index: 2; background: var(--pk-card) !important;
+  border-top-left-radius: var(--pk-radius); border-top-right-radius: var(--pk-radius);
 }
 
-/* In Schermi la card delle impostazioni è alta quanto le altre due: lo spazio per la freccia
-   resta dentro la card, in fondo, così a fine scorrimento i pulsanti non le finiscono sotto. */
-html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenInspector {
-  margin-bottom: 0 !important;
-  min-height: 0 !important;
-  padding-bottom: max(0px, calc(100vh - var(--stentor-right-toggle-center, calc(100vh - 120px)) + 22px)) !important;
-}
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenInspector,
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn { min-height: 0 !important; }
 
 /* Barra destra ridotta: resta una sottile striscia con la freccia per riaprirla */
 
