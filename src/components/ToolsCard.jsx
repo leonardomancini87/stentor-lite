@@ -16,6 +16,8 @@ import {
   nextIndexAfter,
   normalizeLineLimit,
 } from '../utils/textCheck.js';
+import { createCanvasTextMeasure, findCuesWiderThanScreens, loadScreenFonts } from '../utils/screenFit.js';
+import { getScreens } from '../utils/screenSettings.js';
 import { useCardCollapsed } from '../hooks/useCardCollapsed.js';
 import CardCollapseButton from './CardCollapseButton.jsx';
 import { useI18n } from '../i18n/index.js';
@@ -155,11 +157,31 @@ function LineLimitControl({ limit, onChange }) {
 function CheckPanel({ project, language, activeIndex, screenColors, onRevealCue, onChangeLimit }) {
   const numbers = useMemo(() => getCueNumbers(project.cues), [project.cues]);
   const limit = getLineLimit(project);
-  const report = useMemo(() => buildTextCheck(project.cues, language, screenColors, limit), [project.cues, language, screenColors, limit]);
+  const textReport = useMemo(() => buildTextCheck(project.cues, language, screenColors, limit), [project.cues, language, screenColors, limit]);
+  // Battute più larghe di uno schermo: si rimisura quando arrivano i caratteri web.
+  const measure = useMemo(() => createCanvasTextMeasure(), []);
+  const [fontsTick, setFontsTick] = useState(0);
+  const screenFonts = getScreens(project.settings).map((screen) => screen.publicFontFamily).join('|');
+  useEffect(() => {
+    let alive = true;
+    const refresh = () => { if (alive) setFontsTick((value) => value + 1); };
+    loadScreenFonts(project).then(refresh);
+    document.fonts?.addEventListener?.('loadingdone', refresh);
+    return () => { alive = false; document.fonts?.removeEventListener?.('loadingdone', refresh); };
+  }, [screenFonts]); // eslint-disable-line react-hooks/exhaustive-deps
+  const wideIndexes = useMemo(
+    () => (measure ? findCuesWiderThanScreens(project, language, measure) : []),
+    [measure, project.cues, project.settings, project.languages, project.primaryLanguage, language, fontsTick], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+  const report = useMemo(() => (wideIndexes.length
+    ? { ...textReport, items: [{ id: 'wide', severity: 'error', indexes: wideIndexes }, ...textReport.items] }
+    : textReport), [textReport, wideIndexes]);
   const activeCue = project.cues[activeIndex];
   const showActive = activeCue && !isMarkerCue(activeCue);
   const activeInfo = showActive ? describeCue(activeCue, language) : null;
-  const activeProblems = showActive ? getCueProblems(activeCue, language, limit) : [];
+  const activeProblems = showActive
+    ? [...(wideIndexes.includes(activeIndex) ? ['wide'] : []), ...getCueProblems(activeCue, language, limit)]
+    : [];
   const languageName = getLanguageName(project, language);
   const { t } = useI18n();
 
