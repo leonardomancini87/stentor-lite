@@ -97,7 +97,8 @@
       background: #000000;
     }
 
-    #subtitle {
+    /* Ogni battuta è un livello a sé: durante il passaggio convivono quello che esce e quello che entra. */
+    .subtitleLayer {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -106,7 +107,6 @@
       overflow: visible;
       pointer-events: none;
       opacity: 1;
-      transition: opacity 120ms ease-out;
     }
 
     .stage-line {
@@ -146,7 +146,6 @@
 <body>
   <main id="stage">
     <div id="canvas">
-      <svg id="subtitle" viewBox="0 0 2360 800" preserveAspectRatio="xMidYMid meet" role="img" aria-label=""></svg>
     </div>
   </main>
   <div class="hint">Doppio clic: tutto schermo · Esc: esci</div>
@@ -164,11 +163,11 @@
       const DESIGN_HEIGHT = 800;
       const stage = document.getElementById('stage');
       const canvas = document.getElementById('canvas');
-      const subtitle = document.getElementById('subtitle');
-      let lastPayloadText = '';
+      let currentLayer = null;
+      let leavingLayers = [];
+      let layerCounter = 0;
       let lastRawText = null;
       let lastUpdatedAt = 0;
-      let transitionTimer = null;
 
       function escapeHtml(value) {
         return String(value || '')
@@ -322,7 +321,7 @@
         return { primaryY, secondY, secondFontPx, separator: { y: separatorY, width: fontPx * 1.1, thickness: Math.max(2, fontPx * 0.045) } };
       }
 
-      function renderSubtitleText(text, settings = {}, cueStyle = 'normal', cueTextStyle = {}, textSpans = [], secondText = '', secondTextSpans = []) {
+      function renderSubtitleText(subtitle, text, settings = {}, cueStyle = 'normal', cueTextStyle = {}, textSpans = [], secondText = '', secondTextSpans = []) {
         const value = String(text || '');
         const lines = value.split(/\r?\n/);
         const secondValue = String(secondText || '');
@@ -347,13 +346,14 @@
         subtitle.replaceChildren();
         subtitle.setAttribute('aria-label', [value, secondValue].filter(Boolean).join('\n'));
 
+        const clipId = `stageTextClip-${subtitle.dataset.layer || '0'}`;
         const defs = createSvgElement('defs');
-        const clipPath = createSvgElement('clipPath', { id: 'stageTextClip' });
+        const clipPath = createSvgElement('clipPath', { id: clipId });
         clipPath.appendChild(createSvgElement('rect', { x: clipX, y: -DESIGN_HEIGHT, width: clipWidth, height: DESIGN_HEIGHT * 3 }));
         defs.appendChild(clipPath);
         subtitle.appendChild(defs);
 
-        const group = createSvgElement('g', { 'clip-path': 'url(#stageTextClip)' });
+        const group = createSvgElement('g', { 'clip-path': `url(#${clipId})` });
         function appendLines(blockLines, ys, linePx, spans) {
           var lineStart = 0;
           blockLines.forEach((line, index) => {
@@ -405,56 +405,112 @@
         subtitle.appendChild(group);
       }
 
-      function getTransitionMs(settings = {}, key, fallback) {
-        const value = Number.parseInt(settings[key], 10);
-        if (!Number.isFinite(value)) return fallback;
-        return Math.max(0, Math.min(1200, value));
+      // Passaggio tra battute, scelto per ogni schermo (Schermi → Aspetto):
+      //   none       cambio netto
+      //   crossfade  la nuova battuta sfuma sopra la vecchia
+      //   fade       la vecchia sparisce, poi compare la nuova (il comportamento di sempre)
+      //   slide      la vecchia sale e svanisce, la nuova arriva dal basso
+      // transitionMs è la durata di ogni fase. Se arriva una battuta nuova a passaggio in corso,
+      // i livelli in uscita spariscono subito: le animazioni non si accodano mai.
+      const TRANSITIONS = ['none', 'crossfade', 'fade', 'slide'];
+
+      function getTransition(settings = {}) {
+        const effect = TRANSITIONS.includes(settings.transition) ? settings.transition : 'fade';
+        const parsed = Number.parseInt(settings.transitionMs, 10);
+        const ms = effect === 'none' ? 0 : Math.max(0, Math.min(1200, Number.isFinite(parsed) ? parsed : 120));
+        return { effect: ms > 0 ? effect : 'none', ms };
+      }
+
+      function createLayer() {
+        layerCounter += 1;
+        const layer = createSvgElement('svg', {
+          class: 'subtitleLayer',
+          viewBox: `0 0 ${DESIGN_WIDTH} ${DESIGN_HEIGHT}`,
+          preserveAspectRatio: 'xMidYMid meet',
+          role: 'img',
+        });
+        layer.dataset.layer = String(layerCounter);
+        return layer;
+      }
+
+      function removeLeavingLayers() {
+        leavingLayers.forEach((entry) => {
+          window.clearTimeout(entry.timer);
+          entry.layer.remove();
+        });
+        leavingLayers = [];
+      }
+
+      function leaveLayer(layer, effect, ms, slidePx) {
+        if (effect === 'none') {
+          layer.remove();
+          return;
+        }
+        // La transizione parte dallo stato in cui il livello si trova, anche se stava ancora entrando.
+        layer.style.transition = `opacity ${ms}ms ease-out, transform ${ms}ms ease-out`;
+        layer.style.opacity = '0';
+        if (effect === 'slide') layer.style.transform = `translateY(${-slidePx}px)`;
+        const entry = { layer, timer: 0 };
+        entry.timer = window.setTimeout(() => {
+          layer.remove();
+          leavingLayers = leavingLayers.filter((item) => item !== entry);
+        }, ms + 60);
+        leavingLayers.push(entry);
+      }
+
+      function enterLayer(layer, effect, ms, afterOutgoing, slidePx) {
+        if (effect === 'none') return;
+        layer.style.transition = 'none';
+        layer.style.opacity = '0';
+        if (effect === 'slide') layer.style.transform = `translateY(${slidePx}px)`;
+        layer.getBoundingClientRect(); // fissa lo stato di partenza prima di animare
+        // Con lo stacco la battuta nuova aspetta che la vecchia sia sparita.
+        const delay = effect === 'fade' && afterOutgoing ? ms : 0;
+        layer.style.transition = `opacity ${ms}ms ease-out ${delay}ms, transform ${ms}ms ease-out ${delay}ms`;
+        layer.style.opacity = '1';
+        layer.style.transform = 'translateY(0)';
       }
 
       function applyPayload(payload) {
         if (!payload || !payload.settings) return;
 
         const settings = payload.settings;
-        const nextText = payload.blackout ? '' : [payload.text || '', payload.secondText || ''].filter(Boolean).join('\n\u2014\n');
-        const previousText = lastPayloadText || '';
-        const fadeOutMs = payload.blackout
-          ? getTransitionMs(settings, 'blackoutFadeMs', 160)
-          : getTransitionMs(settings, 'fadeOutMs', 120);
-        const fadeInMs = payload.blackout
-          ? 0
-          : getTransitionMs(settings, 'fadeInMs', 120);
-        const shouldFadeOut = previousText && previousText !== nextText && fadeOutMs > 0;
+        const text = payload.blackout ? '' : payload.text || '';
+        const secondText = payload.blackout ? '' : payload.secondText || '';
+        const nextText = [text, secondText].filter(Boolean).join('\n\u2014\n');
+        const { effect, ms } = getTransition(settings);
+        const render = (layer) => renderSubtitleText(layer, text, settings, payload.cueStyle, payload.cueTextStyle, payload.textSpans || [], secondText, payload.secondTextSpans || []);
 
-        window.clearTimeout(transitionTimer);
-        // Stesso testo con stile o posizione diversi (es. mentre lo si sposta): si ridisegna senza dissolvenza.
+        // Stesso testo con stile o posizione diversi (es. mentre lo si sposta): si ridisegna senza effetto.
         const sameText = nextText === lastRawText && Boolean(nextText);
         lastRawText = nextText;
+        lastUpdatedAt = payload.updatedAt || Date.now();
         stage.style.background = settings.background || '#000000';
         canvas.style.background = settings.background || '#000000';
-        subtitle.style.transition = `opacity ${shouldFadeOut ? fadeOutMs : fadeInMs}ms ease-out`;
+        document.body.classList.toggle('debug-empty', !nextText && !payload.blackout);
 
-        const finishRender = () => {
-          renderSubtitleText(payload.blackout ? '' : payload.text || '', settings, payload.cueStyle, payload.cueTextStyle, payload.textSpans || [], payload.blackout ? '' : payload.secondText || '', payload.secondTextSpans || []);
-          lastPayloadText = subtitle.textContent || '';
-          lastUpdatedAt = payload.updatedAt || Date.now();
-          document.body.classList.toggle('debug-empty', !lastPayloadText && !payload.blackout);
-          subtitle.style.transition = `opacity ${fadeInMs}ms ease-out`;
-          subtitle.style.opacity = nextText && fadeInMs > 0 && !sameText ? '0' : '1';
+        if (sameText && currentLayer) {
+          render(currentLayer);
           updateScale();
-          requestAnimationFrame(() => {
-            subtitle.style.opacity = '1';
-          });
-        };
-
-        if (sameText) {
-          subtitle.style.transition = 'none';
-          finishRender();
-        } else if (shouldFadeOut) {
-          subtitle.style.opacity = '0';
-          transitionTimer = window.setTimeout(finishRender, fadeOutMs);
-        } else {
-          finishRender();
+          return;
         }
+
+        removeLeavingLayers();
+        const outgoing = currentLayer;
+        currentLayer = null;
+        const slidePx = parsePixels(settings.fontSize || settings.publicFontSize, 58) * 0.45;
+        // Lo stacco ha senso solo se la battuta che esce si vede ancora: avanzando in fretta
+        // (la precedente non era ancora comparsa) la nuova entra subito.
+        const outgoingVisible = Boolean(outgoing) && Number(window.getComputedStyle(outgoing).opacity) > 0.05;
+        if (outgoing) leaveLayer(outgoing, effect, ms, slidePx);
+        if (nextText) {
+          const incoming = createLayer();
+          render(incoming);
+          canvas.appendChild(incoming);
+          enterLayer(incoming, effect, ms, outgoingVisible, slidePx);
+          currentLayer = incoming;
+        }
+        updateScale();
       }
 
       function readStoredPayload() {

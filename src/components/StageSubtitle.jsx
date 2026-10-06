@@ -44,6 +44,8 @@ export default function StageSubtitle({
   spans = [],
   className = '',
   fadeInMs = 120,
+  // Durata di ogni fase del passaggio tra battute (vedi StageTransition); senza, vale fadeInMs.
+  transitionMs,
   // Seconda lingua: sotto la prima, più piccola, dopo un breve trattino (vedi stageLayout.js).
   secondText = '',
   secondSpans = [],
@@ -112,7 +114,11 @@ export default function StageSubtitle({
   return (
     <svg
       className={`stageSubtitle stageSubtitleSvg ${className}`.trim()}
-      style={{ '--stentore-fade-in-ms': `${Math.max(0, Number.parseInt(fadeInMs, 10) || 0)}ms` }}
+      style={{
+        '--stentore-fade-in-ms': `${Math.max(0, Number.parseInt(fadeInMs, 10) || 0)}ms`,
+        '--stage-fx-ms': `${Math.max(0, Number.parseInt(transitionMs ?? fadeInMs, 10) || 0)}ms`,
+        '--stage-fx-shift': `${Math.round(fontPx * 0.45)}px`,
+      }}
       viewBox={`0 0 ${DESIGN_WIDTH} ${DESIGN_HEIGHT}`}
       aria-label={[text, secondText].filter(Boolean).join('\n')}
       role="img"

@@ -1,4 +1,4 @@
-import { FONT_FAMILY_OPTIONS, getScreenLanguage, getScreenSecondLanguage, screenToPublicSettings } from './screenSettings.js';
+import { FONT_FAMILY_OPTIONS, getScreenLanguage, getScreenSecondLanguage, getScreenTransitionMs, screenToPublicSettings } from './screenSettings.js';
 import { isMarkerCue } from './markers.js';
 import { getCueText, getCueTextStyle } from './cueTextStyle.js';
 import { getCueTextSpans } from './inlineStyleSpans.js';
@@ -56,6 +56,8 @@ export function buildProjectionPayload({
       fadeInMs: settings.publicFadeInMs ?? 120,
       fadeOutMs: settings.publicFadeOutMs ?? 120,
       blackoutFadeMs: settings.publicBlackoutFadeMs ?? 160,
+      transition: settings.publicTransition,
+      transitionMs: getScreenTransitionMs(settings),
       aspectRatio: settings.publicAspectRatio || '16:9',
       secondScale: settings.publicSecondScale,
     },

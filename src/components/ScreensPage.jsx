@@ -3,6 +3,7 @@ import { Monitor } from 'lucide-react';
 
 import StageFrame from './StageFrame.jsx';
 import StageSubtitle from './StageSubtitle.jsx';
+import StageTransition from './StageTransition.jsx';
 import { useI18n } from '../i18n/index.js';
 import { getCueText, getCueTypography } from '../utils/cueTextStyle.js';
 import { getCueTextSpans } from '../utils/inlineStyleSpans.js';
@@ -12,12 +13,15 @@ import {
   FONT_FAMILY_OPTIONS,
   SCREEN_ASPECT_OPTIONS,
   SCREEN_OFFSET_LIMITS,
+  SCREEN_TRANSITIONS,
+  SCREEN_TRANSITION_SPEEDS,
   clampScreenOffset,
   createScreen,
   deleteActiveScreen,
   getScreenAspectOption,
   getScreenLanguage,
   getScreenSecondLanguage,
+  getScreenTransitionMs,
   screenToPublicSettings,
   setActiveScreen,
   updateActiveScreenSettings,
@@ -47,6 +51,8 @@ export default function ScreensPage({
   const canvasRef = useRef(null);
   const dragRef = useRef(null);
   const [dragging, setDragging] = useState(false);
+  // Cambia a ogni «Prova» (e a ogni scelta di effetto o durata): l'anteprima rifà il passaggio.
+  const [transitionTry, setTransitionTry] = useState(0);
   // Valori dei cursori (e del trascinamento) mentre li si muove: si vedono subito, mentre il
   // progetto e lo schermo in sala si aggiornano al massimo una volta per fotogramma.
   const [draft, setDraft] = useState(null);
@@ -179,6 +185,8 @@ export default function ScreensPage({
       publicFadeInMs: fallback.publicFadeInMs,
       publicFadeOutMs: fallback.publicFadeOutMs,
       publicBlackoutFadeMs: fallback.publicBlackoutFadeMs,
+      publicTransition: fallback.publicTransition,
+      publicTransitionSpeed: fallback.publicTransitionSpeed,
       publicAspectRatio: fallback.publicAspectRatio,
       publicSecondScale: fallback.publicSecondScale,
       publicOffsetX: 0,
@@ -305,9 +313,13 @@ export default function ScreensPage({
             title={t('screens.offset.hint')}
           >
             <StageFrame id={`desktop-screen-canvas-${activeScreen.id}`} settings={activeSettings} className="desktopScreenStageFrame">
+              <StageTransition
+                transitionKey={`${blackout ? 'blackout' : cue?.id || 'empty'}-${activeScreen.id}-${activeScreenLanguage}-${activeSecondLanguage}-${transitionTry}`}
+                effect={activeSettings.publicTransition}
+                ms={getScreenTransitionMs(activeSettings)}
+              >
               {blackout ? null : (
                 <StageSubtitle
-                  key={`${cue?.id || 'empty'}-${activeScreen.id}-${activeScreenLanguage}-${activeSecondLanguage}`}
                   text={previewText()}
                   spans={getCueTextSpans(cue, activeScreenLanguage)}
                   secondText={previewSecondText()}
@@ -327,6 +339,7 @@ export default function ScreensPage({
                   }}
                 />
               )}
+              </StageTransition>
             </StageFrame>
           </div>
         </main>
@@ -451,6 +464,32 @@ export default function ScreensPage({
                 {t('screens.field.background')}
                 <input type="color" value={activeSettings.publicBackground || '#000000'} onChange={(event) => updateActiveScreen({ publicBackground: event.target.value })} />
               </label>
+            </div>
+          </section>
+
+          <section className="desktopInspectorSection">
+            <h3>{t('screens.section.transition')}</h3>
+            <label>
+              {t('screens.field.transition')}
+              <select value={activeSettings.publicTransition} onChange={(event) => { updateActiveScreen({ publicTransition: event.target.value }); setTransitionTry((value) => value + 1); }}>
+                {SCREEN_TRANSITIONS.map((effect) => (
+                  <option key={effect} value={effect}>{t(`screens.transition.${effect}`)}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              {t('screens.field.transitionSpeed')}
+              <select value={activeSettings.publicTransitionSpeed} disabled={activeSettings.publicTransition === 'none'} onChange={(event) => { updateActiveScreen({ publicTransitionSpeed: event.target.value }); setTransitionTry((value) => value + 1); }}>
+                {Object.keys(SCREEN_TRANSITION_SPEEDS).map((speed) => (
+                  <option key={speed} value={speed}>{t(`screens.transitionSpeed.${speed}`)}</option>
+                ))}
+              </select>
+            </label>
+            <div className="liteScreenOffsetRow">
+              <small>{t('screens.transition.hint')}</small>
+              <button type="button" onClick={() => setTransitionTry((value) => value + 1)} disabled={activeSettings.publicTransition === 'none' || blackout}>
+                {t('screens.transition.try')}
+              </button>
             </div>
           </section>
 

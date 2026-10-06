@@ -18,6 +18,30 @@ export const SCREEN_ASPECT_OPTIONS = [
   { label: 'Libero', value: 'free', ratio: '16 / 9', width: 1280, height: 720 },
 ];
 
+// Passaggio da una battuta all'altra sullo schermo. «fade» veloce è il comportamento di sempre.
+//   none: cambio netto · crossfade: la nuova sfuma sopra la vecchia
+//   fade: la vecchia sparisce, poi compare la nuova · slide: la vecchia sale, la nuova arriva dal basso
+export const SCREEN_TRANSITIONS = ['none', 'crossfade', 'fade', 'slide'];
+export const DEFAULT_SCREEN_TRANSITION = 'fade';
+
+// Durata di ogni fase del passaggio, in millisecondi.
+export const SCREEN_TRANSITION_SPEEDS = { fast: 120, medium: 300, slow: 600 };
+export const DEFAULT_SCREEN_TRANSITION_SPEED = 'fast';
+
+export function normalizeScreenTransition(value) {
+  return SCREEN_TRANSITIONS.includes(value) ? value : DEFAULT_SCREEN_TRANSITION;
+}
+
+export function normalizeScreenTransitionSpeed(value) {
+  return Object.prototype.hasOwnProperty.call(SCREEN_TRANSITION_SPEEDS, value) ? value : DEFAULT_SCREEN_TRANSITION_SPEED;
+}
+
+// Millisecondi di ogni fase per lo schermo dato; 0 se il cambio è netto.
+export function getScreenTransitionMs(screen = {}) {
+  if (normalizeScreenTransition(screen.publicTransition) === 'none') return 0;
+  return SCREEN_TRANSITION_SPEEDS[normalizeScreenTransitionSpeed(screen.publicTransitionSpeed)];
+}
+
 export function getScreenAspectOption(value) {
   return SCREEN_ASPECT_OPTIONS.find((option) => option.value === value) || SCREEN_ASPECT_OPTIONS[0];
 }
@@ -36,6 +60,8 @@ export const DEFAULT_SCREENS = [
     publicFadeInMs: 120,
     publicFadeOutMs: 120,
     publicBlackoutFadeMs: 160,
+    publicTransition: DEFAULT_SCREEN_TRANSITION,
+    publicTransitionSpeed: DEFAULT_SCREEN_TRANSITION_SPEED,
     publicLanguage: 'active',
     publicSecondLanguage: '',
     publicSecondScale: SECOND_LANGUAGE_SCALE.default,
@@ -98,6 +124,8 @@ export function screenToPublicSettings(screen) {
     publicFadeInMs: clampTransitionMs(screen.publicFadeInMs, 120),
     publicFadeOutMs: clampTransitionMs(screen.publicFadeOutMs, 120),
     publicBlackoutFadeMs: clampTransitionMs(screen.publicBlackoutFadeMs, 160),
+    publicTransition: normalizeScreenTransition(screen.publicTransition),
+    publicTransitionSpeed: normalizeScreenTransitionSpeed(screen.publicTransitionSpeed),
     publicLanguage: screen.publicLanguage || 'active',
     publicSecondLanguage: screen.publicSecondLanguage || '',
     publicSecondScale: clampSecondScale(screen.publicSecondScale),

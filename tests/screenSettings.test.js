@@ -57,3 +57,31 @@ test('si può aggiornare uno schermo che non è quello attivo', () => {
   assert.equal(next.screens.find((screen) => screen.id === 'b').publicOffsetX, 5);
   assert.equal(next.screens.find((screen) => screen.id === 'a').publicOffsetX, 0);
 });
+
+// Passaggio tra battute: effetto e durata scelti per ogni schermo.
+test('passaggio tra battute: predefinito, valori non validi e durata nel payload', async () => {
+  const { DEFAULT_SCREENS, getScreenTransitionMs, screenToPublicSettings } = await import('../src/utils/screenSettings.js');
+  const { buildProjectionPayload } = await import('../src/utils/projectionTargets.js');
+  const base = DEFAULT_SCREENS[0];
+
+  // Uno schermo salvato prima di questa funzione si comporta come sempre: dissolvenza con stacco, rapida.
+  const legacy = { ...base };
+  delete legacy.publicTransition;
+  delete legacy.publicTransitionSpeed;
+  assert.equal(screenToPublicSettings(legacy).publicTransition, 'fade');
+  assert.equal(screenToPublicSettings(legacy).publicTransitionSpeed, 'fast');
+  assert.equal(getScreenTransitionMs(legacy), 120);
+
+  assert.equal(screenToPublicSettings({ ...base, publicTransition: 'girandola', publicTransitionSpeed: 'x' }).publicTransition, 'fade');
+  assert.equal(getScreenTransitionMs({ ...base, publicTransition: 'slide', publicTransitionSpeed: 'slow' }), 600);
+  assert.equal(getScreenTransitionMs({ ...base, publicTransition: 'none', publicTransitionSpeed: 'slow' }), 0);
+
+  const payload = buildProjectionPayload({
+    cue: { id: 'c1', text: 'Prova' },
+    screen: { ...base, publicTransition: 'crossfade', publicTransitionSpeed: 'medium' },
+    activeLanguage: 'it',
+    languages: ['it'],
+  });
+  assert.equal(payload.settings.transition, 'crossfade');
+  assert.equal(payload.settings.transitionMs, 300);
+});
