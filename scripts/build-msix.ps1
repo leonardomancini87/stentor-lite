@@ -29,11 +29,25 @@ $release = Join-Path $root 'src-tauri/target/release'
 $exe = Join-Path $release 'stentor.exe'
 if (-not (Test-Path $exe)) { throw "Non trovo ${exe}: compila prima con 'npx tauri build --no-bundle'." }
 
+# Cerca lo strumento nel Windows SDK installato; se non c'è, scarica il pacchetto NuGet
+# ufficiale Microsoft.Windows.SDK.BuildTools, che contiene gli stessi strumenti.
 function Find-SdkTool($name) {
-  $tool = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin\*\x64' -Filter $name -ErrorAction SilentlyContinue |
-    Sort-Object FullName -Descending | Select-Object -First 1
-  if (-not $tool) { throw "Non trovo ${name}: installa il Windows SDK." }
-  return $tool.FullName
+  $roots = @("${env:ProgramFiles(x86)}\Windows Kits\10\bin", "$env:ProgramFiles\Windows Kits\10\bin", $script:buildTools) |
+    Where-Object { $_ -and (Test-Path $_) }
+  foreach ($root in $roots) {
+    $tool = Get-ChildItem $root -Recurse -Filter $name -ErrorAction SilentlyContinue |
+      Where-Object { $_.FullName -match '\\x64\\' } |
+      Sort-Object FullName -Descending | Select-Object -First 1
+    if ($tool) { return $tool.FullName }
+  }
+  if (-not $script:buildTools) {
+    $script:buildTools = Join-Path $release 'sdk-buildtools'
+    $zip = Join-Path $release 'sdk-buildtools.zip'
+    Invoke-WebRequest 'https://www.nuget.org/api/v2/package/Microsoft.Windows.SDK.BuildTools' -OutFile $zip
+    Expand-Archive $zip $script:buildTools -Force
+    return Find-SdkTool $name
+  }
+  throw "Non trovo ${name}: installa il Windows SDK."
 }
 $makeappx = Find-SdkTool 'makeappx.exe'
 $makepri = Find-SdkTool 'makepri.exe'
