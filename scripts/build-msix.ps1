@@ -9,6 +9,19 @@
 
 $ErrorActionPreference = 'Stop'
 
+# Esegue uno strumento del Windows SDK; se fallisce, riporta le ultime righe del suo messaggio.
+function Invoke-Tool($label, $path, $arguments) {
+  $output = & $path @arguments 2>&1 | ForEach-Object { "$_" }
+  $output | ForEach-Object { Write-Host $_ }
+  if ($LASTEXITCODE -ne 0) {
+    $tail = ($output | Where-Object { $_.Trim() } | Select-Object -Last 12) -join ' | '
+    throw "$label non riuscito: $tail"
+  }
+}
+
+try {
+
+
 $root = Split-Path -Parent $PSScriptRoot
 $conf = Get-Content (Join-Path $root 'src-tauri/tauri.conf.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 $version = $conf.version
@@ -41,19 +54,24 @@ $manifest = $manifest.Replace('__VERSION__', $version)
 
 # Indice delle risorse: serve perché Windows scelga l'icona giusta per ogni dimensione e scala.
 $priConfig = Join-Path $out 'priconfig.xml'
-& $makepri createconfig /cf $priConfig /dq en-US /o
-if ($LASTEXITCODE -ne 0) { throw 'makepri createconfig non riuscito.' }
+Invoke-Tool 'makepri createconfig' $makepri @('createconfig', '/cf', $priConfig, '/dq', 'en-US', '/o')
 # Senza questo passaggio makepri dividerebbe le risorse in più file (uno per lingua e per scala),
 # cosa che ha senso solo per i pacchetti multipli: qui serve un unico resources.pri.
 [xml]$priXml = Get-Content $priConfig
 $packaging = $priXml.SelectSingleNode('//packaging')
 if ($packaging) { [void]$packaging.ParentNode.RemoveChild($packaging) }
 $priXml.Save($priConfig)
-& $makepri new /pr $layout /cf $priConfig /mn (Join-Path $layout 'AppxManifest.xml') /of (Join-Path $layout 'resources.pri') /o
-if ($LASTEXITCODE -ne 0) { throw 'makepri new non riuscito.' }
+Invoke-Tool 'makepri new' $makepri @('new', '/pr', $layout, '/cf', $priConfig, '/mn', (Join-Path $layout 'AppxManifest.xml'), '/of', (Join-Path $layout 'resources.pri'), '/o')
 
 $package = Join-Path $out "Stentor.Lite_${version}_x64.msix"
-& $makeappx pack /d $layout /p $package /o
-if ($LASTEXITCODE -ne 0) { throw 'makeappx pack non riuscito.' }
+Invoke-Tool 'makeappx pack' $makeappx @('pack', '/d', $layout, '/p', $package, '/o')
 
-Write-Host "Pacchetto pronto: $package"
+$sizeMb = [math]::Round((Get-Item $package).Length / 1MB, 1)
+$files = (Get-ChildItem $layout -Recurse -File | ForEach-Object { $_.FullName.Substring($layout.Length + 1) }) -join ', '
+Write-Host "Pacchetto pronto: $package ($sizeMb MB)"
+if ($env:GITHUB_ACTIONS) { Write-Host "::notice title=Pacchetto MSIX pronto::$(Split-Path -Leaf $package), $sizeMb MB. Contenuto: $files" }
+} catch {
+  # Su GitHub Actions l'errore compare anche come annotazione nella pagina dell'esecuzione.
+  if ($env:GITHUB_ACTIONS) { Write-Host "::error title=Pacchetto MSIX::$($_.Exception.Message) [$($_.InvocationInfo.ScriptLineNumber)]" }
+  throw
+}
