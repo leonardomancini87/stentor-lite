@@ -1460,6 +1460,20 @@ html[data-app-theme] .appShell .workspace.liteRegiaWorkspace textarea.liteInline
   cursor: text;
 }
 
+/* A proiezione chiusa il testo della battuta si modifica con un clic: cursore di testo e
+   sottolineatura puntinata al passaggio, come per la nota operatore. */
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.textClickEdit:not(.editing) .liteEditableCueBody > span {
+  cursor: text;
+  /* Largo quanto il testo, non quanto la colonna: il clic nello spazio vuoto manda ancora in onda. */
+  width: fit-content !important; max-width: 100%;
+}
+
+html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .regiaLiveCueListRow.textClickEdit:not(.editing) .liteEditableCueBody > span:hover {
+  /* Sottolineatura vicina al testo: più in basso verrebbe tagliata dalla riga. */
+  text-decoration: underline dotted; text-underline-offset: 1px; text-decoration-color: var(--pk-faint);
+}
+
 /* Nota operatore modificabile con un clic direttamente nella riga. */
 
 html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteEditableCueList .liteCueOperatorNote[data-editable="true"] {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { buildProjectionPayload, getProjectionStorageKey } from '../utils/projectionTargets.js';
 import { getActiveScreen, getScreenAspectOption, getScreens } from '../utils/screenSettings.js';
@@ -21,6 +21,8 @@ export function getStageWindowName(screenId) {
 // così resta aggiornato anche se la finestra è stata ricaricata.
 export function useProjection({ project, cue, language, blackout, onBlocked }) {
   const windowsRef = useRef({});
+  // Vero finché almeno una finestra di proiezione aperta da qui è ancora aperta.
+  const [isOpen, setIsOpen] = useState(false);
   const screens = getScreens(project.settings);
   const activeScreen = getActiveScreen(project.settings);
 
@@ -72,6 +74,7 @@ export function useProjection({ project, cue, language, blackout, onBlocked }) {
       return null;
     }
     windowsRef.current[screen.id] = stageWindow;
+    setIsOpen(true);
     stageWindow.focus();
     [0, 100, 300, 700, 1500, 3000].forEach((delay) => {
       window.setTimeout(() => publish(screen), delay);
@@ -85,5 +88,15 @@ export function useProjection({ project, cue, language, blackout, onBlocked }) {
     screens.forEach((screen) => publish(screen));
   }, [publish, project.settings]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { openScreen, activeScreen, screens };
+  // La chiusura di una finestra non avvisa: si controlla una volta al secondo.
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const timer = window.setInterval(() => {
+      const anyOpen = Object.values(windowsRef.current).some((stageWindow) => stageWindow && !stageWindow.closed);
+      if (!anyOpen) setIsOpen(false);
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [isOpen]);
+
+  return { openScreen, activeScreen, screens, isOpen };
 }

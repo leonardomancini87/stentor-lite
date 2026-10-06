@@ -1495,6 +1495,14 @@ export default function App() {
                       const isEditing = editingCue?.index === index;
                       const isExpanded = expandedCueId === cue.id;
                       const panelId = `lite-cue-editor-${index}`;
+                      const startInlineEdit = (event) => {
+                        const offset = getClickCaretOffset(event);
+                        const leading = text.length - text.trimStart().length;
+                        setEditingCue({
+                          index,
+                          caret: offset === null || !text.trim() ? null : leading + offset,
+                        });
+                      };
                       return (
                         <div key={cue.id} className={classNames('liteCueItem', isExpanded && 'expanded')} role="listitem">
                         <div
@@ -1504,11 +1512,18 @@ export default function App() {
                             isProjected && 'live',
                             isSelected && 'selected',
                             hasNextCue && index === nextCueIndex && !isProjected && 'next',
-                            isEditing && 'editing'
+                            isEditing && 'editing',
+                            !projection.isOpen && 'textClickEdit'
                           )}
-                          onClick={() => {
-                            // Un clic manda in onda la battuta (Regia 1.1).
+                          onClick={(event) => {
                             if (isEditing) return;
+                            // A proiezione chiusa, un clic proprio sul testo lo modifica senza mandarlo in onda.
+                            // Con uno schermo aperto il clic manda sempre in onda: in spettacolo niente sorprese.
+                            if (!projection.isOpen && event.target.closest?.('.liteEditableCueBody > span')) {
+                              startInlineEdit(event);
+                              return;
+                            }
+                            // Un clic manda in onda la battuta (Regia 1.1).
                             setEditingCue(null);
                             jumpToCue(index);
                           }}
@@ -1516,12 +1531,7 @@ export default function App() {
                             // Doppio clic: modifica il testo nel punto cliccato.
                             setActiveIndex(index);
                             if (isEditing) return;
-                            const offset = getClickCaretOffset(event);
-                            const leading = text.length - text.trimStart().length;
-                            setEditingCue({
-                              index,
-                              caret: offset === null || !text.trim() ? null : leading + offset,
-                            });
+                            startInlineEdit(event);
                           }}
                         >
                           <strong>{cueNumberLabel(index)}</strong>
