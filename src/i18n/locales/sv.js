@@ -502,4 +502,9 @@ export default {
   'settings.updates.installError': 'Uppdateringen kunde inte installeras. Försök igen eller hämta den nya versionen från stentor.live.',
   'settings.updates.help': 'Sténtor Lite söker efter en ny version vid start och installerar den bara när du väljer det. Projekt och inställningar finns kvar. Uppdatera inte under en föreställning.',
   'nav.updateAvailable': 'Uppdatering tillgänglig',
+  'screens.field.secondLanguage': 'Andra språk',
+  'screens.secondLanguage.none': 'Inget',
+  'screens.secondLanguage.hint': 'Under det första, mindre, efter ett kort streck. Repliker utan översättning visar bara det första språket.',
+  'screens.secondLanguage.needMore': 'För att projicera två språk lägger du först till ett annat språk i projektet.',
+  'screens.field.secondSize': 'Storlek på andra språket',
 };

@@ -30,11 +30,12 @@ export function useProjection({ project, cue, language, blackout, onBlocked }) {
       screen,
       activeLanguage: language,
       languages: project.languages,
+      primaryLanguage: project.primaryLanguage,
       blackout,
     }),
     projectTitle: project.title || '',
     ...overrides,
-  }), [cue, language, blackout, project.languages, project.title]);
+  }), [cue, language, blackout, project.languages, project.primaryLanguage, project.title]);
 
   const publish = useCallback((screen, payload = buildPayload(screen)) => {
     const screenId = screen?.id || payload.screenId;

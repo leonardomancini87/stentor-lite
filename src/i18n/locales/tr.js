@@ -502,4 +502,9 @@ export default {
   'settings.updates.installError': 'Güncelleme yüklenemedi. Tekrar deneyin ya da yeni sürümü stentor.live adresinden indirin.',
   'settings.updates.help': 'Sténtor Lite açılışta yeni bir sürüm olup olmadığını denetler ve yalnızca siz seçtiğinizde yükler. Projeler ve ayarlar korunur. Gösteri sırasında güncelleme yapmayın.',
   'nav.updateAvailable': 'Güncelleme var',
+  'screens.field.secondLanguage': 'İkinci dil',
+  'screens.secondLanguage.none': 'Yok',
+  'screens.secondLanguage.hint': 'Birincinin altında, daha küçük, kısa bir çizgiden sonra. Çevrilmemiş replikler yalnızca birinci dili gösterir.',
+  'screens.secondLanguage.needMore': 'İki dil yansıtmak için önce projeye başka bir dil ekleyin.',
+  'screens.field.secondSize': 'İkinci dil boyutu',
 };

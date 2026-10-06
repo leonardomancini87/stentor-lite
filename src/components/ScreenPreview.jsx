@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import InlineFormattedText from './InlineFormattedText.jsx';
 import { getCueTypography } from '../utils/cueTextStyle.js';
 import { FONT_FAMILY_OPTIONS } from '../utils/screenSettings.js';
+import { clampSecondScale } from '../utils/stageLayout.js';
 
 // Tela virtuale dello schermo pubblico (vedi StageSubtitle / public-stage.html).
 const DESIGN_WIDTH = 2360;
@@ -18,7 +19,7 @@ function parseNumber(value, fallback) {
 // - carattere, colore, peso, corsivo e formattazioni sono quelli della battuta/schermo;
 // - la larghezza massima è quella impostata in Schermi, in proporzione al corpo del testo;
 // - se una riga non entra nel riquadro, il testo si rimpicciolisce invece di andare a capo.
-export default function ScreenPreview({ cue, text, spans = [], settings = {}, empty = false, className = '' }) {
+export default function ScreenPreview({ cue, text, spans = [], secondText = '', secondSpans = [], settings = {}, empty = false, className = '' }) {
   const hostRef = useRef(null);
   const textRef = useRef(null);
   const [fit, setFit] = useState(1);
@@ -54,7 +55,7 @@ export default function ScreenPreview({ cue, text, spans = [], settings = {}, em
     const observer = new ResizeObserver(measure);
     observer.observe(host);
     return () => { alive = false; observer.disconnect(); };
-  }, [text, spans, fontPx, widthPct, settings.publicFontFamily, cue?.renderStyle, cue?.textStyle?.bold]);
+  }, [text, spans, secondText, settings.publicSecondScale, fontPx, widthPct, settings.publicFontFamily, cue?.renderStyle, cue?.textStyle?.bold]);
 
   const typography = cue ? getCueTypography(cue) : {};
   return (
@@ -79,6 +80,15 @@ export default function ScreenPreview({ cue, text, spans = [], settings = {}, em
           }}
         >
           <InlineFormattedText text={text} spans={spans} />
+          {secondText ? (
+            // Seconda lingua: breve trattino, poi il testo più piccolo (come in sala, vedi stageLayout.js).
+            <>
+              <span className="liteScreenPreviewSeparator" aria-hidden="true" />
+              <span className="liteScreenPreviewSecond" style={{ fontSize: `${clampSecondScale(settings.publicSecondScale)}%` }}>
+                <InlineFormattedText text={secondText} spans={secondSpans} />
+              </span>
+            </>
+          ) : null}
         </div>
       )}
     </div>

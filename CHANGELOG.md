@@ -3,6 +3,13 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
+## 0.9.1 — in preparazione · beta
+
+**Schermi**
+- Due lingue sullo stesso schermo: in Schermi → Seconda lingua si sceglie una traduzione da proiettare sotto la prima, più piccola, dopo un breve trattino centrale. La dimensione si regola in Aspetto (dal 50% al 90% della prima, 70% di partenza).
+- Le battute non tradotte nella seconda lingua mostrano solo la prima: il testo originale non viene ripetuto.
+- L'elenco degli schermi e l'anteprima in regia mostrano entrambe le lingue (per esempio «IT · EN»).
+
 ## 0.9.0 — 6 ottobre 2026 · beta
 
 **Aggiornamenti**

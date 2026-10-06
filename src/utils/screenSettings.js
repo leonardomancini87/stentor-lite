@@ -1,3 +1,5 @@
+import { SECOND_LANGUAGE_SCALE, clampSecondScale } from './stageLayout.js';
+
 export const FONT_FAMILY_OPTIONS = [
   { label: 'Atkinson Hyperlegible', value: '"Atkinson Hyperlegible", Arial, sans-serif' },
   { label: 'Sistema sans', system: true, value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' },
@@ -35,6 +37,8 @@ export const DEFAULT_SCREENS = [
     publicFadeOutMs: 120,
     publicBlackoutFadeMs: 160,
     publicLanguage: 'active',
+    publicSecondLanguage: '',
+    publicSecondScale: SECOND_LANGUAGE_SCALE.default,
     publicAspectRatio: '16:9',
     publicOffsetX: 0,
     publicOffsetY: 0,
@@ -95,6 +99,8 @@ export function screenToPublicSettings(screen) {
     publicFadeOutMs: clampTransitionMs(screen.publicFadeOutMs, 120),
     publicBlackoutFadeMs: clampTransitionMs(screen.publicBlackoutFadeMs, 160),
     publicLanguage: screen.publicLanguage || 'active',
+    publicSecondLanguage: screen.publicSecondLanguage || '',
+    publicSecondScale: clampSecondScale(screen.publicSecondScale),
     publicAspectRatio: getScreenAspectOption(screen.publicAspectRatio).value,
     publicOffsetX: clampScreenOffset(screen.publicOffsetX),
     publicOffsetY: clampScreenOffset(screen.publicOffsetY, 'y'),
@@ -143,6 +149,14 @@ export function getScreenLanguage(screen = {}, activeLanguage = 'it', languages 
   if (requested === 'active') return activeLanguage || languages[0] || 'it';
   if (Array.isArray(languages) && languages.includes(requested)) return requested;
   return activeLanguage || languages[0] || requested || 'it';
+}
+
+// Seconda lingua dello schermo (sotto la prima, più piccola): '' se non c'è, se non è più tra
+// le lingue del progetto o se coincide con la prima.
+export function getScreenSecondLanguage(screen = {}, activeLanguage = 'it', languages = []) {
+  const requested = screen.publicSecondLanguage || '';
+  if (!requested || !Array.isArray(languages) || !languages.includes(requested)) return '';
+  return requested === getScreenLanguage(screen, activeLanguage, languages) ? '' : requested;
 }
 
 export function withScreensInitialized(settings = {}) {

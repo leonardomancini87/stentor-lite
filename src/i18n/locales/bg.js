@@ -502,4 +502,9 @@ export default {
   'settings.updates.installError': 'Актуализацията не бе инсталирана. Опитайте отново или изтеглете новата версия от stentor.live.',
   'settings.updates.help': 'Sténtor Lite проверява за нова версия при стартиране и я инсталира само когато вие изберете. Проектите и настройките се запазват. Не актуализирайте по време на представление.',
   'nav.updateAvailable': 'Налична е актуализация',
+  'screens.field.secondLanguage': 'Втори език',
+  'screens.secondLanguage.none': 'Няма',
+  'screens.secondLanguage.hint': 'Под първия, по-малък, след кратко тире. Непреведените реплики показват само първия език.',
+  'screens.secondLanguage.needMore': 'За да прожектирате два езика, първо добавете още един език към проекта.',
+  'screens.field.secondSize': 'Размер на втория език',
 };

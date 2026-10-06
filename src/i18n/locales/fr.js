@@ -514,4 +514,9 @@ export default {
   'settings.updates.installError': 'L’installation a échoué. Réessayez ou téléchargez la nouvelle version sur stentor.live.',
   'settings.updates.help': 'Sténtor Lite recherche une nouvelle version au démarrage et ne l’installe que lorsque vous le décidez. Projets et réglages sont conservés. Ne faites pas de mise à jour pendant un spectacle.',
   'nav.updateAvailable': 'Mise à jour disponible',
+  'screens.field.secondLanguage': 'Deuxième langue',
+  'screens.secondLanguage.none': 'Aucune',
+  'screens.secondLanguage.hint': 'Sous la première, plus petite, après un court tiret. Les répliques non traduites n’affichent que la première langue.',
+  'screens.secondLanguage.needMore': 'Pour projeter deux langues, ajoutez d’abord une autre langue au projet.',
+  'screens.field.secondSize': 'Taille de la deuxième langue',
 };

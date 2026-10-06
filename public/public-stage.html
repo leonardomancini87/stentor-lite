@@ -299,17 +299,42 @@
         return result;
       }
 
-      function renderSubtitleText(text, settings = {}, cueStyle = 'normal', cueTextStyle = {}, textSpans = []) {
+      // Stesso calcolo di src/utils/stageLayout.js (layoutStageText): tenerli allineati.
+      function layoutStageText(lineCount, secondLineCount, fontPx, secondScale, centerY, verticalAlign) {
+        const lineHeight = fontPx * 1.12;
+        const primaryHeight = lineCount * lineHeight;
+        const hasSecond = lineCount > 0 && secondLineCount > 0;
+        const scale = Number.isFinite(Number(secondScale)) ? Math.max(50, Math.min(90, Number(secondScale))) : 70;
+        const secondFontPx = fontPx * (scale / 100);
+        const secondLineHeight = secondFontPx * 1.12;
+        const gap = fontPx * 0.42;
+        const totalHeight = primaryHeight + (hasSecond ? gap * 2 + secondLineCount * secondLineHeight : 0);
+        let top = centerY - primaryHeight / 2;
+        if (hasSecond && verticalAlign === 'bottom') top = centerY + primaryHeight / 2 - totalHeight;
+        else if (hasSecond && verticalAlign !== 'top') top = centerY - totalHeight / 2;
+        const primaryY = [];
+        for (let i = 0; i < lineCount; i += 1) primaryY.push(top + lineHeight * (i + 0.5));
+        if (!hasSecond) return { primaryY, secondY: [], separator: null, secondFontPx };
+        const separatorY = top + primaryHeight + gap;
+        const secondY = [];
+        for (let i = 0; i < secondLineCount; i += 1) secondY.push(separatorY + gap + secondLineHeight * (i + 0.5));
+        return { primaryY, secondY, secondFontPx, separator: { y: separatorY, width: fontPx * 1.1, thickness: Math.max(2, fontPx * 0.045) } };
+      }
+
+      function renderSubtitleText(text, settings = {}, cueStyle = 'normal', cueTextStyle = {}, textSpans = [], secondText = '', secondTextSpans = []) {
         const value = String(text || '');
         const lines = value.split(/\r?\n/);
+        const secondValue = String(secondText || '');
+        const secondLines = secondValue ? secondValue.split(/\r?\n/) : [];
         const fontPx = parsePixels(settings.fontSize || settings.publicFontSize, 58);
         const widthPercent = parsePercent(settings.maxWidth || settings.publicMaxWidth, 90);
         const clipWidth = DESIGN_WIDTH * (widthPercent / 100);
         const shiftX = (parseOffset(settings.offsetX ?? settings.publicOffsetX) / 100) * DESIGN_WIDTH;
         const clipX = (DESIGN_WIDTH - clipWidth) / 2 + shiftX;
-        const lineHeight = fontPx * 1.12;
-        const centerY = getCenterY(settings.verticalAlign || settings.publicVerticalAlign, settings.paddingTop || settings.publicPaddingTop)
+        const verticalAlign = settings.verticalAlign || settings.publicVerticalAlign;
+        const centerY = getCenterY(verticalAlign, settings.paddingTop || settings.publicPaddingTop)
           + (parseOffset(settings.offsetY ?? settings.publicOffsetY) / 100) * DESIGN_HEIGHT;
+        const layout = layoutStageText(lines.length, secondLines.length, fontPx, settings.secondScale, centerY, verticalAlign);
         const fill = settings.color || settings.publicTextColor || '#F3E7B3';
         const fontFamily = settings.fontFamily || settings.publicFontFamily || 'Helvetica, Arial, sans-serif';
         const fontStyle = cueStyle === 'italic' ? 'italic' : 'normal';
@@ -319,7 +344,7 @@
         const textX = alignment === 'left' ? clipX : alignment === 'right' ? clipX + clipWidth : DESIGN_WIDTH / 2 + shiftX;
 
         subtitle.replaceChildren();
-        subtitle.setAttribute('aria-label', value);
+        subtitle.setAttribute('aria-label', [value, secondValue].filter(Boolean).join('\n'));
 
         const defs = createSvgElement('defs');
         const clipPath = createSvgElement('clipPath', { id: 'stageTextClip' });
@@ -328,37 +353,54 @@
         subtitle.appendChild(defs);
 
         const group = createSvgElement('g', { 'clip-path': 'url(#stageTextClip)' });
-        var lineStart = 0;
-        lines.forEach((line, index) => {
-          const y = centerY + (index - (lines.length - 1) / 2) * lineHeight;
-          const textNode = createSvgElement('text', {
-            x: textX,
-            y,
-            'text-anchor': textAnchor,
-            'dominant-baseline': 'middle',
-            fill,
-            'font-family': fontFamily,
-            'font-size': fontPx,
-            'font-style': fontStyle,
-            'font-weight': fontWeight,
-            'letter-spacing': '0.005em',
+        function appendLines(blockLines, ys, linePx, spans) {
+          var lineStart = 0;
+          blockLines.forEach((line, index) => {
+            const textNode = createSvgElement('text', {
+              x: textX,
+              y: ys[index],
+              'text-anchor': textAnchor,
+              'dominant-baseline': 'middle',
+              fill,
+              'font-family': fontFamily,
+              'font-size': linePx,
+              'font-style': fontStyle,
+              'font-weight': fontWeight,
+              'letter-spacing': '0.005em',
+            });
+            styledLineSegments(line, lineStart, spans).forEach((segment) => {
+              const attrs = {
+                'font-style': segment.italic === true ? 'italic' : segment.italic === false ? 'normal' : fontStyle,
+                'font-weight': segment.bold === true ? '800' : segment.bold === false ? '400' : fontWeight,
+              };
+              if (segment.underline === true) attrs['text-decoration'] = 'underline';
+              if (segment.underline === false) attrs['text-decoration'] = 'none';
+              if (segment.color) attrs.fill = segment.color;
+              if (Number.isFinite(Number(segment.fontScale))) attrs['font-size'] = linePx * Number(segment.fontScale);
+              const tspan = createSvgElement('tspan', attrs);
+              tspan.textContent = segment.text || '\u00A0';
+              textNode.appendChild(tspan);
+            });
+            group.appendChild(textNode);
+            lineStart += line.length + 1;
           });
-          styledLineSegments(line, lineStart, textSpans).forEach((segment) => {
-            const attrs = {
-              'font-style': segment.italic === true ? 'italic' : segment.italic === false ? 'normal' : fontStyle,
-              'font-weight': segment.bold === true ? '800' : segment.bold === false ? '400' : fontWeight,
-            };
-            if (segment.underline === true) attrs['text-decoration'] = 'underline';
-            if (segment.underline === false) attrs['text-decoration'] = 'none';
-            if (segment.color) attrs.fill = segment.color;
-            if (Number.isFinite(Number(segment.fontScale))) attrs['font-size'] = fontPx * Number(segment.fontScale);
-            const tspan = createSvgElement('tspan', attrs);
-            tspan.textContent = segment.text || '\u00A0';
-            textNode.appendChild(tspan);
-          });
-          group.appendChild(textNode);
-          lineStart += line.length + 1;
-        });
+        }
+
+        appendLines(lines, layout.primaryY, fontPx, textSpans);
+        if (layout.separator) {
+          // Seconda lingua: breve trattino centrale, poi il testo più piccolo.
+          group.appendChild(createSvgElement('line', {
+            x1: textX - layout.separator.width / 2,
+            x2: textX + layout.separator.width / 2,
+            y1: layout.separator.y,
+            y2: layout.separator.y,
+            stroke: fill,
+            'stroke-opacity': 0.6,
+            'stroke-width': layout.separator.thickness,
+            'stroke-linecap': 'round',
+          }));
+          appendLines(secondLines, layout.secondY, layout.secondFontPx, secondTextSpans);
+        }
         subtitle.appendChild(group);
       }
 
@@ -372,7 +414,7 @@
         if (!payload || !payload.settings) return;
 
         const settings = payload.settings;
-        const nextText = payload.blackout ? '' : payload.text || '';
+        const nextText = payload.blackout ? '' : [payload.text || '', payload.secondText || ''].filter(Boolean).join('\n\u2014\n');
         const previousText = lastPayloadText || '';
         const fadeOutMs = payload.blackout
           ? getTransitionMs(settings, 'blackoutFadeMs', 160)
@@ -391,7 +433,7 @@
         subtitle.style.transition = `opacity ${shouldFadeOut ? fadeOutMs : fadeInMs}ms ease-out`;
 
         const finishRender = () => {
-          renderSubtitleText(nextText, settings, payload.cueStyle, payload.cueTextStyle, payload.textSpans || []);
+          renderSubtitleText(payload.blackout ? '' : payload.text || '', settings, payload.cueStyle, payload.cueTextStyle, payload.textSpans || [], payload.blackout ? '' : payload.secondText || '', payload.secondTextSpans || []);
           lastPayloadText = subtitle.textContent || '';
           lastUpdatedAt = payload.updatedAt || Date.now();
           document.body.classList.toggle('debug-empty', !lastPayloadText && !payload.blackout);

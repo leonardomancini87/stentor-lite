@@ -516,4 +516,9 @@ export default {
   'settings.updates.installError': 'Не вдалося встановити оновлення. Спробуйте ще раз або завантажте нову версію з stentor.live.',
   'settings.updates.help': 'Sténtor Lite перевіряє наявність нової версії під час запуску й установлює її лише тоді, коли ви це оберете. Проєкти й налаштування зберігаються. Не оновлюйте під час вистави.',
   'nav.updateAvailable': 'Доступне оновлення',
+  'screens.field.secondLanguage': 'Друга мова',
+  'screens.secondLanguage.none': 'Немає',
+  'screens.secondLanguage.hint': 'Під першою, дрібніше, після короткого тире. Для неперекладених реплік показується лише перша мова.',
+  'screens.secondLanguage.needMore': 'Щоб показувати дві мови, спершу додайте до проєкту ще одну мову.',
+  'screens.field.secondSize': 'Розмір другої мови',
 };

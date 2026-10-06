@@ -59,7 +59,8 @@ import {
 } from './utils/showMap.js';
 import { getCueJumpState } from './utils/cueJump.js';
 import { getRevealScrollTop } from './utils/listScroll.js';
-import { FONT_FAMILY_OPTIONS, getPublicSettings } from './utils/screenSettings.js';
+import { FONT_FAMILY_OPTIONS, getActiveScreen, getPublicSettings, getScreenSecondLanguage } from './utils/screenSettings.js';
+import { getSecondProjectionText } from './utils/projectionTargets.js';
 import { STAGE_COMMAND_STORAGE_KEY, STAGE_COMMAND_TYPE, normalizeStageCommand } from './utils/stageCommands.js';
 
 import { useProjectHistory } from './hooks/useProjectHistory.js';
@@ -1310,6 +1311,11 @@ export default function App() {
   const projectedText = blackout
     ? ''
     : (getCueText(projectedCue, language) || ui('cues.empty'));
+  // Seconda lingua dello schermo attivo, come in sala (sotto, più piccola).
+  const projectedSecondLanguage = getScreenSecondLanguage(getActiveScreen(project.settings), language, project.languages);
+  const projectedSecondText = blackout || projectedSecondLanguage === language || !getCueText(projectedCue, language).trim()
+    ? ''
+    : getSecondProjectionText(projectedCue, projectedSecondLanguage, project.primaryLanguage);
   const nextCueIndex = findPlayableIndex(projectedIndex, 1);
   const hasNextCue = nextCueIndex > projectedIndex;
   function goToFromQuery() {
@@ -1406,7 +1412,7 @@ export default function App() {
                   <div className="r11PreviewLabel live"><span className="r11Dot" aria-hidden="true" />{!blackout ? ui('cues.current') : ui('cues.blackout')} · {cueNumberLabel(projectedIndex)}</div>
                   <article className="regiaLiveCueCard regiaLiveCueCardCurrent">
                     <div className="regiaLiveCueText liteScreenPreviewHost">
-                      <ScreenPreview cue={projectedCue} text={projectedText} spans={getCueTextSpans(projectedCue, language)} settings={publicSettings} empty={blackout} />
+                      <ScreenPreview cue={projectedCue} text={projectedText} spans={getCueTextSpans(projectedCue, language)} secondText={projectedSecondText} secondSpans={projectedSecondText ? getCueTextSpans(projectedCue, projectedSecondLanguage) : []} settings={publicSettings} empty={blackout} />
                     </div>
                   </article>
                 </section>

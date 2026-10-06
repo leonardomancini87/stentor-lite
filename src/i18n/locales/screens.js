@@ -52,6 +52,11 @@ export default {
     'screens.dialog.delete.message': 'Eliminare lo schermo “{name}”?',
     'screens.dialog.blocked.title': 'Schermo di proiezione non aperto',
     'screens.dialog.blocked.message': 'Il programma non è riuscito ad aprire lo schermo di proiezione. Consenti le finestre a comparsa per Sténtor e riprova.',
+    'screens.field.secondLanguage': 'Seconda lingua',
+    'screens.secondLanguage.none': 'Nessuna',
+    'screens.secondLanguage.hint': 'Sotto la prima, più piccola, dopo un breve trattino. Le battute non tradotte mostrano solo la prima lingua.',
+    'screens.secondLanguage.needMore': 'Per proiettare due lingue, aggiungi prima un’altra lingua al progetto.',
+    'screens.field.secondSize': 'Dimensione seconda lingua',
   },
   en: {
     'screens.aria': 'Sténtor Lite screens',
@@ -105,5 +110,10 @@ export default {
     'screens.dialog.delete.message': 'Delete the screen “{name}”?',
     'screens.dialog.blocked.title': 'Projection screen not opened',
     'screens.dialog.blocked.message': 'The projection screen could not be opened. Allow pop-up windows for Sténtor and try again.',
+    'screens.field.secondLanguage': 'Second language',
+    'screens.secondLanguage.none': 'None',
+    'screens.secondLanguage.hint': 'Below the first, smaller, after a short dash. Untranslated lines show the first language only.',
+    'screens.secondLanguage.needMore': 'To project two languages, first add another language to the project.',
+    'screens.field.secondSize': 'Second language size',
   },
 };

@@ -17,12 +17,15 @@ import {
   deleteActiveScreen,
   getScreenAspectOption,
   getScreenLanguage,
+  getScreenSecondLanguage,
   screenToPublicSettings,
   setActiveScreen,
   updateActiveScreenSettings,
   updateScreenSettings,
 } from '../utils/screenSettings.js';
 import PageHeader from './PageHeader.jsx';
+import { getSecondProjectionText } from '../utils/projectionTargets.js';
+import { SECOND_LANGUAGE_SCALE } from '../utils/stageLayout.js';
 
 function classNames(...items) {
   return items.filter(Boolean).join(' ');
@@ -55,6 +58,11 @@ export default function ScreensPage({
   };
   const activeAspect = getScreenAspectOption(activeSettings.publicAspectRatio);
   const activeScreenLanguage = getScreenLanguage(activeScreen, language, project.languages);
+  const activeSecondLanguage = getScreenSecondLanguage(activeScreen, language, project.languages);
+  const screenLanguagesLabel = (screen) => [
+    getScreenLanguage(screen, language, project.languages),
+    getScreenSecondLanguage(screen, language, project.languages),
+  ].filter(Boolean).join(' · ').toUpperCase();
 
   function updateSettings(nextSettings) {
     updateProject({ settings: nextSettings });
@@ -129,6 +137,11 @@ export default function ScreensPage({
     return text || t('screens.previewText.empty');
   }
 
+  function previewSecondText() {
+    if (blackout || !cue || isMarkerCue(cue) || !getCueText(cue, activeScreenLanguage).trim()) return '';
+    return getSecondProjectionText(cue, activeSecondLanguage, project.primaryLanguage);
+  }
+
   async function addScreen() {
     const name = await dialogs.input({
       title: t('screens.dialog.new.title'),
@@ -167,6 +180,7 @@ export default function ScreensPage({
       publicFadeOutMs: fallback.publicFadeOutMs,
       publicBlackoutFadeMs: fallback.publicBlackoutFadeMs,
       publicAspectRatio: fallback.publicAspectRatio,
+      publicSecondScale: fallback.publicSecondScale,
       publicOffsetX: 0,
       publicOffsetY: 0,
     });
@@ -259,7 +273,7 @@ export default function ScreensPage({
                   <span className="desktopOutputIcon"><Monitor size={16} /></span>
                   <span className="desktopOutputCopy">
                     <strong>{screen.name}</strong>
-                    <em>{getScreenLanguage(screen, language, project.languages).toUpperCase()}</em>
+                    <em>{screenLanguagesLabel(screen)}</em>
                   </span>
                   <span className={classNames('desktopOutputStatus', rowStatus.tone)}>{rowStatus.label}</span>
                 </button>
@@ -276,7 +290,7 @@ export default function ScreensPage({
             </div>
             <div className="desktopCanvasMeta">
               <small>{t(`screens.aspect.${activeAspect.value}`)}</small>
-              <small>{activeScreenLanguage.toUpperCase()}</small>
+              <small>{screenLanguagesLabel(activeScreen)}</small>
               <small className={classNames('desktopCanvasLiveBadge', status.tone)}>{status.label}</small>
             </div>
           </div>
@@ -293,9 +307,12 @@ export default function ScreensPage({
             <StageFrame id={`desktop-screen-canvas-${activeScreen.id}`} settings={activeSettings} className="desktopScreenStageFrame">
               {blackout ? null : (
                 <StageSubtitle
-                  key={`${cue?.id || 'empty'}-${activeScreen.id}-${activeScreenLanguage}`}
+                  key={`${cue?.id || 'empty'}-${activeScreen.id}-${activeScreenLanguage}-${activeSecondLanguage}`}
                   text={previewText()}
                   spans={getCueTextSpans(cue, activeScreenLanguage)}
+                  secondText={previewSecondText()}
+                  secondSpans={activeSecondLanguage ? getCueTextSpans(cue, activeSecondLanguage) : []}
+                  secondScale={activeSettings.publicSecondScale}
                   fontSize={activeSettings.publicFontSize}
                   maxWidth={activeSettings.publicMaxWidth || '90%'}
                   verticalAlign={activeSettings.publicVerticalAlign || 'center'}
@@ -335,6 +352,22 @@ export default function ScreensPage({
               </select>
             </label>
             <label>
+              {t('screens.field.secondLanguage')}
+              <select
+                value={activeSecondLanguage}
+                onChange={(event) => updateActiveScreen({ publicSecondLanguage: event.target.value })}
+                disabled={project.languages.length < 2}
+              >
+                <option value="">{t('screens.secondLanguage.none')}</option>
+                {project.languages.filter((lang) => lang !== activeScreenLanguage).map((lang) => (
+                  <option key={lang} value={lang}>{project.languageNames?.[lang] || lang.toUpperCase()}</option>
+                ))}
+              </select>
+            </label>
+            <small className="liteScreenFieldHint">
+              {t(project.languages.length < 2 ? 'screens.secondLanguage.needMore' : 'screens.secondLanguage.hint')}
+            </small>
+            <label>
               {t('screens.field.format')}
               <select value={activeSettings.publicAspectRatio || '16:9'} onChange={(event) => updateActiveScreen({ publicAspectRatio: event.target.value })}>
                 {SCREEN_ASPECT_OPTIONS.map((option) => (
@@ -368,6 +401,15 @@ export default function ScreensPage({
                 <strong>{maxWidth}%</strong>
               </div>
             </label>
+            {activeSecondLanguage && (
+              <label>
+                {t('screens.field.secondSize')}
+                <div className="desktopRange">
+                  <input type="range" min={SECOND_LANGUAGE_SCALE.min} max={SECOND_LANGUAGE_SCALE.max} step="5" value={activeSettings.publicSecondScale} onChange={(event) => patchLive({ publicSecondScale: Number(event.target.value) })} onPointerUp={endLive} onKeyUp={endLive} />
+                  <strong>{activeSettings.publicSecondScale}%</strong>
+                </div>
+              </label>
+            )}
             <label>
               {t('screens.field.position')}
               <select value={activeSettings.publicVerticalAlign || 'center'} onChange={(event) => updateActiveScreen({ publicVerticalAlign: event.target.value })}>

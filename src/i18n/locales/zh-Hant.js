@@ -514,4 +514,9 @@ export default {
   'settings.updates.installError': '更新安裝失敗。請再試一次，或從 stentor.live 下載新版本。',
   'settings.updates.help': 'Sténtor Lite 會在啟動時檢查新版本，但只有在您選擇後才會安裝。專案與設定保持不變。請勿在演出期間更新。',
   'nav.updateAvailable': '有可用更新',
+  'screens.field.secondLanguage': '第二語言',
+  'screens.secondLanguage.none': '無',
+  'screens.secondLanguage.hint': '顯示在第一語言下方，字級較小，中間以短橫線分隔。未翻譯的台詞只顯示第一語言。',
+  'screens.secondLanguage.needMore': '要投影兩種語言，請先為專案新增另一種語言。',
+  'screens.field.secondSize': '第二語言字級',
 };

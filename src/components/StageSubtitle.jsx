@@ -1,5 +1,6 @@
 import React, { useId } from 'react';
 import { segmentTextLines } from '../utils/inlineStyleSpans.js';
+import { layoutStageText } from '../utils/stageLayout.js';
 
 const DESIGN_WIDTH = 2360;
 const DESIGN_HEIGHT = 800;
@@ -43,17 +44,30 @@ export default function StageSubtitle({
   spans = [],
   className = '',
   fadeInMs = 120,
+  // Seconda lingua: sotto la prima, più piccola, dopo un breve trattino (vedi stageLayout.js).
+  secondText = '',
+  secondSpans = [],
+  secondScale,
 }) {
   const clipId = useId().replace(/:/g, '');
   const lines = String(text || '').split(/\r?\n/);
   const styledLines = segmentTextLines(String(text || ''), spans);
+  const secondLines = secondText ? String(secondText).split(/\r?\n/) : [];
+  const secondStyledLines = secondText ? segmentTextLines(String(secondText), secondSpans) : [];
   const fontPx = parsePixels(fontSize, 58);
   const widthPercent = parsePercent(maxWidth || style?.maxWidth, 90);
   const clipWidth = DESIGN_WIDTH * (widthPercent / 100);
   const shiftX = (parseOffset(offsetX) / 100) * DESIGN_WIDTH;
   const clipX = (DESIGN_WIDTH - clipWidth) / 2 + shiftX;
-  const lineHeight = fontPx * 1.12;
   const centerY = getCenterY(verticalAlign, paddingTop) + (parseOffset(offsetY) / 100) * DESIGN_HEIGHT;
+  const layout = layoutStageText({
+    lineCount: lines.length,
+    secondLineCount: secondLines.length,
+    fontPx,
+    secondScale,
+    centerY,
+    verticalAlign,
+  });
   const fill = style?.color || '#F3E7B3';
   const fontFamily = style?.fontFamily || 'Helvetica, Arial, sans-serif';
   const fontStyle = style?.fontStyle || 'normal';
@@ -62,12 +76,45 @@ export default function StageSubtitle({
   const anchor = alignment === 'left' ? 'start' : alignment === 'right' ? 'end' : 'middle';
   const textX = alignment === 'left' ? clipX : alignment === 'right' ? clipX + clipWidth : DESIGN_WIDTH / 2 + shiftX;
 
+  function renderLine(line, segmentsForLine, y, linePx, key) {
+    const segments = segmentsForLine || [{ text: line || '\u00A0' }];
+    return (
+      <text
+        key={key}
+        className="stageSubtitleLine"
+        x={textX}
+        y={y}
+        textAnchor={anchor}
+        dominantBaseline="middle"
+        fill={fill}
+        fontFamily={fontFamily}
+        fontSize={linePx}
+        fontStyle={fontStyle}
+        fontWeight={fontWeight}
+        letterSpacing="0.005em"
+      >
+        {segments.map((segment, segmentIndex) => (
+          <tspan
+            key={`${segmentIndex}-${segment.text.slice(0, 8)}`}
+            fontStyle={segment.italic === true ? 'italic' : segment.italic === false ? 'normal' : fontStyle}
+            fontWeight={segment.bold === true ? 800 : segment.bold === false ? 400 : fontWeight}
+            textDecoration={segment.underline === true ? 'underline' : segment.underline === false ? 'none' : undefined}
+            fill={segment.color || undefined}
+            fontSize={Number.isFinite(Number(segment.fontScale)) ? linePx * Number(segment.fontScale) : undefined}
+          >
+            {segment.text || '\u00A0'}
+          </tspan>
+        ))}
+      </text>
+    );
+  }
+
   return (
     <svg
       className={`stageSubtitle stageSubtitleSvg ${className}`.trim()}
       style={{ '--stentore-fade-in-ms': `${Math.max(0, Number.parseInt(fadeInMs, 10) || 0)}ms` }}
       viewBox={`0 0 ${DESIGN_WIDTH} ${DESIGN_HEIGHT}`}
-      aria-label={String(text || '')}
+      aria-label={[text, secondText].filter(Boolean).join('\n')}
       role="img"
       preserveAspectRatio="xMidYMid meet"
     >
@@ -78,40 +125,21 @@ export default function StageSubtitle({
       </defs>
 
       <g clipPath={`url(#${clipId})`}>
-        {lines.map((line, index) => {
-          const y = centerY + (index - (lines.length - 1) / 2) * lineHeight;
-          const segments = styledLines[index] || [{ text: line || '\u00A0' }];
-
-          return (
-            <text
-              key={index}
-              className="stageSubtitleLine"
-              x={textX}
-              y={y}
-              textAnchor={anchor}
-              dominantBaseline="middle"
-              fill={fill}
-              fontFamily={fontFamily}
-              fontSize={fontPx}
-              fontStyle={fontStyle}
-              fontWeight={fontWeight}
-              letterSpacing="0.005em"
-            >
-              {segments.map((segment, segmentIndex) => (
-                <tspan
-                  key={`${segmentIndex}-${segment.text.slice(0, 8)}`}
-                  fontStyle={segment.italic === true ? 'italic' : segment.italic === false ? 'normal' : fontStyle}
-                  fontWeight={segment.bold === true ? 800 : segment.bold === false ? 400 : fontWeight}
-                  textDecoration={segment.underline === true ? 'underline' : segment.underline === false ? 'none' : undefined}
-                  fill={segment.color || undefined}
-                  fontSize={Number.isFinite(Number(segment.fontScale)) ? fontPx * Number(segment.fontScale) : undefined}
-                >
-                  {segment.text || '\u00A0'}
-                </tspan>
-              ))}
-            </text>
-          );
-        })}
+        {lines.map((line, index) => renderLine(line, styledLines[index], layout.primaryY[index], fontPx, `p${index}`))}
+        {layout.separator && (
+          <line
+            className="stageSubtitleSeparator"
+            x1={textX - layout.separator.width / 2}
+            x2={textX + layout.separator.width / 2}
+            y1={layout.separator.y}
+            y2={layout.separator.y}
+            stroke={fill}
+            strokeOpacity={0.6}
+            strokeWidth={layout.separator.thickness}
+            strokeLinecap="round"
+          />
+        )}
+        {layout.separator && secondLines.map((line, index) => renderLine(line, secondStyledLines[index], layout.secondY[index], layout.secondFontPx, `s${index}`))}
       </g>
     </svg>
   );

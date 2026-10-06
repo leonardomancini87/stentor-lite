@@ -533,4 +533,9 @@ export default {
   'settings.updates.installError': 'تعذّر تثبيت التحديث. حاول مرة أخرى أو نزّل الإصدار الجديد من stentor.live.',
   'settings.updates.help': 'يتحقق Sténtor Lite عند التشغيل من وجود إصدار جديد ولا يثبّته إلا عندما تختار ذلك. تبقى المشاريع والإعدادات كما هي. لا تحدّث أثناء العرض.',
   'nav.updateAvailable': 'يتوفر تحديث',
+  'screens.field.secondLanguage': 'اللغة الثانية',
+  'screens.secondLanguage.none': 'لا شيء',
+  'screens.secondLanguage.hint': 'أسفل الأولى، بحجم أصغر، بعد شرطة قصيرة. الجمل غير المترجمة تعرض اللغة الأولى فقط.',
+  'screens.secondLanguage.needMore': 'لعرض لغتين، أضف أولًا لغة أخرى إلى المشروع.',
+  'screens.field.secondSize': 'حجم اللغة الثانية',
 };

@@ -516,4 +516,9 @@ export default {
   'settings.updates.installError': 'Aktualizáciu sa nepodarilo nainštalovať. Skúste to znova alebo si stiahnite novú verziu zo stentor.live.',
   'settings.updates.help': 'Sténtor Lite pri spustení kontroluje, či je k dispozícii nová verzia, a nainštaluje ju, len keď sa tak rozhodnete. Projekty a nastavenia zostanú zachované. Neaktualizujte počas predstavenia.',
   'nav.updateAvailable': 'Je k dispozícii aktualizácia',
+  'screens.field.secondLanguage': 'Druhý jazyk',
+  'screens.secondLanguage.none': 'Žiadny',
+  'screens.secondLanguage.hint': 'Pod prvým, menší, za krátkou čiarkou. Nepreložené repliky zobrazia len prvý jazyk.',
+  'screens.secondLanguage.needMore': 'Ak chcete premietať dva jazyky, najprv do projektu pridajte ďalší jazyk.',
+  'screens.field.secondSize': 'Veľkosť druhého jazyka',
 };

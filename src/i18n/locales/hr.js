@@ -509,4 +509,9 @@ export default {
   'settings.updates.installError': 'Instalacija ažuriranja nije uspjela. Pokušajte ponovno ili preuzmite novu verziju sa stentor.live.',
   'settings.updates.help': 'Sténtor Lite pri pokretanju provjerava postoji li nova verzija i instalira je samo kada to odaberete. Projekti i postavke ostaju sačuvani. Ne ažurirajte tijekom predstave.',
   'nav.updateAvailable': 'Dostupno ažuriranje',
+  'screens.field.secondLanguage': 'Drugi jezik',
+  'screens.secondLanguage.none': 'Nijedan',
+  'screens.secondLanguage.hint': 'Ispod prvoga, manji, nakon kratke crtice. Neprevedene replike prikazuju samo prvi jezik.',
+  'screens.secondLanguage.needMore': 'Za prikaz dvaju jezika najprije dodajte još jedan jezik u projekt.',
+  'screens.field.secondSize': 'Veličina drugog jezika',
 };

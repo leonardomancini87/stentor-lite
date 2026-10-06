@@ -1,4 +1,4 @@
-import { FONT_FAMILY_OPTIONS, getScreenLanguage, screenToPublicSettings } from './screenSettings.js';
+import { FONT_FAMILY_OPTIONS, getScreenLanguage, getScreenSecondLanguage, screenToPublicSettings } from './screenSettings.js';
 import { isMarkerCue } from './markers.js';
 import { getCueText, getCueTextStyle } from './cueTextStyle.js';
 import { getCueTextSpans } from './inlineStyleSpans.js';
@@ -8,16 +8,27 @@ export function getProjectionText(cue, language) {
   return getCueText(cue, language);
 }
 
+// Testo della seconda lingua: solo una traduzione vera. Se la battuta non è tradotta in quella
+// lingua resta vuoto (non si ripete il testo originale) e lo schermo mostra la prima lingua sola.
+export function getSecondProjectionText(cue, language, primaryLanguage) {
+  if (!cue || !language || isMarkerCue(cue)) return '';
+  const text = language === primaryLanguage ? getCueText(cue, language) : String(cue?.translations?.[language] ?? '');
+  return text.trim() ? text : '';
+}
+
 export function buildProjectionPayload({
   cue,
   screen,
   activeLanguage = 'it',
   languages = [],
+  primaryLanguage = languages[0],
   blackout = false,
 }) {
   const targetLanguage = getScreenLanguage(screen, activeLanguage, languages);
+  const secondLanguage = getScreenSecondLanguage(screen, activeLanguage, languages);
   const settings = screenToPublicSettings(screen);
   const text = getProjectionText(cue, targetLanguage);
+  const secondText = text.trim() ? getSecondProjectionText(cue, secondLanguage, primaryLanguage) : '';
 
   return {
     screenId: screen.id,
@@ -25,6 +36,9 @@ export function buildProjectionPayload({
     language: targetLanguage,
     text: blackout ? '' : text,
     textSpans: blackout ? [] : getCueTextSpans(cue, targetLanguage),
+    secondLanguage,
+    secondText: blackout ? '' : secondText,
+    secondTextSpans: blackout || !secondText ? [] : getCueTextSpans(cue, secondLanguage),
     blackout,
     cueStyle: cue?.renderStyle || 'normal',
     cueTextStyle: getCueTextStyle(cue),
@@ -43,6 +57,7 @@ export function buildProjectionPayload({
       fadeOutMs: settings.publicFadeOutMs ?? 120,
       blackoutFadeMs: settings.publicBlackoutFadeMs ?? 160,
       aspectRatio: settings.publicAspectRatio || '16:9',
+      secondScale: settings.publicSecondScale,
     },
   };
 }

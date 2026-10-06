@@ -502,4 +502,9 @@ export default {
   'settings.updates.installError': 'Päivitystä ei voitu asentaa. Yritä uudelleen tai lataa uusi versio osoitteesta stentor.live.',
   'settings.updates.help': 'Sténtor Lite tarkistaa käynnistyessään, onko uutta versiota, ja asentaa sen vain, kun itse valitset. Projektit ja asetukset säilyvät. Älä päivitä esityksen aikana.',
   'nav.updateAvailable': 'Päivitys saatavilla',
+  'screens.field.secondLanguage': 'Toinen kieli',
+  'screens.secondLanguage.none': 'Ei mitään',
+  'screens.secondLanguage.hint': 'Ensimmäisen alla, pienempänä, lyhyen viivan jälkeen. Kääntämättömissä repliikeissä näkyy vain ensimmäinen kieli.',
+  'screens.secondLanguage.needMore': 'Jos haluat heijastaa kaksi kieltä, lisää ensin projektiin toinen kieli.',
+  'screens.field.secondSize': 'Toisen kielen koko',
 };

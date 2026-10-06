@@ -514,4 +514,9 @@ export default {
   'settings.updates.installError': 'Die Installation ist fehlgeschlagen. Erneut versuchen oder die neue Version von stentor.live laden.',
   'settings.updates.help': 'Sténtor Lite sucht beim Start nach einer neuen Version und installiert sie nur, wenn Sie es möchten. Projekte und Einstellungen bleiben erhalten. Nicht während einer Vorstellung aktualisieren.',
   'nav.updateAvailable': 'Update verfügbar',
+  'screens.field.secondLanguage': 'Zweite Sprache',
+  'screens.secondLanguage.none': 'Keine',
+  'screens.secondLanguage.hint': 'Unter der ersten, kleiner, nach einem kurzen Strich. Nicht übersetzte Repliken zeigen nur die erste Sprache.',
+  'screens.secondLanguage.needMore': 'Um zwei Sprachen zu projizieren, füge dem Projekt zuerst eine weitere Sprache hinzu.',
+  'screens.field.secondSize': 'Größe der zweiten Sprache',
 };
