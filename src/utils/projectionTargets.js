@@ -69,3 +69,21 @@ export function getProjectionStorageKey(screenId) {
     ? `stentore-public-stage-payload-${screenId}`
     : 'stentore-public-stage-payload';
 }
+
+// Segnale di presenza della finestra di proiezione: la finestra lo riscrive ogni secondo
+// (public/public-stage.html), così la regia sa che uno schermo è aperto anche dopo essere stata
+// ricaricata, o se la finestra è stata aperta da sé con il suo indirizzo.
+export const STAGE_ALIVE_MAX_AGE_MS = 5000;
+
+export function getStageAliveKey(screenId) {
+  return `stentore-public-stage-alive-${screenId || 'default'}`;
+}
+
+export function isStageAlive(screenId, storage = globalThis.localStorage, now = Date.now()) {
+  try {
+    const beat = Number(storage?.getItem(getStageAliveKey(screenId)));
+    return Number.isFinite(beat) && beat > 0 && now - beat < STAGE_ALIVE_MAX_AGE_MS;
+  } catch {
+    return false;
+  }
+}

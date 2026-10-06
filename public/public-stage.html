@@ -629,6 +629,18 @@
         }
       });
 
+      // Segnale di presenza per la regia (vedi isStageAlive in src/utils/projectionTargets.js):
+      // riscritto ogni secondo, tolto alla chiusura della finestra.
+      var ALIVE_KEY = 'stentore-public-stage-alive-' + (SCREEN_ID || 'default');
+      function signalAlive() {
+        try { window.localStorage.setItem(ALIVE_KEY, String(Date.now())); } catch (error) {}
+      }
+      signalAlive();
+      window.setInterval(signalAlive, 1000);
+      window.addEventListener('pagehide', function () {
+        try { window.localStorage.removeItem(ALIVE_KEY); } catch (error) {}
+      });
+
       window.__STENTORE_APPLY_PUBLIC_PAYLOAD = applyPayload;
       updateScale();
       refreshFromStorage();

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { buildProjectionPayload, getProjectionStorageKey } from '../utils/projectionTargets.js';
+import { buildProjectionPayload, getProjectionStorageKey, isStageAlive } from '../utils/projectionTargets.js';
 import { getActiveScreen, getScreenAspectOption, getScreens } from '../utils/screenSettings.js';
 
 // Indirizzo della finestra dello schermo (public/public-stage.html), relativo alla base dell'app:
@@ -21,7 +21,8 @@ export function getStageWindowName(screenId) {
 // così resta aggiornato anche se la finestra è stata ricaricata.
 export function useProjection({ project, cue, language, blackout, onBlocked }) {
   const windowsRef = useRef({});
-  // Vero finché almeno una finestra di proiezione aperta da qui è ancora aperta.
+  // Vero finché almeno una finestra di proiezione è aperta: aperta da qui, oppure viva per conto
+  // suo (segnale di presenza), per esempio dopo che la regia è stata ricaricata.
   const [isOpen, setIsOpen] = useState(false);
   const screens = getScreens(project.settings);
   const activeScreen = getActiveScreen(project.settings);
@@ -88,15 +89,18 @@ export function useProjection({ project, cue, language, blackout, onBlocked }) {
     screens.forEach((screen) => publish(screen));
   }, [publish, project.settings]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // La chiusura di una finestra non avvisa: si controlla una volta al secondo.
+  // Né la chiusura né l'apertura di una finestra avvisano: si controlla una volta al secondo.
+  const screenIds = screens.map((screen) => screen.id).join('|');
   useEffect(() => {
-    if (!isOpen) return undefined;
-    const timer = window.setInterval(() => {
-      const anyOpen = Object.values(windowsRef.current).some((stageWindow) => stageWindow && !stageWindow.closed);
-      if (!anyOpen) setIsOpen(false);
-    }, 1000);
+    const check = () => {
+      const openedHere = Object.values(windowsRef.current).some((stageWindow) => stageWindow && !stageWindow.closed);
+      const alive = screenIds.split('|').some((screenId) => isStageAlive(screenId));
+      setIsOpen(openedHere || alive);
+    };
+    check();
+    const timer = window.setInterval(check, 1000);
     return () => window.clearInterval(timer);
-  }, [isOpen]);
+  }, [screenIds]);
 
   return { openScreen, activeScreen, screens, isOpen };
 }
