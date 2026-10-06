@@ -99,10 +99,10 @@ test('i18n: le lingue aggiuntive hanno tutte le chiavi e i segnaposto giusti', (
 
 import { APP_LANGUAGES as CHOOSER_LANGUAGES, getAppLanguageMeta } from '../src/utils/appLanguage.js';
 
-test('i18n: nella scelta della lingua i nomi sono in ordine alfabetico', () => {
-  const labels = CHOOSER_LANGUAGES.map((item) => item.label);
-  const collator = new Intl.Collator('en', { sensitivity: 'base' });
-  assert.deepEqual(labels, [...labels].sort(collator.compare));
-  assert.equal(labels[0], 'Čeština');
+test('i18n: nella scelta della lingua l\'ordine è alfabetico per sigla', () => {
+  const codes = CHOOSER_LANGUAGES.map((item) => item.code.toLowerCase());
+  assert.deepEqual(codes, [...codes].sort());
+  assert.equal(CHOOSER_LANGUAGES[0].label, 'العربية');
+  assert.deepEqual(CHOOSER_LANGUAGES.slice(-2).map((item) => item.code), ['zh', 'zh-Hant']);
   assert.equal(getAppLanguageMeta('xx').code, 'it');
 });
