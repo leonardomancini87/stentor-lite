@@ -472,7 +472,7 @@ export default {
   'feedback.feature.screens': 'Екрани и пројекција',
   'feedback.feature.timing': 'Тајминг',
   'feedback.feature.languages': 'Језици и преводи',
-  'feedback.q.liked': 'Шта вам се највише допада?',
+  'feedback.q.usage': 'Реците нам како га користите',
   'feedback.q.improve': 'Шта бисте побољшали или додали?',
   'feedback.q.problems': 'Да ли сте наишли на проблеме или грешке?',
   'feedback.placeholder': 'Пишите овде…',

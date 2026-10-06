@@ -484,7 +484,7 @@ export default {
   'feedback.feature.screens': '螢幕與投影',
   'feedback.feature.timing': '計時',
   'feedback.feature.languages': '語言與翻譯',
-  'feedback.q.liked': '你最喜歡什麼？',
+  'feedback.q.usage': '告訴我們你是怎麼使用的',
   'feedback.q.improve': '你希望改進或新增什麼？',
   'feedback.q.problems': '你遇過問題或錯誤嗎？',
   'feedback.placeholder': '在此輸入…',

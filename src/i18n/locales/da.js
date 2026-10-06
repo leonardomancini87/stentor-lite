@@ -472,7 +472,7 @@ export default {
   'feedback.feature.screens': 'Skærme og projektion',
   'feedback.feature.timing': 'Tider',
   'feedback.feature.languages': 'Sprog og oversættelser',
-  'feedback.q.liked': 'Hvad kan du bedst lide?',
+  'feedback.q.usage': 'Fortæl os, hvordan du bruger det',
   'feedback.q.improve': 'Hvad ville du forbedre eller tilføje?',
   'feedback.q.problems': 'Er du stødt på problemer eller fejl?',
   'feedback.placeholder': 'Skriv her…',

@@ -484,7 +484,7 @@ export default {
   'feedback.feature.screens': 'Pantallas y proyección',
   'feedback.feature.timing': 'Tiempos',
   'feedback.feature.languages': 'Idiomas y traducciones',
-  'feedback.q.liked': '¿Qué es lo que más te gusta?',
+  'feedback.q.usage': 'Cuéntanos cómo lo usas',
   'feedback.q.improve': '¿Qué mejorarías o añadirías?',
   'feedback.q.problems': '¿Has tenido problemas o errores?',
   'feedback.placeholder': 'Escribe aquí…',

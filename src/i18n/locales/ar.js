@@ -503,7 +503,7 @@ export default {
   'feedback.feature.screens': 'الشاشات والعرض',
   'feedback.feature.timing': 'التوقيت',
   'feedback.feature.languages': 'اللغات والترجمات',
-  'feedback.q.liked': 'ما الذي يعجبك أكثر؟',
+  'feedback.q.usage': 'أخبرنا كيف تستخدمه',
   'feedback.q.improve': 'ما الذي تودّ تحسينه أو إضافته؟',
   'feedback.q.problems': 'هل واجهت مشكلات أو أخطاء؟',
   'feedback.placeholder': 'اكتب هنا…',

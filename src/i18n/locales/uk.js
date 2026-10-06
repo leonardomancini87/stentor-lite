@@ -486,7 +486,7 @@ export default {
   'feedback.feature.screens': 'Екрани та проєкція',
   'feedback.feature.timing': 'Хронометраж',
   'feedback.feature.languages': 'Мови та переклади',
-  'feedback.q.liked': 'Що вам подобається найбільше?',
+  'feedback.q.usage': 'Розкажіть, як ви ним користуєтеся',
   'feedback.q.improve': 'Що б ви покращили або додали?',
   'feedback.q.problems': 'Чи траплялися вам проблеми або помилки?',
   'feedback.placeholder': 'Напишіть тут…',

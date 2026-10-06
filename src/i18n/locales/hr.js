@@ -479,7 +479,7 @@ export default {
   'feedback.feature.screens': 'Zasloni i projekcija',
   'feedback.feature.timing': 'Vrijeme',
   'feedback.feature.languages': 'Jezici i prijevodi',
-  'feedback.q.liked': 'Što vam se najviše sviđa?',
+  'feedback.q.usage': 'Recite nam kako ga koristite',
   'feedback.q.improve': 'Što biste poboljšali ili dodali?',
   'feedback.q.problems': 'Jeste li naišli na probleme ili pogreške?',
   'feedback.placeholder': 'Pišite ovdje…',

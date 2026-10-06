@@ -486,7 +486,7 @@ export default {
   'feedback.feature.screens': 'Obrazovky a projekcia',
   'feedback.feature.timing': 'Časovanie',
   'feedback.feature.languages': 'Jazyky a preklady',
-  'feedback.q.liked': 'Čo sa vám páči najviac?',
+  'feedback.q.usage': 'Povedzte nám, ako ho používate',
   'feedback.q.improve': 'Čo by ste zlepšili alebo pridali?',
   'feedback.q.problems': 'Narazili ste na nejaké problémy alebo chyby?',
   'feedback.placeholder': 'Píšte sem…',

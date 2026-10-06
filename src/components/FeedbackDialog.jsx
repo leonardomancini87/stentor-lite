@@ -132,7 +132,7 @@ export default function FeedbackDialog({ onClose }) {
           <ChoiceField label={t('feedback.q.recommend')} options={FEEDBACK_RECOMMEND} value={answers.recommend} onChange={set('recommend')} t={t} prefix="feedback.recommend" />
           <ChoiceField label={t('feedback.q.context')} options={FEEDBACK_CONTEXTS} value={answers.contexts} onChange={set('contexts')} multiple t={t} prefix="feedback.context" />
           <ChoiceField label={t('feedback.q.feature')} options={FEEDBACK_FEATURES} value={answers.feature} onChange={set('feature')} t={t} prefix="feedback.feature" />
-          <OpenField label={t('feedback.q.liked')} value={answers.liked} onChange={set('liked')} />
+          <OpenField label={t('feedback.q.usage')} value={answers.usage} onChange={set('usage')} />
           <OpenField label={t('feedback.q.improve')} value={answers.improve} onChange={set('improve')} />
           <OpenField label={t('feedback.q.problems')} value={answers.problems} onChange={set('problems')} />
           <label className="feedbackField feedbackOpen">

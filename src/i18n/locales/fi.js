@@ -472,7 +472,7 @@ export default {
   'feedback.feature.screens': 'Näytöt ja projisointi',
   'feedback.feature.timing': 'Ajoitus',
   'feedback.feature.languages': 'Kielet ja käännökset',
-  'feedback.q.liked': 'Mistä pidät eniten?',
+  'feedback.q.usage': 'Kerro, miten käytät sitä',
   'feedback.q.improve': 'Mitä parantaisit tai lisäisit?',
   'feedback.q.problems': 'Kohtasitko ongelmia tai virheitä?',
   'feedback.placeholder': 'Kirjoita tähän…',

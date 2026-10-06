@@ -472,7 +472,7 @@ export default {
   'feedback.feature.screens': 'Ekranlar ve yansıtma',
   'feedback.feature.timing': 'Süreler',
   'feedback.feature.languages': 'Diller ve çeviriler',
-  'feedback.q.liked': 'En çok neyi beğeniyorsunuz?',
+  'feedback.q.usage': 'Nasıl kullandığınızı anlatın',
   'feedback.q.improve': 'Neyi iyileştirirdiniz veya eklerdiniz?',
   'feedback.q.problems': 'Sorun veya hatayla karşılaştınız mı?',
   'feedback.placeholder': 'Buraya yazın…',

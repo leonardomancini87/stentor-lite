@@ -498,7 +498,7 @@ export default {
   'feedback.feature.screens': 'സ്ക്രീനുകളും പ്രൊജക്ഷനും',
   'feedback.feature.timing': 'സമയക്രമം',
   'feedback.feature.languages': 'ഭാഷകളും വിവർത്തനങ്ങളും',
-  'feedback.q.liked': 'നിങ്ങൾക്ക് ഏറ്റവും ഇഷ്ടപ്പെട്ടത് എന്താണ്?',
+  'feedback.q.usage': 'നിങ്ങൾ ഇത് എങ്ങനെ ഉപയോഗിക്കുന്നുവെന്ന് പറയൂ',
   'feedback.q.improve': 'എന്ത് മെച്ചപ്പെടുത്തുകയോ ചേർക്കുകയോ ചെയ്യും?',
   'feedback.q.problems': 'എന്തെങ്കിലും പ്രശ്നങ്ങളോ പിശകുകളോ നേരിട്ടോ?',
   'feedback.placeholder': 'ഇവിടെ എഴുതുക…',

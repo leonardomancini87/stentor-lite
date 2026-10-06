@@ -497,7 +497,7 @@ export default {
   'feedback.feature.screens': 'स्क्रीन और प्रोजेक्शन',
   'feedback.feature.timing': 'समय',
   'feedback.feature.languages': 'भाषाएँ और अनुवाद',
-  'feedback.q.liked': 'आपको सबसे अच्छा क्या लगता है?',
+  'feedback.q.usage': 'हमें बताएँ कि आप इसका उपयोग कैसे करते हैं',
   'feedback.q.improve': 'आप क्या सुधारेंगे या जोड़ेंगे?',
   'feedback.q.problems': 'क्या आपको कोई समस्या या त्रुटि मिली?',
   'feedback.placeholder': 'यहाँ लिखें…',

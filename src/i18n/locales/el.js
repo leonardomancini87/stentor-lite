@@ -472,7 +472,7 @@ export default {
   'feedback.feature.screens': 'Οθόνες και προβολή',
   'feedback.feature.timing': 'Χρόνοι',
   'feedback.feature.languages': 'Γλώσσες και μεταφράσεις',
-  'feedback.q.liked': 'Τι σας αρέσει περισσότερο;',
+  'feedback.q.usage': 'Πείτε μας πώς το χρησιμοποιείτε',
   'feedback.q.improve': 'Τι θα βελτιώνατε ή θα προσθέτατε;',
   'feedback.q.problems': 'Αντιμετωπίσατε προβλήματα ή σφάλματα;',
   'feedback.placeholder': 'Γράψτε εδώ…',
