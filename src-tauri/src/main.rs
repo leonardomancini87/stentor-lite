@@ -158,6 +158,23 @@ fn stentor_window_ready(app: tauri::AppHandle) {
     show_main_window(&app);
 }
 
+// Vero se l'app è installata dal Microsoft Store (pacchetto MSIX): Windows mette i pacchetti
+// in "Program Files\\WindowsApps". In quel caso gli aggiornamenti li fa lo Store e l'app non
+// deve cercarli né installarli da sola (vedi src/hooks/useAppUpdates.js).
+#[tauri::command]
+fn stentor_is_store_package() -> bool {
+    #[cfg(target_os = "windows")]
+    {
+        std::env::current_exe()
+            .map(|path| path.to_string_lossy().to_lowercase().contains("\\windowsapps\\"))
+            .unwrap_or(false)
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        false
+    }
+}
+
 fn main() {
     tauri::Builder::default()
         // Aggiornamenti: verifica, download e installazione (src/hooks/useAppUpdates.js);
@@ -214,7 +231,7 @@ fn main() {
                 _ => emit_menu_action(app, &id),
             }
         })
-        .invoke_handler(tauri::generate_handler![stentor_save_project_file, stentor_open_project_file, stentor_window_ready])
+        .invoke_handler(tauri::generate_handler![stentor_save_project_file, stentor_open_project_file, stentor_window_ready, stentor_is_store_package])
         .run(tauri::generate_context!())
         .expect("error while running Sténtor Lite");
 }
