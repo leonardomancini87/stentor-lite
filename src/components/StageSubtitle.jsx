@@ -1,6 +1,6 @@
-import React, { useId } from 'react';
+import React, { useId, useLayoutEffect, useRef, useState } from 'react';
 import { segmentTextLines } from '../utils/inlineStyleSpans.js';
-import { layoutStageText } from '../utils/stageLayout.js';
+import { fitStageShiftX, layoutStageText } from '../utils/stageLayout.js';
 
 const DESIGN_WIDTH = 2360;
 const DESIGN_HEIGHT = 800;
@@ -52,6 +52,9 @@ export default function StageSubtitle({
   secondScale,
 }) {
   const clipId = useId().replace(/:/g, '');
+  const groupRef = useRef(null);
+  // Correzione orizzontale perché una riga lunga, spostata di lato, non esca dallo schermo.
+  const [fitX, setFitX] = useState(0);
   const lines = String(text || '').split(/\r?\n/);
   const styledLines = segmentTextLines(String(text || ''), spans);
   const secondLines = secondText ? String(secondText).split(/\r?\n/) : [];
@@ -77,6 +80,25 @@ export default function StageSubtitle({
   const alignment = ['left', 'right'].includes(style?.textAlign) ? style.textAlign : 'center';
   const anchor = alignment === 'left' ? 'start' : alignment === 'right' ? 'end' : 'middle';
   const textX = alignment === 'left' ? clipX : alignment === 'right' ? clipX + clipWidth : DESIGN_WIDTH / 2 + shiftX;
+
+  // Si misura la riga più larga dopo ogni disegno (e quando arrivano i caratteri web).
+  useLayoutEffect(() => {
+    const measure = () => {
+      const group = groupRef.current;
+      if (!group) return;
+      const widths = [...group.querySelectorAll('text')].map((node) => node.getComputedTextLength());
+      const next = Math.round(fitStageShiftX({
+        centerX: DESIGN_WIDTH / 2 + shiftX,
+        lineWidth: Math.max(0, ...widths),
+        clipWidth,
+        stageWidth: DESIGN_WIDTH,
+      }));
+      setFitX((current) => (current === next ? current : next));
+    };
+    measure();
+    document.fonts?.addEventListener?.('loadingdone', measure);
+    return () => document.fonts?.removeEventListener?.('loadingdone', measure);
+  });
 
   function renderLine(line, segmentsForLine, y, linePx, key) {
     const segments = segmentsForLine || [{ text: line || '\u00A0' }];
@@ -130,7 +152,7 @@ export default function StageSubtitle({
         </clipPath>
       </defs>
 
-      <g clipPath={`url(#${clipId})`}>
+      <g ref={groupRef} clipPath={`url(#${clipId})`} transform={fitX ? `translate(${fitX} 0)` : undefined}>
         {lines.map((line, index) => renderLine(line, styledLines[index], layout.primaryY[index], fontPx, `p${index}`))}
         {layout.separator && (
           <line

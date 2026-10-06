@@ -167,6 +167,7 @@
       let leavingLayers = [];
       let layerCounter = 0;
       let lastRawText = null;
+      let lastPayload = null;
       let lastUpdatedAt = 0;
 
       function escapeHtml(value) {
@@ -321,6 +322,19 @@
         return { primaryY, secondY, secondFontPx, separator: { y: separatorY, width: fontPx * 1.1, thickness: Math.max(2, fontPx * 0.045) } };
       }
 
+      // Stesso calcolo di src/utils/stageLayout.js (fitStageShiftX): tenerli allineati.
+      // Una riga lunga, spostata di lato, viene riavvicinata quanto basta per restare nello schermo.
+      function fitStageShiftX(centerX, lineWidth, clipWidth) {
+        const margin = 24;
+        const visible = Math.min(lineWidth || 0, clipWidth || 0);
+        if (visible <= 0) return 0;
+        const half = visible / 2;
+        const min = margin + half;
+        const max = DESIGN_WIDTH - margin - half;
+        if (min > max) return DESIGN_WIDTH / 2 - centerX;
+        return Math.max(min, Math.min(max, centerX)) - centerX;
+      }
+
       function renderSubtitleText(subtitle, text, settings = {}, cueStyle = 'normal', cueTextStyle = {}, textSpans = [], secondText = '', secondTextSpans = []) {
         const value = String(text || '');
         const lines = value.split(/\r?\n/);
@@ -403,6 +417,11 @@
           appendLines(secondLines, layout.secondY, layout.secondFontPx, secondTextSpans);
         }
         subtitle.appendChild(group);
+
+        // La misura richiede che il livello sia già nella pagina.
+        const widths = Array.from(group.querySelectorAll('text')).map((node) => node.getComputedTextLength());
+        const fitX = Math.round(fitStageShiftX(DESIGN_WIDTH / 2 + shiftX, Math.max(0, ...widths), clipWidth));
+        if (fitX) group.setAttribute('transform', `translate(${fitX} 0)`);
       }
 
       // Passaggio tra battute, scelto per ogni schermo (Schermi → Aspetto):
@@ -484,6 +503,7 @@
         // Stesso testo con stile o posizione diversi (es. mentre lo si sposta): si ridisegna senza effetto.
         const sameText = nextText === lastRawText && Boolean(nextText);
         lastRawText = nextText;
+        lastPayload = payload;
         lastUpdatedAt = payload.updatedAt || Date.now();
         stage.style.background = settings.background || '#000000';
         canvas.style.background = settings.background || '#000000';
@@ -505,8 +525,8 @@
         if (outgoing) leaveLayer(outgoing, effect, ms, slidePx);
         if (nextText) {
           const incoming = createLayer();
-          render(incoming);
           canvas.appendChild(incoming);
+          render(incoming);
           enterLayer(incoming, effect, ms, outgoingVisible, slidePx);
           currentLayer = incoming;
         }
@@ -533,6 +553,10 @@
       }
 
       window.addEventListener('resize', updateScale);
+      // Quando arriva un carattere web le larghezze cambiano: la battuta in onda si ridisegna sul posto.
+      document.fonts?.addEventListener?.('loadingdone', () => {
+        if (lastPayload && currentLayer) applyPayload(lastPayload);
+      });
       window.addEventListener('storage', (event) => {
         if (event.key !== PAYLOAD_KEY || !event.newValue) return;
         try { applyPayload(JSON.parse(event.newValue)); } catch (error) {}
