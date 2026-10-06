@@ -1,10 +1,11 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Permessi della finestra di regia: eventi del menu nativo, verifica e installazione degli aggiornamenti, riavvio dopo l'aggiornamento.",
+  "description": "Permessi della finestra di regia: eventi del menu nativo, titolo con il nome del progetto, verifica e installazione degli aggiornamenti, riavvio dopo l'aggiornamento.",
   "windows": ["regia"],
   "permissions": [
     "core:default",
+    "core:window:allow-set-title",
     "updater:default",
     "process:allow-restart"
   ]

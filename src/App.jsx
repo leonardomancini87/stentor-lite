@@ -95,6 +95,7 @@ import StentoreErrorBoundary from './components/StentoreErrorBoundary.jsx';
 import DesktopDashboard from './components/DesktopDashboard.jsx';
 import DesktopPreferences from './components/DesktopPreferences.jsx';
 import useAppUpdates from './hooks/useAppUpdates.js';
+import { getWindowTitle } from './utils/windowTitle.js';
 import PageHeader from './components/PageHeader.jsx';
 
 const RIGHT_SIDEBAR_STORAGE_KEY = 'stentor.rightSidebar.collapsed.v1';
@@ -289,6 +290,16 @@ export default function App() {
       // Memoria locale non disponibile: lo stato vale solo per questa sessione.
     }
   }, [rightSidebarCollapsed]);
+
+  // Titolo della finestra: il nome del progetto aperto (vedi utils/windowTitle.js).
+  const windowTitle = getWindowTitle(project.title, { untitled: ui('nav.untitled') });
+  useEffect(() => {
+    document.title = windowTitle;
+    if (!window.__TAURI_INTERNALS__) return;
+    import('@tauri-apps/api/window')
+      .then(({ getCurrentWindow }) => getCurrentWindow().setTitle(windowTitle))
+      .catch(() => {});
+  }, [windowTitle]);
 
   // Allinea verticalmente la freccia destra alla firma Sténtor in fondo alla barra sinistra.
   useLayoutEffect(() => {

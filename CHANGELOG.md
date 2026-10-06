@@ -3,7 +3,7 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
-## 0.9.2 — in preparazione · beta
+## 0.9.2 — 6 ottobre 2026 · beta
 
 **Schermi**
 - Seconda lingua un po' più distanziata dal trattino: lo spazio sopra e sotto il trattino ora appare uguale.
@@ -14,6 +14,7 @@ Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténto
 
 **Interfaccia**
 - Meno spazio vuoto sotto la barra dei comandi (Indietro, Avanti…) e sotto la firma della barra laterale.
+- La barra della finestra mostra il nome del progetto aperto, come Excel o Pages: su Mac solo il nome (per esempio «Macbett»), su Windows e Linux «Macbett — Sténtor Lite».
 
 ## 0.9.1 — 6 ottobre 2026 · beta
 
