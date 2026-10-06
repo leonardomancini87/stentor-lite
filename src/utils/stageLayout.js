@@ -22,8 +22,11 @@ export function layoutStageText({ lineCount, secondLineCount = 0, fontPx, second
   const hasSecond = lineCount > 0 && secondLineCount > 0;
   const secondFontPx = fontPx * (clampSecondScale(secondScale) / 100);
   const secondLineHeight = secondFontPx * LINE_HEIGHT;
-  const gap = fontPx * 0.42;
-  const totalHeight = primaryHeight + (hasSecond ? gap * 2 + secondLineCount * secondLineHeight : 0);
+  // Sotto il trattino un po' più di spazio che sopra: la prima riga ha sotto le discendenti
+  // (g, p…), la seconda sopra le maiuscole; con spazi uguali il trattino sembra attaccato alla seconda.
+  const gapAbove = fontPx * 0.42;
+  const gapBelow = fontPx * 0.6;
+  const totalHeight = primaryHeight + (hasSecond ? gapAbove + gapBelow + secondLineCount * secondLineHeight : 0);
 
   let top = centerY - primaryHeight / 2;
   if (hasSecond && verticalAlign === 'bottom') top = centerY + primaryHeight / 2 - totalHeight;
@@ -32,8 +35,8 @@ export function layoutStageText({ lineCount, secondLineCount = 0, fontPx, second
   const primaryY = Array.from({ length: lineCount }, (_, index) => top + primaryLineHeight * (index + 0.5));
   if (!hasSecond) return { primaryY, secondY: [], separator: null, secondFontPx };
 
-  const separatorY = top + primaryHeight + gap;
-  const secondY = Array.from({ length: secondLineCount }, (_, index) => separatorY + gap + secondLineHeight * (index + 0.5));
+  const separatorY = top + primaryHeight + gapAbove;
+  const secondY = Array.from({ length: secondLineCount }, (_, index) => separatorY + gapBelow + secondLineHeight * (index + 0.5));
   return {
     primaryY,
     secondY,

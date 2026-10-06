@@ -307,17 +307,18 @@
         const scale = Number.isFinite(Number(secondScale)) ? Math.max(50, Math.min(90, Number(secondScale))) : 70;
         const secondFontPx = fontPx * (scale / 100);
         const secondLineHeight = secondFontPx * 1.12;
-        const gap = fontPx * 0.42;
-        const totalHeight = primaryHeight + (hasSecond ? gap * 2 + secondLineCount * secondLineHeight : 0);
+        const gapAbove = fontPx * 0.42;
+        const gapBelow = fontPx * 0.6;
+        const totalHeight = primaryHeight + (hasSecond ? gapAbove + gapBelow + secondLineCount * secondLineHeight : 0);
         let top = centerY - primaryHeight / 2;
         if (hasSecond && verticalAlign === 'bottom') top = centerY + primaryHeight / 2 - totalHeight;
         else if (hasSecond && verticalAlign !== 'top') top = centerY - totalHeight / 2;
         const primaryY = [];
         for (let i = 0; i < lineCount; i += 1) primaryY.push(top + lineHeight * (i + 0.5));
         if (!hasSecond) return { primaryY, secondY: [], separator: null, secondFontPx };
-        const separatorY = top + primaryHeight + gap;
+        const separatorY = top + primaryHeight + gapAbove;
         const secondY = [];
-        for (let i = 0; i < secondLineCount; i += 1) secondY.push(separatorY + gap + secondLineHeight * (i + 0.5));
+        for (let i = 0; i < secondLineCount; i += 1) secondY.push(separatorY + gapBelow + secondLineHeight * (i + 0.5));
         return { primaryY, secondY, secondFontPx, separator: { y: separatorY, width: fontPx * 1.1, thickness: Math.max(2, fontPx * 0.045) } };
       }
 

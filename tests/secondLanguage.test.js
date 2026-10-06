@@ -47,6 +47,8 @@ test('impaginazione: la seconda lingua va sotto, più piccola, dopo il trattino'
   assert.deepEqual(layout.primaryY, [400]);
   assert.ok(layout.separator.y > layout.primaryY[0]);
   assert.ok(layout.secondY[0] > layout.separator.y);
+  // Più spazio sotto il trattino che sopra (le maiuscole della seconda lingua lo «avvicinano»).
+  assert.ok(layout.secondY[0] - 70 * 1.12 / 2 - layout.separator.y > layout.separator.y - (layout.primaryY[0] + 56));
   assert.equal(layout.secondFontPx, 70);
 
   const centered = layoutStageText({ lineCount: 1, secondLineCount: 1, fontPx: 100, centerY: 400 });

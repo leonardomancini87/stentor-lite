@@ -2079,7 +2079,7 @@ html[data-app-theme] .appShell .settingsPage .settingsUpdatesPanel .settingsFeed
 html[data-app-theme] .appShell .liteScreenFieldHint { display: block; margin-top: -4px; color: var(--pk-muted, #6b7280); font-size: 11px; line-height: 1.35; }
 /* Anteprima in regia con la seconda lingua: trattino centrale e testo più piccolo (come in sala). */
 html[data-app-theme] .appShell .liteScreenPreviewText .liteScreenPreviewSeparator {
-  display: block; width: 1.1em; height: max(2px, 0.045em); margin: 0.42em auto; border-radius: 1em;
+  display: block; width: 1.1em; height: max(2px, 0.045em); margin: 0.42em auto 0.6em; border-radius: 1em;
   background: currentColor; opacity: 0.6;
 }
 html[data-app-theme] .appShell .liteScreenPreviewText .liteScreenPreviewSecond { display: block; }
