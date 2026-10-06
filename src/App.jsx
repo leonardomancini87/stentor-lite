@@ -36,7 +36,7 @@ import {
   saveProject,
   updateArchivedProject,
 } from './utils/projectPersistence.js';
-import { downloadJson } from './lib/storage.js';
+import { downloadJson, downloadText } from './lib/storage.js';
 import {
   chooseProjectSaveHandle,
   createBlankProject,
@@ -94,6 +94,7 @@ import StentoreDialog from './components/StentoreDialog.jsx';
 import StentoreErrorBoundary from './components/StentoreErrorBoundary.jsx';
 import DesktopDashboard from './components/DesktopDashboard.jsx';
 import DesktopPreferences from './components/DesktopPreferences.jsx';
+import { buildScriptHtml, getScriptDownloadName } from './utils/scriptPrint.js';
 import CardsCard from './components/CardsCard.jsx';
 import { addCard, getCards, removeCard, updateCard } from './utils/showCards.js';
 import useAppUpdates from './hooks/useAppUpdates.js';
@@ -814,6 +815,28 @@ export default function App() {
     downloadJson(getProjectDownloadName(source), withProjectMetadata(source));
   }
 
+  // Copione da stampare: un file HTML da aprire nel browser, dove si stampa o si salva in PDF.
+  function printProject(projectId) {
+    // Il progetto aperto si stampa com'è adesso, comprese le modifiche non ancora archiviate.
+    const source = projectId === project.id ? project : loadProjectById(projectId);
+    if (!source) return;
+    const printLanguage = source.activeLanguage || source.primaryLanguage || source.languages?.[0] || 'it';
+    const cueCount = (source.cues || []).filter((cue) => !isMarkerCue(cue)).length;
+    const html = buildScriptHtml(source, {
+      language: printLanguage,
+      languageName: getLanguageName(source, printLanguage),
+      date: new Intl.DateTimeFormat(appLanguage, { dateStyle: 'long' }).format(new Date()),
+      labels: {
+        voice: ui('print.voice'),
+        text: ui('screens.field.text'),
+        note: ui('cues.note.label'),
+        print: ui('print.button'),
+        cues: ui('count.cues', { count: cueCount }),
+      },
+    });
+    downloadText(getScriptDownloadName(source), html, 'text/html;charset=utf-8');
+  }
+
   async function deleteProject(projectId) {
     const source = loadProjectById(projectId);
     if (!source) return;
@@ -1435,6 +1458,7 @@ export default function App() {
             switchProject={switchProject}
             editProjectDetails={editProjectDetails}
             exportProject={exportProject}
+            printProject={printProject}
             duplicateProject={duplicateProject}
             deleteProject={deleteProject}
             updateProjectCover={updateProjectCover}

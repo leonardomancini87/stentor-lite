@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useI18n } from '../i18n/index.js';
 import { IMPORT_ACCEPT } from '../utils/fileImport.js';
-import { Copy, Download, Edit3, FolderOpen, Grid2X2, ImagePlus, Languages, List, MoreHorizontal, Play, Plus, Search, Trash2, Upload, X } from 'lucide-react';
+import { Copy, Download, Printer, Edit3, FolderOpen, Grid2X2, ImagePlus, Languages, List, MoreHorizontal, Play, Plus, Search, Trash2, Upload, X } from 'lucide-react';
 import PageHeader from './PageHeader.jsx';
 
 function getLanguageLabel(project, code) {
@@ -81,7 +81,7 @@ function ProjectCard({ project, isCurrent, selected, onSelect, onOpen, onOpenAct
   );
 }
 
-function ProjectActionsModal({ project, currentProjectId, onClose, onDetails, editProjectDetails, onManageLanguages, exportProject, duplicateProject, deleteProject, updateProjectCover }) {
+function ProjectActionsModal({ project, currentProjectId, onClose, onDetails, editProjectDetails, onManageLanguages, exportProject, printProject, duplicateProject, deleteProject, updateProjectCover }) {
   const { t } = useI18n();
   useEffect(() => {
     function handleKeyDown(event) {
@@ -162,6 +162,13 @@ function ProjectActionsModal({ project, currentProjectId, onClose, onDetails, ed
             <span><strong>{t('projects.actions.export')}</strong><small>{t('projects.actions.exportHelp')}</small></span>
           </button>
 
+          {printProject ? (
+            <button type="button" onClick={() => run(() => printProject(project.id))}>
+              <Printer size={18} />
+              <span><strong>{t('projects.actions.print')}</strong><small>{t('projects.actions.printHelp')}</small></span>
+            </button>
+          ) : null}
+
           <button type="button" onClick={() => run(() => duplicateProject?.(project.id))}>
             <Copy size={18} />
             <span><strong>{t('projects.actions.duplicate')}</strong><small>{t('projects.actions.duplicateHelp')}</small></span>
@@ -193,6 +200,7 @@ export default function DesktopDashboard({
   switchProject,
   editProjectDetails,
   exportProject,
+  printProject,
   duplicateProject,
   deleteProject,
   updateProjectCover,
@@ -372,6 +380,7 @@ export default function DesktopDashboard({
         editProjectDetails={editProjectDetails}
         onManageLanguages={onManageLanguages}
         exportProject={exportProject}
+        printProject={printProject}
         duplicateProject={duplicateProject}
         deleteProject={deleteProject}
         updateProjectCover={updateProjectCover}
