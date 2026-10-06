@@ -23,7 +23,6 @@ function RatingField({ label, value, onChange, t }) {
     <fieldset className="feedbackField">
       <legend>{label}</legend>
       <div className="feedbackRating" role="radiogroup" aria-label={label}>
-        <small>{t('feedback.scale.low')}</small>
         {[1, 2, 3, 4, 5].map((n) => (
           <button
             key={n}
@@ -34,10 +33,10 @@ function RatingField({ label, value, onChange, t }) {
             className={classNames('feedbackStar', n <= value && 'on')}
             onClick={() => onChange(value === n ? 0 : n)}
           >
-            <Star size={22} />
+            <Star size={20} strokeWidth={1.5} />
           </button>
         ))}
-        <small>{t('feedback.scale.high')}</small>
+        <small>{value ? t('feedback.rating.aria', { value }) : `${t('feedback.scale.low')} – ${t('feedback.scale.high')}`}</small>
       </div>
     </fieldset>
   );
@@ -72,11 +71,11 @@ function ChoiceField({ label, options, value, onChange, multiple = false, t, pre
   );
 }
 
-function OpenField({ label, value, onChange, t, rows = 3 }) {
+function OpenField({ label, value, onChange, rows = 2 }) {
   return (
     <label className="feedbackField feedbackOpen">
       <span>{label}</span>
-      <textarea rows={rows} value={value} placeholder={t('feedback.placeholder')} onChange={(event) => onChange(event.target.value)} />
+      <textarea rows={rows} value={value} onChange={(event) => onChange(event.target.value)} />
     </label>
   );
 }
@@ -121,9 +120,8 @@ export default function FeedbackDialog({ onClose }) {
   return (
     <div className="projectActionsOverlay feedbackOverlay" role="presentation" onMouseDown={onClose}>
       <section className="projectActionsDialog feedbackDialog" role="dialog" aria-modal="true" aria-labelledby="feedback-title" onMouseDown={(event) => event.stopPropagation()}>
-        <button type="button" className="projectActionsClose" aria-label={t('feedback.close')} onClick={onClose}><X size={17} /></button>
+        <button type="button" className="projectActionsClose" aria-label={t('feedback.close')} onClick={onClose}><X size={16} /></button>
         <header className="feedbackHeader">
-          <p className="projectActionsEyebrow">{t('feedback.card.title')}</p>
           <h2 id="feedback-title">{t('feedback.title')}</h2>
           <p>{t('feedback.intro')}</p>
         </header>
@@ -134,9 +132,9 @@ export default function FeedbackDialog({ onClose }) {
           <ChoiceField label={t('feedback.q.recommend')} options={FEEDBACK_RECOMMEND} value={answers.recommend} onChange={set('recommend')} t={t} prefix="feedback.recommend" />
           <ChoiceField label={t('feedback.q.context')} options={FEEDBACK_CONTEXTS} value={answers.contexts} onChange={set('contexts')} multiple t={t} prefix="feedback.context" />
           <ChoiceField label={t('feedback.q.feature')} options={FEEDBACK_FEATURES} value={answers.feature} onChange={set('feature')} t={t} prefix="feedback.feature" />
-          <OpenField label={t('feedback.q.liked')} value={answers.liked} onChange={set('liked')} t={t} />
-          <OpenField label={t('feedback.q.improve')} value={answers.improve} onChange={set('improve')} t={t} />
-          <OpenField label={t('feedback.q.problems')} value={answers.problems} onChange={set('problems')} t={t} />
+          <OpenField label={t('feedback.q.liked')} value={answers.liked} onChange={set('liked')} />
+          <OpenField label={t('feedback.q.improve')} value={answers.improve} onChange={set('improve')} />
+          <OpenField label={t('feedback.q.problems')} value={answers.problems} onChange={set('problems')} />
           <label className="feedbackField feedbackOpen">
             <span>{t('feedback.q.contact')}</span>
             <input value={answers.contact} onChange={(event) => set('contact')(event.target.value)} />
@@ -146,8 +144,8 @@ export default function FeedbackDialog({ onClose }) {
         <footer className="feedbackFooter">
           <p className="feedbackStatus" role="status">{status || t('feedback.optional')}</p>
           <div className="feedbackActions">
-            <button type="button" className="interfaceLanguageCancel" onClick={copy}><Copy size={15} /> {t('feedback.copy')}</button>
-            <button type="button" className="interfaceLanguageConfirm feedbackSend" onClick={send}><Mail size={15} /> {t('feedback.send')}</button>
+            <button type="button" className="interfaceLanguageCancel" onClick={copy}><Copy size={14} /> {t('feedback.copy')}</button>
+            <button type="button" className="interfaceLanguageConfirm feedbackSend" onClick={send}><Mail size={14} /> {t('feedback.send')}</button>
           </div>
         </footer>
       </section>
