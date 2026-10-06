@@ -357,7 +357,8 @@ html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColu
 html[data-app-theme] .appShell .liteScreensWorkspace,
 html[data-app-theme] .appShell .liteScreensWorkspace .liteScreensBody { background: var(--pk-window) !important; color: var(--pk-ink) !important; }
 
-html[data-app-theme] .appShell .liteScreensWorkspace * { font-family: var(--pk-font) !important; }
+/* Il testo dell'anteprima è escluso: deve usare il carattere scelto per lo schermo, non quello dell'interfaccia. */
+html[data-app-theme] .appShell .liteScreensWorkspace :not(.stageSubtitleSvg, .stageSubtitleSvg *) { font-family: var(--pk-font) !important; }
 
 /* Elenco, anteprima e impostazioni sono tre card distinte: un piccolo spazio le separa. */
 html[data-app-theme] .appShell .liteScreensWorkspace .liteScreensBody { gap: 12px !important; }
