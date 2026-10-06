@@ -298,8 +298,6 @@ export default {
   'nav.settings': 'सेटिंग्स',
   'nav.project.aria': 'प्रोजेक्ट की जानकारी',
   'nav.untitled': 'बिना शीर्षक',
-  'nav.saved': 'इस कंप्यूटर पर सहेजा गया',
-  'nav.unsaved': 'बिना सहेजे बदलाव',
   'nav.cueCount.one': '{count} सरटाइटल',
   'nav.cueCount.other': '{count} सरटाइटल',
   'nav.expand': 'साइडबार फैलाएँ',

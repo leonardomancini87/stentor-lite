@@ -288,8 +288,6 @@ export default {
   'nav.settings': '设置',
   'nav.project.aria': '项目信息',
   'nav.untitled': '未命名',
-  'nav.saved': '已保存在本机',
-  'nav.unsaved': '有未保存的更改',
   'nav.cueCount.one': '{count} 条字幕',
   'nav.cueCount.other': '{count} 条字幕',
   'nav.expand': '展开侧边栏',

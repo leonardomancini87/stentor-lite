@@ -288,8 +288,6 @@ export default {
   'nav.settings': '設定',
   'nav.project.aria': '專案資訊',
   'nav.untitled': '未命名',
-  'nav.saved': '已儲存在本機',
-  'nav.unsaved': '有未儲存的變更',
   'nav.cueCount.one': '{count} 則字幕',
   'nav.cueCount.other': '{count} 則字幕',
   'nav.expand': '展開側邊欄',

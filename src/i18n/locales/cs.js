@@ -287,8 +287,6 @@ export default {
   'nav.settings': 'Nastavení',
   'nav.project.aria': 'Informace o projektu',
   'nav.untitled': 'Bez názvu',
-  'nav.saved': 'uloženo místně',
-  'nav.unsaved': 'neuložené změny',
   'nav.cueCount.one': '{count} titulek',
   'nav.cueCount.other': '{count} titulků',
   'nav.cueCount.few': '{count} titulky',

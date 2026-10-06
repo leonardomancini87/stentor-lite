@@ -284,8 +284,6 @@ export default {
   'nav.settings': 'Postavke',
   'nav.project.aria': 'Podaci o projektu',
   'nav.untitled': 'Bez naslova',
-  'nav.saved': 'spremljeno lokalno',
-  'nav.unsaved': 'nespremljene promjene',
   'nav.cueCount.one': '{count} nadnaslov',
   'nav.cueCount.few': '{count} nadnaslova',
   'nav.cueCount.other': '{count} nadnaslova',

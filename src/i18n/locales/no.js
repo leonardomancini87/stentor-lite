@@ -281,8 +281,6 @@ export default {
   'nav.settings': 'Innstillinger',
   'nav.project.aria': 'Prosjektinformasjon',
   'nav.untitled': 'Uten tittel',
-  'nav.saved': 'lagret lokalt',
-  'nav.unsaved': 'ulagrede endringer',
   'nav.cueCount.one': '{count} overtekst',
   'nav.cueCount.other': '{count} overtekster',
   'nav.expand': 'Utvid sidepanelet',

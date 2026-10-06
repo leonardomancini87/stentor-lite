@@ -298,8 +298,6 @@ export default {
   'nav.settings': 'الإعدادات',
   'nav.project.aria': 'معلومات المشروع',
   'nav.untitled': 'بلا عنوان',
-  'nav.saved': 'محفوظ على هذا الحاسوب',
-  'nav.unsaved': 'تغييرات غير محفوظة',
   'nav.cueCount.one': '{count} ترجمة فوقية',
   'nav.cueCount.two': '{count} ترجمتان فوقيتان',
   'nav.cueCount.few': '{count} ترجمات فوقية',

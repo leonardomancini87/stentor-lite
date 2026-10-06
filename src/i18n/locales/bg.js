@@ -281,8 +281,6 @@ export default {
   'nav.settings': 'Настройки',
   'nav.project.aria': 'Информация за проекта',
   'nav.untitled': 'Без заглавие',
-  'nav.saved': 'записан локално',
-  'nav.unsaved': 'незаписани промени',
   'nav.cueCount.one': '{count} надпис',
   'nav.cueCount.other': '{count} надписа',
   'nav.expand': 'Разгъни страничната лента',

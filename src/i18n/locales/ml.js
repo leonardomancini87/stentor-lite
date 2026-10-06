@@ -299,8 +299,6 @@ export default {
   'nav.settings': 'ക്രമീകരണങ്ങൾ',
   'nav.project.aria': 'പ്രോജക്റ്റ് വിവരങ്ങൾ',
   'nav.untitled': 'പേരില്ലാത്തത്',
-  'nav.saved': 'ഈ കമ്പ്യൂട്ടറിൽ സേവ് ചെയ്തു',
-  'nav.unsaved': 'സേവ് ചെയ്യാത്ത മാറ്റങ്ങൾ',
   'nav.cueCount.one': '{count} സർടൈറ്റിൽ',
   'nav.cueCount.other': '{count} സർടൈറ്റിലുകൾ',
   'nav.expand': 'സൈഡ്ബാർ വികസിപ്പിക്കുക',

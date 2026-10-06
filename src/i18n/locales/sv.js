@@ -281,8 +281,6 @@ export default {
   'nav.settings': 'Inställningar',
   'nav.project.aria': 'Projektinformation',
   'nav.untitled': 'Namnlös',
-  'nav.saved': 'sparat lokalt',
-  'nav.unsaved': 'osparade ändringar',
   'nav.cueCount.one': '{count} övertext',
   'nav.cueCount.other': '{count} övertexter',
   'nav.expand': 'Visa sidofältet',

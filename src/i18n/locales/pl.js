@@ -287,8 +287,6 @@ export default {
   'nav.settings': 'Ustawienia',
   'nav.project.aria': 'Informacje o projekcie',
   'nav.untitled': 'Bez tytułu',
-  'nav.saved': 'zapisano lokalnie',
-  'nav.unsaved': 'niezapisane zmiany',
   'nav.cueCount.one': '{count} napis',
   'nav.cueCount.few': '{count} napisy',
   'nav.cueCount.many': '{count} napisów',

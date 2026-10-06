@@ -281,8 +281,6 @@ export default {
   'nav.settings': 'Ayarlar',
   'nav.project.aria': 'Proje bilgileri',
   'nav.untitled': 'Adsız',
-  'nav.saved': 'yerel olarak kaydedildi',
-  'nav.unsaved': 'kaydedilmemiş değişiklikler',
   'nav.cueCount.one': '{count} üstyazı',
   'nav.cueCount.other': '{count} üstyazı',
   'nav.expand': 'Kenar çubuğunu genişlet',

@@ -287,8 +287,6 @@ export default {
   'nav.settings': 'Настройки',
   'nav.project.aria': 'Сведения о проекте',
   'nav.untitled': 'Без названия',
-  'nav.saved': 'сохранено локально',
-  'nav.unsaved': 'несохранённые изменения',
   'nav.cueCount.one': '{count} титр',
   'nav.cueCount.other': '{count} титра',
   'nav.cueCount.few': '{count} титра',

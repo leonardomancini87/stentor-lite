@@ -288,8 +288,6 @@ export default {
   'nav.settings': 'Definições',
   'nav.project.aria': 'Informações do projeto',
   'nav.untitled': 'Sem título',
-  'nav.saved': 'guardado neste computador',
-  'nav.unsaved': 'alterações não guardadas',
   'nav.cueCount.one': '{count} legenda',
   'nav.cueCount.other': '{count} legendas',
   'nav.expand': 'Expandir a barra lateral',

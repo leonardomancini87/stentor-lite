@@ -281,8 +281,6 @@ export default {
   'nav.settings': 'Asetukset',
   'nav.project.aria': 'Projektin tiedot',
   'nav.untitled': 'Nimetön',
-  'nav.saved': 'tallennettu paikallisesti',
-  'nav.unsaved': 'tallentamattomia muutoksia',
   'nav.cueCount.one': '{count} repliikki',
   'nav.cueCount.other': '{count} repliikkiä',
   'nav.expand': 'Laajenna sivupalkki',

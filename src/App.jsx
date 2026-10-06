@@ -1359,7 +1359,6 @@ export default function App() {
         viewMode={viewMode}
         setViewMode={setViewMode}
         project={project}
-        isDirty={isDirty}
         appLanguage={appLanguage}
         setAppLanguage={setAppLanguage}
         collapsed={leftSidebarCollapsed}

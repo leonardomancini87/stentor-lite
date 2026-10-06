@@ -38,7 +38,6 @@ export default function Sidebar({
   viewMode,
   setViewMode,
   project,
-  isDirty = false,
   appLanguage = 'it',
   collapsed = false,
   updateAvailable = false,
@@ -51,7 +50,6 @@ export default function Sidebar({
   const companyName = String(project?.company || project?.companyName || '').trim();
   // I marcatori (atti, scene…) non sono sopratitoli: non vengono contati.
   const cueCount = (project?.cues || []).filter((cue) => cue?.type !== 'marker').length;
-  const savedLabel = t(isDirty ? 'nav.unsaved' : 'nav.saved');
 
   function openDashboard() {
     setViewMode('dashboard');
@@ -88,7 +86,6 @@ export default function Sidebar({
             <>
               <strong className="stentorSidebarProjectTitle">{projectTitle}</strong>
               {companyName ? <span className="stentorSidebarProjectMeta">{companyName}</span> : null}
-              <span className="stentorSidebarProjectMeta">{savedLabel} •</span>
               <span className="stentorSidebarProjectMeta">{t('nav.cueCount', { count: cueCount })}</span>
             </>
           )}

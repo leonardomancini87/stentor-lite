@@ -10,6 +10,9 @@ Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténto
 - Le battute non tradotte nella seconda lingua mostrano solo la prima: il testo originale non viene ripetuto.
 - L'elenco degli schermi e l'anteprima in regia mostrano entrambe le lingue (per esempio «IT · EN»).
 
+**Barra laterale**
+- Sotto il titolo del progetto non compare più «salvato localmente»: restano compagnia e numero di sopratitoli. I progetti continuano a salvarsi da soli.
+
 ## 0.9.0 — 6 ottobre 2026 · beta
 
 **Aggiornamenti**

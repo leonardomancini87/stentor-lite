@@ -288,8 +288,6 @@ export default {
   'nav.settings': 'Einstellungen',
   'nav.project.aria': 'Projektinformationen',
   'nav.untitled': 'Ohne Titel',
-  'nav.saved': 'auf diesem Computer gespeichert',
-  'nav.unsaved': 'ungespeicherte Änderungen',
   'nav.cueCount.one': '{count} Übertitel',
   'nav.cueCount.other': '{count} Übertitel',
   'nav.expand': 'Seitenleiste aufklappen',

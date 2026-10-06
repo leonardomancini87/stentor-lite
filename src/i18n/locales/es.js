@@ -288,8 +288,6 @@ export default {
   'nav.settings': 'Ajustes',
   'nav.project.aria': 'Información del proyecto',
   'nav.untitled': 'Sin título',
-  'nav.saved': 'guardado en este ordenador',
-  'nav.unsaved': 'cambios sin guardar',
   'nav.cueCount.one': '{count} sobretítulo',
   'nav.cueCount.other': '{count} sobretítulos',
   'nav.expand': 'Desplegar la barra lateral',

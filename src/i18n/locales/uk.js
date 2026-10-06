@@ -287,8 +287,6 @@ export default {
   'nav.settings': 'Налаштування',
   'nav.project.aria': 'Відомості про проєкт',
   'nav.untitled': 'Без назви',
-  'nav.saved': 'збережено локально',
-  'nav.unsaved': 'незбережені зміни',
   'nav.cueCount.one': '{count} супертитр',
   'nav.cueCount.other': '{count} супертитру',
   'nav.cueCount.few': '{count} супертитри',

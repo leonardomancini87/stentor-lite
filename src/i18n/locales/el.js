@@ -281,8 +281,6 @@ export default {
   'nav.settings': 'Ρυθμίσεις',
   'nav.project.aria': 'Πληροφορίες έργου',
   'nav.untitled': 'Χωρίς τίτλο',
-  'nav.saved': 'αποθηκεύτηκε τοπικά',
-  'nav.unsaved': 'μη αποθηκευμένες αλλαγές',
   'nav.cueCount.one': '{count} υπέρτιτλος',
   'nav.cueCount.other': '{count} υπέρτιτλοι',
   'nav.expand': 'Ανάπτυξη πλαϊνής στήλης',

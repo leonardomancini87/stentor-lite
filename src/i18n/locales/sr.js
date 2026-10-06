@@ -281,8 +281,6 @@ export default {
   'nav.settings': 'Подешавања',
   'nav.project.aria': 'Информације о пројекту',
   'nav.untitled': 'Без наслова',
-  'nav.saved': 'сачувано локално',
-  'nav.unsaved': 'несачуване измене',
   'nav.cueCount.one': '{count} надтитл',
   'nav.cueCount.other': '{count} надтитлова',
   'nav.expand': 'Прошири бочну траку',
