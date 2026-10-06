@@ -811,10 +811,17 @@ html[data-app-theme] .appShell .stentorRightSidebarToggle:focus-visible { outlin
 
 html[data-app-theme] .appShell .projectDetailsPanel { padding-bottom: 72px !important; }
 
-html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenInspector,
 html[data-app-theme] .appShell .workspace.liteRegiaWorkspace .liteRegiaRightColumn {
   margin-bottom: max(0px, calc(100vh - var(--stentor-right-toggle-center, calc(100vh - 120px)) + 22px)) !important;
   min-height: 0 !important;
+}
+
+/* In Schermi la card delle impostazioni è alta quanto le altre due: lo spazio per la freccia
+   resta dentro la card, in fondo, così a fine scorrimento i pulsanti non le finiscono sotto. */
+html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenInspector {
+  margin-bottom: 0 !important;
+  min-height: 0 !important;
+  padding-bottom: max(0px, calc(100vh - var(--stentor-right-toggle-center, calc(100vh - 120px)) + 22px)) !important;
 }
 
 /* Barra destra ridotta: resta una sottile striscia con la freccia per riaprirla */
