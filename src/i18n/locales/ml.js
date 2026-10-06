@@ -414,6 +414,8 @@ export default {
   'screens.open': 'സ്ക്രീൻ തുറക്കുക',
   'screens.fullscreen': 'പൂർണ്ണ സ്ക്രീൻ',
   'screens.blackout': 'ബ്ലാക്കൗട്ട്',
+  'screens.testPattern': 'പരീക്ഷണ സ്ക്രീൻ',
+  'screens.testPattern.title': 'പ്രൊജക്ടർ ക്രമീകരിക്കാനും ഫോക്കസ് ചെയ്യാനും എല്ലാ സ്ക്രീനുകളിലും ഫ്രെയിമും മധ്യവും ഒരു മാതൃകാ വരിയും കാണിക്കുക',
   'screens.showText': 'വാചകം കാണിക്കുക',
   'screens.list.aria': 'ക്രമീകരിച്ച സ്ക്രീനുകൾ',
   'screens.preview': 'പ്രിവ്യൂ',

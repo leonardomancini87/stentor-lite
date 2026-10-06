@@ -401,6 +401,8 @@ export default {
   'screens.open': 'Abrir pantalla',
   'screens.fullscreen': 'Pantalla completa',
   'screens.blackout': 'Oscuro',
+  'screens.testPattern': 'Carta de ajuste',
+  'screens.testPattern.title': 'Mostrar un marco, el centro y una línea de muestra en todas las pantallas, para alinear y enfocar el proyector',
   'screens.showText': 'Mostrar texto',
   'screens.list.aria': 'Pantallas configuradas',
   'screens.preview': 'Vista previa',

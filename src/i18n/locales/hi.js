@@ -413,6 +413,8 @@ export default {
   'screens.open': 'स्क्रीन खोलें',
   'screens.fullscreen': 'पूर्ण स्क्रीन',
   'screens.blackout': 'ब्लैकआउट',
+  'screens.testPattern': 'परीक्षण स्क्रीन',
+  'screens.testPattern.title': 'प्रोजेक्टर को सीध में लाने और फ़ोकस करने के लिए सभी स्क्रीन पर फ़्रेम, केंद्र और एक नमूना पंक्ति दिखाएँ',
   'screens.showText': 'पाठ दिखाएँ',
   'screens.list.aria': 'सेट की गई स्क्रीन',
   'screens.preview': 'प्रीव्यू',

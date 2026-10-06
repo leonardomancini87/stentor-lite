@@ -28,7 +28,7 @@ import {
   updateScreenSettings,
 } from '../utils/screenSettings.js';
 import PageHeader from './PageHeader.jsx';
-import { getSecondProjectionText } from '../utils/projectionTargets.js';
+import { getSecondProjectionText, getTestPatternText } from '../utils/projectionTargets.js';
 import { SECOND_LANGUAGE_SCALE } from '../utils/stageLayout.js';
 
 function classNames(...items) {
@@ -42,6 +42,8 @@ export default function ScreensPage({
   cue,
   blackout,
   setBlackout,
+  testPattern = false,
+  setTestPattern,
   updateProject,
   setProject,
   dialogs,
@@ -138,13 +140,14 @@ export default function ScreensPage({
   }
 
   function previewText() {
+    if (testPattern) return getTestPatternText(activeScreen);
     if (blackout) return '';
     const text = cue && !isMarkerCue(cue) ? getCueText(cue, activeScreenLanguage) : '';
     return text || t('screens.previewText.empty');
   }
 
   function previewSecondText() {
-    if (blackout || !cue || isMarkerCue(cue) || !getCueText(cue, activeScreenLanguage).trim()) return '';
+    if (testPattern || blackout || !cue || isMarkerCue(cue) || !getCueText(cue, activeScreenLanguage).trim()) return '';
     return getSecondProjectionText(cue, activeSecondLanguage, project.primaryLanguage);
   }
 
@@ -259,6 +262,11 @@ export default function ScreensPage({
             <button type="button" className="isPrimary" onClick={() => openScreen(activeScreen)}>{t('screens.open')}</button>
             <button type="button" onClick={addScreen}>{t('screens.add')}</button>
             <button type="button" onClick={toggleCanvasFullscreen}>{t('screens.fullscreen')}</button>
+            {setTestPattern ? (
+              <button type="button" className={testPattern ? 'isActive' : ''} aria-pressed={testPattern} onClick={() => setTestPattern(!testPattern)} title={t('screens.testPattern.title')}>
+                {t('screens.testPattern')}
+              </button>
+            ) : null}
             <button type="button" className={blackout ? 'isActive' : ''} onClick={() => setBlackout(!blackout)}>
               {blackout ? t('screens.showText') : t('screens.blackout')}
             </button>
@@ -314,14 +322,14 @@ export default function ScreensPage({
           >
             <StageFrame id={`desktop-screen-canvas-${activeScreen.id}`} settings={activeSettings} className="desktopScreenStageFrame">
               <StageTransition
-                transitionKey={`${blackout ? 'blackout' : cue?.id || 'empty'}-${activeScreen.id}-${activeScreenLanguage}-${activeSecondLanguage}-${transitionTry}`}
+                transitionKey={`${testPattern ? 'test' : blackout ? 'blackout' : cue?.id || 'empty'}-${activeScreen.id}-${activeScreenLanguage}-${activeSecondLanguage}-${transitionTry}`}
                 effect={activeSettings.publicTransition}
                 ms={getScreenTransitionMs(activeSettings)}
               >
-              {blackout ? null : (
+              {blackout && !testPattern ? null : (
                 <StageSubtitle
                   text={previewText()}
-                  spans={getCueTextSpans(cue, activeScreenLanguage)}
+                  spans={testPattern ? [] : getCueTextSpans(cue, activeScreenLanguage)}
                   secondText={previewSecondText()}
                   secondSpans={activeSecondLanguage ? getCueTextSpans(cue, activeSecondLanguage) : []}
                   secondScale={activeSettings.publicSecondScale}
@@ -335,7 +343,7 @@ export default function ScreensPage({
                   style={{
                     color: activeSettings.publicTextColor,
                     fontFamily: activeSettings.publicFontFamily || FONT_FAMILY_OPTIONS[0].value,
-                    ...getCueTypography(cue),
+                    ...(testPattern ? {} : getCueTypography(cue)),
                   }}
                 />
               )}

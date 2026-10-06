@@ -392,6 +392,8 @@ export default {
   'screens.open': 'Åbn skærm',
   'screens.fullscreen': 'Fuld skærm',
   'screens.blackout': 'Blackout',
+  'screens.testPattern': 'Testbillede',
+  'screens.testPattern.title': 'Vis ramme, midte og en eksempellinje på alle skærme for at justere og stille skarpt på projektoren',
   'screens.showText': 'Vis tekst',
   'screens.list.aria': 'Konfigurerede skærme',
   'screens.preview': 'Eksempel',

@@ -406,6 +406,8 @@ export default {
   'screens.open': 'Otevřít obrazovku',
   'screens.fullscreen': 'Celá obrazovka',
   'screens.blackout': 'Zatemnění',
+  'screens.testPattern': 'Zkušební obrazec',
+  'screens.testPattern.title': 'Zobrazit rámeček, střed a ukázkový řádek na všech obrazovkách pro zarovnání a zaostření projektoru',
   'screens.showText': 'Zobrazit text',
   'screens.list.aria': 'Nastavené obrazovky',
   'screens.preview': 'Náhled',

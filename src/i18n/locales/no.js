@@ -392,6 +392,8 @@ export default {
   'screens.open': 'Åpne skjerm',
   'screens.fullscreen': 'Fullskjerm',
   'screens.blackout': 'Svart skjerm',
+  'screens.testPattern': 'Testbilde',
+  'screens.testPattern.title': 'Vis ramme, midtpunkt og en eksempellinje på alle skjermer for å justere og stille skarpt på projektoren',
   'screens.showText': 'Vis tekst',
   'screens.list.aria': 'Konfigurerte skjermer',
   'screens.preview': 'Forhåndsvisning',

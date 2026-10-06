@@ -401,6 +401,8 @@ export default {
   'screens.open': 'Ouvrir l’écran',
   'screens.fullscreen': 'Plein écran',
   'screens.blackout': 'Noir',
+  'screens.testPattern': 'Mire de test',
+  'screens.testPattern.title': 'Afficher un cadre, le centre et une ligne d’exemple sur tous les écrans, pour aligner et mettre au point le projecteur',
   'screens.showText': 'Afficher le texte',
   'screens.list.aria': 'Écrans configurés',
   'screens.preview': 'Aperçu',

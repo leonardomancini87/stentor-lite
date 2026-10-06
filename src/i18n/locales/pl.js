@@ -406,6 +406,8 @@ export default {
   'screens.open': 'Otwórz ekran',
   'screens.fullscreen': 'Pełny ekran',
   'screens.blackout': 'Wygaszenie',
+  'screens.testPattern': 'Obraz testowy',
+  'screens.testPattern.title': 'Pokaż ramkę, środek i przykładowy wiersz na wszystkich ekranach, aby ustawić projektor i jego ostrość',
   'screens.showText': 'Pokaż tekst',
   'screens.list.aria': 'Skonfigurowane ekrany',
   'screens.preview': 'Podgląd',

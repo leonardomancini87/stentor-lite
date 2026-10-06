@@ -392,6 +392,8 @@ export default {
   'screens.open': 'Avaa näyttö',
   'screens.fullscreen': 'Koko näyttö',
   'screens.blackout': 'Pimennys',
+  'screens.testPattern': 'Testikuva',
+  'screens.testPattern.title': 'Näytä kehys, keskikohta ja esimerkkirivi kaikilla näytöillä projektorin kohdistamista ja tarkennusta varten',
   'screens.showText': 'Näytä teksti',
   'screens.list.aria': 'Määritetyt näytöt',
   'screens.preview': 'Esikatselu',

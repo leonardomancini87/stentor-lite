@@ -420,6 +420,8 @@ export default {
   'screens.open': 'فتح الشاشة',
   'screens.fullscreen': 'ملء الشاشة',
   'screens.blackout': 'إظلام',
+  'screens.testPattern': 'شاشة اختبار',
+  'screens.testPattern.title': 'إظهار إطار ومركز وسطر نموذجي على كل الشاشات لمحاذاة جهاز العرض وضبط تركيزه',
   'screens.showText': 'إظهار النص',
   'screens.list.aria': 'الشاشات المُعدّة',
   'screens.preview': 'معاينة',

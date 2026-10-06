@@ -401,6 +401,8 @@ export default {
   'screens.open': '開啟螢幕',
   'screens.fullscreen': '全螢幕',
   'screens.blackout': '暗場',
+  'screens.testPattern': '測試畫面',
+  'screens.testPattern.title': '在所有螢幕上顯示邊框、中心和範例行，用於對齊和調焦投影機',
   'screens.showText': '顯示文字',
   'screens.list.aria': '已設定的螢幕',
   'screens.preview': '預覽',

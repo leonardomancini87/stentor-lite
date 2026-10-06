@@ -392,6 +392,8 @@ export default {
   'screens.open': 'Ekranı aç',
   'screens.fullscreen': 'Tam ekran',
   'screens.blackout': 'Karartma',
+  'screens.testPattern': 'Test ekranı',
+  'screens.testPattern.title': 'Projektörü hizalamak ve netlemek için tüm ekranlarda çerçeve, merkez ve örnek bir satır göster',
   'screens.showText': 'Metni göster',
   'screens.list.aria': 'Yapılandırılmış ekranlar',
   'screens.preview': 'Önizleme',

@@ -406,6 +406,8 @@ export default {
   'screens.open': 'Открыть экран',
   'screens.fullscreen': 'Полный экран',
   'screens.blackout': 'Затемнение',
+  'screens.testPattern': 'Тестовый экран',
+  'screens.testPattern.title': 'Показать рамку, центр и строку-образец на всех экранах, чтобы выровнять и сфокусировать проектор',
   'screens.showText': 'Показать текст',
   'screens.list.aria': 'Настроенные экраны',
   'screens.preview': 'Предпросмотр',

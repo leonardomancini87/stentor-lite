@@ -392,6 +392,8 @@ export default {
   'screens.open': 'Öppna skärm',
   'screens.fullscreen': 'Helskärm',
   'screens.blackout': 'Svart skärm',
+  'screens.testPattern': 'Testbild',
+  'screens.testPattern.title': 'Visa ram, mitt och en exempelrad på alla skärmar för att rikta in och ställa in skärpan på projektorn',
   'screens.showText': 'Visa text',
   'screens.list.aria': 'Konfigurerade skärmar',
   'screens.preview': 'Förhandsvisning',

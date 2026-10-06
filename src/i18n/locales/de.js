@@ -401,6 +401,8 @@ export default {
   'screens.open': 'Bildschirm öffnen',
   'screens.fullscreen': 'Vollbild',
   'screens.blackout': 'Blackout',
+  'screens.testPattern': 'Testbild',
+  'screens.testPattern.title': 'Rahmen, Mitte und eine Beispielzeile auf allen Bildschirmen anzeigen, um den Projektor auszurichten und scharfzustellen',
   'screens.showText': 'Text zeigen',
   'screens.list.aria': 'Eingerichtete Bildschirme',
   'screens.preview': 'Vorschau',

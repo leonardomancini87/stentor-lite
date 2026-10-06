@@ -392,6 +392,8 @@ export default {
   'screens.open': 'Отвори екран',
   'screens.fullscreen': 'Цео екран',
   'screens.blackout': 'Затамњење',
+  'screens.testPattern': 'Пробна слика',
+  'screens.testPattern.title': 'Прикажи оквир, средиште и огледни ред на свим екранима ради поравнања и изоштравања пројектора',
   'screens.showText': 'Прикажи текст',
   'screens.list.aria': 'Подешени екрани',
   'screens.preview': 'Преглед',

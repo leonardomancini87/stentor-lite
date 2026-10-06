@@ -399,6 +399,8 @@ export default {
   'screens.open': 'Otvori zaslon',
   'screens.fullscreen': 'Cijeli zaslon',
   'screens.blackout': 'Zatamnjenje',
+  'screens.testPattern': 'Probna slika',
+  'screens.testPattern.title': 'Prikaži okvir, središte i ogledni redak na svim zaslonima radi poravnanja i izoštravanja projektora',
   'screens.showText': 'Prikaži tekst',
   'screens.list.aria': 'Konfigurirani zasloni',
   'screens.preview': 'Pretpregled',

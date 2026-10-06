@@ -221,6 +221,8 @@ export default function App() {
   const [projectedIndex, setProjectedIndex] = useState(0);
   const [editingCue, setEditingCue] = useState(null);
   const [expandedCueId, setExpandedCueId] = useState(null);
+  // Schermata di prova per il proiettore (Schermi): non fa parte del progetto, non si salva.
+  const [testPattern, setTestPattern] = useState(false);
   // Blocco spettacolo: a lucchetto chiuso il copione non si può modificare (testo, note, struttura).
   // Resta attivo anche dopo un riavvio dell'app, finché non lo si riapre.
   const [editLocked, setEditLocked] = useState(() => {
@@ -493,8 +495,11 @@ export default function App() {
     cue: projectedCue,
     language,
     blackout,
+    testPattern,
     onBlocked: showProjectionBlocked,
   });
+  // La schermata di prova si spegne da sola appena si manda in onda una battuta o si va al buio.
+  useEffect(() => { setTestPattern(false); }, [projectedIndex, blackout]);
 
 
   async function createNewProject() {
@@ -1710,6 +1715,8 @@ export default function App() {
               cue={projectedCue}
               blackout={blackout}
               setBlackout={setBlackout}
+              testPattern={testPattern}
+              setTestPattern={setTestPattern}
               updateProject={updateProject}
               setProject={setProject}
               dialogs={dialogs}

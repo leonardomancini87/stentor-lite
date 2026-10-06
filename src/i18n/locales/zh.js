@@ -401,6 +401,8 @@ export default {
   'screens.open': '打开屏幕',
   'screens.fullscreen': '全屏',
   'screens.blackout': '黑场',
+  'screens.testPattern': '测试画面',
+  'screens.testPattern.title': '在所有屏幕上显示边框、中心和示例行，用于对齐和调焦投影机',
   'screens.showText': '显示文字',
   'screens.list.aria': '已配置的屏幕',
   'screens.preview': '预览',

@@ -392,6 +392,8 @@ export default {
   'screens.open': 'Отвори екрана',
   'screens.fullscreen': 'Цял екран',
   'screens.blackout': 'Затъмнение',
+  'screens.testPattern': 'Тестов екран',
+  'screens.testPattern.title': 'Показване на рамка, център и примерен ред на всички екрани за подравняване и фокусиране на проектора',
   'screens.showText': 'Покажи текста',
   'screens.list.aria': 'Настроени екрани',
   'screens.preview': 'Преглед',

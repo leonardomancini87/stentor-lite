@@ -401,6 +401,8 @@ export default {
   'screens.open': 'Abrir ecrã',
   'screens.fullscreen': 'Ecrã inteiro',
   'screens.blackout': 'Negro',
+  'screens.testPattern': 'Ecrã de teste',
+  'screens.testPattern.title': 'Mostrar uma moldura, o centro e uma linha de exemplo em todos os ecrãs, para alinhar e focar o projetor',
   'screens.showText': 'Mostrar texto',
   'screens.list.aria': 'Ecrãs configurados',
   'screens.preview': 'Pré-visualização',

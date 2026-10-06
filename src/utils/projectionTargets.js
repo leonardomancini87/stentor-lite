@@ -16,6 +16,14 @@ export function getSecondProjectionText(cue, language, primaryLanguage) {
   return text.trim() ? text : '';
 }
 
+// Schermata di prova: nome dello schermo e una riga campione, con carattere, dimensione e
+// posizione dello schermo. Serve ad allineare e mettere a fuoco il proiettore prima dello spettacolo.
+export const TEST_PATTERN_SAMPLE = 'AaBbCc ÀÉÎÕÜ 0123456789';
+
+export function getTestPatternText(screen) {
+  return `${screen?.name || ''}\n${TEST_PATTERN_SAMPLE}`.trim();
+}
+
 export function buildProjectionPayload({
   cue,
   screen,
@@ -23,12 +31,19 @@ export function buildProjectionPayload({
   languages = [],
   primaryLanguage = languages[0],
   blackout = false,
+  testPattern = false,
 }) {
   const targetLanguage = getScreenLanguage(screen, activeLanguage, languages);
   const secondLanguage = getScreenSecondLanguage(screen, activeLanguage, languages);
   const settings = screenToPublicSettings(screen);
   const text = getProjectionText(cue, targetLanguage);
   const secondText = text.trim() ? getSecondProjectionText(cue, secondLanguage, primaryLanguage) : '';
+
+  if (testPattern) {
+    // La prova sostituisce battuta e buio finché resta accesa.
+    const base = buildProjectionPayload({ cue: null, screen, activeLanguage, languages, primaryLanguage });
+    return { ...base, text: getTestPatternText(screen), testPattern: true };
+  }
 
   return {
     screenId: screen.id,

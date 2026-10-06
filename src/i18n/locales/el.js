@@ -392,6 +392,8 @@ export default {
   'screens.open': 'Άνοιγμα οθόνης',
   'screens.fullscreen': 'Πλήρης οθόνη',
   'screens.blackout': 'Μαύρο',
+  'screens.testPattern': 'Οθόνη δοκιμής',
+  'screens.testPattern.title': 'Εμφάνιση πλαισίου, κέντρου και μιας γραμμής δείγματος σε όλες τις οθόνες, για ευθυγράμμιση και εστίαση του προβολέα',
   'screens.showText': 'Εμφάνιση κειμένου',
   'screens.list.aria': 'Διαμορφωμένες οθόνες',
   'screens.preview': 'Προεπισκόπηση',
