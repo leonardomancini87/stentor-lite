@@ -16,6 +16,7 @@ import {
   nextIndexAfter,
   normalizeLineLimit,
 } from '../utils/textCheck.js';
+import { findInCues, replaceInCues } from '../utils/findReplace.js';
 import { createCanvasTextMeasure, findCuesWiderThanScreens, loadScreenFonts } from '../utils/screenFit.js';
 import { getScreens } from '../utils/screenSettings.js';
 import { useCardCollapsed } from '../hooks/useCardCollapsed.js';
@@ -33,7 +34,7 @@ function classNames(...items) {
 function loadTab() {
   try {
     const saved = window.localStorage.getItem(TAB_STORAGE_KEY);
-    return saved === 'clean' || saved === 'check' ? saved : 'check';
+    return saved === 'clean' || saved === 'check' || saved === 'find' ? saved : 'check';
   } catch {
     return 'check';
   }
@@ -101,6 +102,60 @@ function CleanupPanel({ project, activeCue, activeNumber, setProject, locked = f
       <button type="button" className="liteToolsPrimary" onClick={apply} disabled={locked} title={locked ? t('toolbar.locked') : undefined}>
         {effectiveScope === 'cue' ? t('clean.apply.cue', { number: activeNumber }) : t('clean.apply.all')}
       </button>
+      {result ? <p className="liteToolsResult" role="status">{result}</p> : null}
+    </div>
+  );
+}
+
+// Cerca e sostituisci nel testo delle battute, nella lingua di lavoro.
+function FindPanel({ project, language, activeIndex, setProject, onRevealCue, locked = false }) {
+  const [query, setQuery] = useState('');
+  const [replacement, setReplacement] = useState('');
+  const [caseSensitive, setCaseSensitive] = useState(false);
+  const [result, setResult] = useState('');
+  const { t } = useI18n();
+  const options = { caseSensitive, primaryLanguage: project.primaryLanguage };
+  const found = useMemo(
+    () => findInCues(project.cues, language, query, options),
+    [project.cues, language, query, caseSensitive, project.primaryLanguage], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+  const languageName = getLanguageName(project, language);
+
+  useEffect(() => setResult(''), [query, replacement, caseSensitive, language]);
+
+  function replaceAll() {
+    const outcome = replaceInCues(project.cues, language, query, replacement, options);
+    if (outcome.replaced) setProject((current) => ({ ...current, cues: outcome.cues }));
+    setResult(t('find.done', { count: outcome.replaced }));
+  }
+
+  return (
+    <div className="liteToolsPane liteToolsFind">
+      <label>
+        <span>{t('find.query')}</span>
+        <input type="text" value={query} onChange={(event) => setQuery(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' && found.total) onRevealCue?.(nextIndexAfter(found.indexes, activeIndex)); }} autoComplete="off" spellCheck={false} />
+      </label>
+      <label>
+        <span>{t('find.replacement')}</span>
+        <input type="text" value={replacement} onChange={(event) => setReplacement(event.target.value)} autoComplete="off" spellCheck={false} />
+      </label>
+      <label className="liteToolsFindCase">
+        <input type="checkbox" checked={caseSensitive} onChange={(event) => setCaseSensitive(event.target.checked)} />
+        <span>{t('find.case')}</span>
+      </label>
+
+      {query ? (
+        <p className="liteToolsIntro" role="status">
+          {found.total
+            ? t('find.count', { count: found.total, cues: t('count.cues', { count: found.indexes.length }) })
+            : t('find.none', { language: languageName })}
+        </p>
+      ) : null}
+
+      <div className="liteToolsFindActions">
+        <button type="button" onClick={() => onRevealCue?.(nextIndexAfter(found.indexes, activeIndex))} disabled={!found.total}>{t('find.next')}</button>
+        <button type="button" className="liteToolsPrimary" onClick={replaceAll} disabled={locked || !found.total} title={locked ? t('toolbar.locked') : undefined}>{t('find.replaceAll')}</button>
+      </div>
       {result ? <p className="liteToolsResult" role="status">{result}</p> : null}
     </div>
   );
@@ -262,6 +317,7 @@ export default function ToolsCard({ project, language, activeIndex, setProject, 
           {[
             { id: 'check', label: t('tools.tab.check') },
             { id: 'clean', label: t('tools.tab.clean') },
+            { id: 'find', label: t('tools.tab.find') },
           ].map((item) => (
             <button
               key={item.id}
@@ -289,6 +345,8 @@ export default function ToolsCard({ project, language, activeIndex, setProject, 
             settings: { ...(current.settings || {}), maxCharsPerLine: value },
           }))}
         />
+      ) : tab === 'find' ? (
+        <FindPanel project={project} language={language} activeIndex={activeIndex} setProject={setProject} onRevealCue={onRevealCue} locked={locked} />
       ) : (
         <CleanupPanel
           project={project}
