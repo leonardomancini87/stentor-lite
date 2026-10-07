@@ -211,6 +211,26 @@ fn stentor_window_ready(app: tauri::AppHandle) {
     show_main_window(&app);
 }
 
+// Porta in primo piano la finestra di proiezione di uno schermo (secondo clic su «Proiezione»).
+// Riguarda le finestre create da open_stage_window; altrove non trova nulla e non fa nulla.
+#[tauri::command]
+fn stentor_focus_stage(app: tauri::AppHandle, screen_id: String) {
+    for (label, window) in app.webview_windows() {
+        if !label.starts_with("schermo-") {
+            continue;
+        }
+        let same_screen = window
+            .url()
+            .map(|url| url.query_pairs().any(|(key, value)| key == "i" && value == screen_id.as_str()))
+            .unwrap_or(false);
+        if same_screen {
+            let _ = window.unminimize();
+            let _ = window.show();
+            let _ = window.set_focus();
+        }
+    }
+}
+
 fn main() {
     tauri::Builder::default()
         // Aggiornamenti: verifica, download e installazione (src/hooks/useAppUpdates.js);
@@ -293,7 +313,7 @@ fn main() {
                 _ => emit_menu_action(app, &id),
             }
         })
-        .invoke_handler(tauri::generate_handler![stentor_save_project_file, stentor_open_project_file, stentor_window_ready])
+        .invoke_handler(tauri::generate_handler![stentor_save_project_file, stentor_open_project_file, stentor_window_ready, stentor_focus_stage])
         .run(tauri::generate_context!())
         .expect("error while running Sténtor Lite");
 }
