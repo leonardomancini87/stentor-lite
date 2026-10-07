@@ -50,6 +50,51 @@ fn is_stage_window_url(url: &tauri::Url) -> bool {
     from_app && url.path().ends_with("/public-stage.html")
 }
 
+// Risposta alla richiesta di aprire la finestra di proiezione.
+// Su macOS la finestra va creata qui, come vera finestra dell'app: quella "automatica" del
+// motore non sa caricare le pagine interne dell'app e fa chiudere il programma.
+#[cfg(target_os = "macos")]
+fn open_stage_window(
+    app: &tauri::AppHandle,
+    features: tauri::webview::NewWindowFeatures,
+) -> tauri::webview::NewWindowResponse<tauri::Wry> {
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    static NEXT_STAGE_WINDOW: AtomicUsize = AtomicUsize::new(1);
+    let label = format!("schermo-{}", NEXT_STAGE_WINDOW.fetch_add(1, Ordering::Relaxed));
+    let built = tauri::WebviewWindowBuilder::new(
+        app,
+        label,
+        tauri::WebviewUrl::External("about:blank".parse().unwrap()),
+    )
+    .window_features(features)
+    .title("Sténtor Lite")
+    .on_document_title_changed(|window, title| {
+        let _ = window.set_title(&title);
+    })
+    .build();
+    match built {
+        Ok(window) => tauri::webview::NewWindowResponse::Create { window },
+        Err(_) => tauri::webview::NewWindowResponse::Deny,
+    }
+}
+
+// Su Windows e Linux basta il consenso: la finestra la crea il motore.
+#[cfg(not(target_os = "macos"))]
+fn open_stage_window(
+    _app: &tauri::AppHandle,
+    _features: tauri::webview::NewWindowFeatures,
+) -> tauri::webview::NewWindowResponse<tauri::Wry> {
+    tauri::webview::NewWindowResponse::Allow
+}
+
+// La finestra in primo piano (regia o schermo di proiezione); in mancanza, la regia.
+fn front_window(app: &tauri::AppHandle) -> Option<tauri::WebviewWindow> {
+    app.webview_windows()
+        .into_values()
+        .find(|window| window.is_focused().unwrap_or(false))
+        .or_else(|| app.get_webview_window("regia"))
+}
+
 // Apre il sito nel browser predefinito del sistema.
 fn open_website() {
     #[cfg(target_os = "macos")]
@@ -184,13 +229,13 @@ fn main() {
                 .find(|window| window.label == "regia")
                 .cloned()
                 .ok_or("finestra di regia assente in tauri.conf.json")?;
+            let stage_app = app.handle().clone();
             tauri::WebviewWindowBuilder::from_config(app.handle(), &regia_config)?
-                .on_new_window(|url, _features| {
-                    if is_stage_window_url(&url) {
-                        tauri::webview::NewWindowResponse::Allow
-                    } else {
-                        tauri::webview::NewWindowResponse::Deny
+                .on_new_window(move |url, features| {
+                    if !is_stage_window_url(&url) {
+                        return tauri::webview::NewWindowResponse::Deny;
                     }
+                    open_stage_window(&stage_app, features)
                 })
                 .build()?;
             if let Some(window) = app.get_webview_window("regia") {
@@ -219,23 +264,29 @@ fn main() {
             }
             Ok(())
         })
+        // Chiusa la regia si chiude il programma, anche con uno schermo di proiezione aperto.
+        .on_window_event(|window, event| {
+            if window.label() == "regia" && matches!(event, tauri::WindowEvent::Destroyed) {
+                window.app_handle().exit(0);
+            }
+        })
         .on_menu_event(|app, event| {
             let id = event.id().as_ref().to_string();
             match id.as_str() {
                 "app.quit" => app.exit(0),
                 "help.website" | "app.website" => open_website(),
                 "window.close" => {
-                    if let Some(window) = app.get_webview_window("regia") {
+                    if let Some(window) = front_window(app) {
                         let _ = window.close();
                     }
                 }
                 "window.minimize" => {
-                    if let Some(window) = app.get_webview_window("regia") {
+                    if let Some(window) = front_window(app) {
                         let _ = window.minimize();
                     }
                 }
                 "window.zoom" => {
-                    if let Some(window) = app.get_webview_window("regia") {
+                    if let Some(window) = front_window(app) {
                         let _ = window.maximize();
                     }
                 }
