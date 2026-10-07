@@ -59,3 +59,19 @@ test('impaginazione: la seconda lingua va sotto, più piccola, dopo il trattino'
   const bottomAligned = layoutStageText({ lineCount: 1, secondLineCount: 1, fontPx: 100, centerY: 400, verticalAlign: 'bottom' });
   assert.ok(Math.abs(bottomAligned.secondY[0] + (70 * 1.12) / 2 - 456) < 1e-9);
 });
+
+// Una riga lunga, spostata di lato in Schermi, non deve uscire dallo schermo.
+test('schermo: una riga lunga spostata di lato viene riavvicinata, una corta resta dov\'è', async () => {
+  const { fitStageShiftX } = await import('../src/utils/stageLayout.js');
+  const stage = { stageWidth: 2360, clipWidth: 2124 };
+  // Riga corta spostata a sinistra del 20%: ci sta, nessuna correzione.
+  assert.equal(fitStageShiftX({ ...stage, centerX: 708, lineWidth: 1000 }), 0);
+  // Riga lunga nello stesso punto: il bordo sinistro torna al margine (24).
+  assert.equal(fitStageShiftX({ ...stage, centerX: 708, lineWidth: 1900 }), 24 + 950 - 708);
+  // Stessa cosa verso destra.
+  assert.equal(fitStageShiftX({ ...stage, centerX: 1652, lineWidth: 1900 }), 2360 - 24 - 950 - 1652);
+  // Riga più larga dello schermo: torna al centro.
+  assert.equal(fitStageShiftX({ stageWidth: 2360, clipWidth: 2360, centerX: 708, lineWidth: 3000 }), 1180 - 708);
+  // Senza spostamento e con testo che ci sta: niente da correggere.
+  assert.equal(fitStageShiftX({ ...stage, centerX: 1180, lineWidth: 2100 }), 0);
+});

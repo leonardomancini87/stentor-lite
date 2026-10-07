@@ -1,6 +1,6 @@
-import React, { useId } from 'react';
+import React, { useId, useLayoutEffect, useRef, useState } from 'react';
 import { segmentTextLines } from '../utils/inlineStyleSpans.js';
-import { layoutStageText } from '../utils/stageLayout.js';
+import { fitStageShiftX, layoutStageText } from '../utils/stageLayout.js';
 
 const DESIGN_WIDTH = 2360;
 const DESIGN_HEIGHT = 800;
@@ -29,7 +29,8 @@ function getCenterY(verticalAlign, paddingTop) {
   const offset = (parseVh(paddingTop, 0) / 100) * DESIGN_HEIGHT;
   if (verticalAlign === 'top') return DESIGN_HEIGHT * 0.26 + offset;
   if (verticalAlign === 'bottom') return DESIGN_HEIGHT * 0.74 + offset;
-  return DESIGN_HEIGHT * 0.5 + offset;
+  // «Centro» è il centro esatto: il margine dall'alto vale solo per le posizioni Alto e Basso.
+  return DESIGN_HEIGHT * 0.5;
 }
 
 export default function StageSubtitle({
@@ -44,12 +45,17 @@ export default function StageSubtitle({
   spans = [],
   className = '',
   fadeInMs = 120,
+  // Durata di ogni fase del passaggio tra battute (vedi StageTransition); senza, vale fadeInMs.
+  transitionMs,
   // Seconda lingua: sotto la prima, più piccola, dopo un breve trattino (vedi stageLayout.js).
   secondText = '',
   secondSpans = [],
   secondScale,
 }) {
   const clipId = useId().replace(/:/g, '');
+  const groupRef = useRef(null);
+  // Correzione orizzontale perché una riga lunga, spostata di lato, non esca dallo schermo.
+  const [fitX, setFitX] = useState(0);
   const lines = String(text || '').split(/\r?\n/);
   const styledLines = segmentTextLines(String(text || ''), spans);
   const secondLines = secondText ? String(secondText).split(/\r?\n/) : [];
@@ -75,6 +81,25 @@ export default function StageSubtitle({
   const alignment = ['left', 'right'].includes(style?.textAlign) ? style.textAlign : 'center';
   const anchor = alignment === 'left' ? 'start' : alignment === 'right' ? 'end' : 'middle';
   const textX = alignment === 'left' ? clipX : alignment === 'right' ? clipX + clipWidth : DESIGN_WIDTH / 2 + shiftX;
+
+  // Si misura la riga più larga dopo ogni disegno (e quando arrivano i caratteri web).
+  useLayoutEffect(() => {
+    const measure = () => {
+      const group = groupRef.current;
+      if (!group) return;
+      const widths = [...group.querySelectorAll('text')].map((node) => node.getComputedTextLength());
+      const next = Math.round(fitStageShiftX({
+        centerX: DESIGN_WIDTH / 2 + shiftX,
+        lineWidth: Math.max(0, ...widths),
+        clipWidth,
+        stageWidth: DESIGN_WIDTH,
+      }));
+      setFitX((current) => (current === next ? current : next));
+    };
+    measure();
+    document.fonts?.addEventListener?.('loadingdone', measure);
+    return () => document.fonts?.removeEventListener?.('loadingdone', measure);
+  });
 
   function renderLine(line, segmentsForLine, y, linePx, key) {
     const segments = segmentsForLine || [{ text: line || '\u00A0' }];
@@ -112,7 +137,11 @@ export default function StageSubtitle({
   return (
     <svg
       className={`stageSubtitle stageSubtitleSvg ${className}`.trim()}
-      style={{ '--stentore-fade-in-ms': `${Math.max(0, Number.parseInt(fadeInMs, 10) || 0)}ms` }}
+      style={{
+        '--stentore-fade-in-ms': `${Math.max(0, Number.parseInt(fadeInMs, 10) || 0)}ms`,
+        '--stage-fx-ms': `${Math.max(0, Number.parseInt(transitionMs ?? fadeInMs, 10) || 0)}ms`,
+        '--stage-fx-shift': `${Math.round(fontPx * 0.45)}px`,
+      }}
       viewBox={`0 0 ${DESIGN_WIDTH} ${DESIGN_HEIGHT}`}
       aria-label={[text, secondText].filter(Boolean).join('\n')}
       role="img"
@@ -124,7 +153,7 @@ export default function StageSubtitle({
         </clipPath>
       </defs>
 
-      <g clipPath={`url(#${clipId})`}>
+      <g ref={groupRef} clipPath={`url(#${clipId})`} transform={fitX ? `translate(${fitX} 0)` : undefined}>
         {lines.map((line, index) => renderLine(line, styledLines[index], layout.primaryY[index], fontPx, `p${index}`))}
         {layout.separator && (
           <line

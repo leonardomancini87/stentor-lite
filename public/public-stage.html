@@ -97,7 +97,8 @@
       background: #000000;
     }
 
-    #subtitle {
+    /* Ogni battuta è un livello a sé: durante il passaggio convivono quello che esce e quello che entra. */
+    .subtitleLayer {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -106,8 +107,47 @@
       overflow: visible;
       pointer-events: none;
       opacity: 1;
-      transition: opacity 120ms ease-out;
     }
+
+    /* Schermata di prova: cornice ai bordi della finestra, croce al centro e guide della fascia del testo. */
+    #testFrame {
+      position: fixed;
+      inset: 0;
+      box-sizing: border-box;
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      pointer-events: none;
+      display: none;
+      z-index: 2;
+    }
+    #testFrame::before,
+    #testFrame::after {
+      content: "";
+      position: absolute;
+      background: rgba(255, 255, 255, 0.55);
+    }
+    #testFrame::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+    #testFrame::after { top: 50%; left: 0; right: 0; height: 1px; }
+    #testFrame i {
+      position: absolute;
+      width: 6vmin;
+      height: 6vmin;
+      border: 0 solid #ffffff;
+    }
+    #testFrame i:nth-child(1) { left: 2vmin; top: 2vmin; border-left-width: 3px; border-top-width: 3px; }
+    #testFrame i:nth-child(2) { right: 2vmin; top: 2vmin; border-right-width: 3px; border-top-width: 3px; }
+    #testFrame i:nth-child(3) { left: 2vmin; bottom: 2vmin; border-left-width: 3px; border-bottom-width: 3px; }
+    #testFrame i:nth-child(4) { right: 2vmin; bottom: 2vmin; border-right-width: 3px; border-bottom-width: 3px; }
+    #testGuides {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      display: none;
+    }
+    body.test-pattern #testFrame,
+    body.test-pattern #testGuides { display: block; }
 
     .stage-line {
       white-space: pre;
@@ -146,9 +186,10 @@
 <body>
   <main id="stage">
     <div id="canvas">
-      <svg id="subtitle" viewBox="0 0 2360 800" preserveAspectRatio="xMidYMid meet" role="img" aria-label=""></svg>
+      <svg id="testGuides" viewBox="0 0 2360 800" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
     </div>
   </main>
+  <div id="testFrame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="hint">Doppio clic: tutto schermo · Esc: esci</div>
   <div class="emptyNotice">In attesa dello schermo di proiezione di Sténtor…</div>
   <script>
@@ -164,11 +205,12 @@
       const DESIGN_HEIGHT = 800;
       const stage = document.getElementById('stage');
       const canvas = document.getElementById('canvas');
-      const subtitle = document.getElementById('subtitle');
-      let lastPayloadText = '';
+      let currentLayer = null;
+      let leavingLayers = [];
+      let layerCounter = 0;
       let lastRawText = null;
+      let lastPayload = null;
       let lastUpdatedAt = 0;
-      let transitionTimer = null;
 
       function escapeHtml(value) {
         return String(value || '')
@@ -210,7 +252,8 @@
         const offset = (parseVh(paddingTop, 0) / 100) * DESIGN_HEIGHT;
         if (verticalAlign === 'top') return DESIGN_HEIGHT * 0.26 + offset;
         if (verticalAlign === 'bottom') return DESIGN_HEIGHT * 0.74 + offset;
-        return DESIGN_HEIGHT * 0.5 + offset;
+        // «Centro» è il centro esatto: il margine dall'alto vale solo per le posizioni Alto e Basso.
+        return DESIGN_HEIGHT * 0.5;
       }
 
       function createSvgElement(name, attributes = {}) {
@@ -322,7 +365,20 @@
         return { primaryY, secondY, secondFontPx, separator: { y: separatorY, width: fontPx * 1.1, thickness: Math.max(2, fontPx * 0.045) } };
       }
 
-      function renderSubtitleText(text, settings = {}, cueStyle = 'normal', cueTextStyle = {}, textSpans = [], secondText = '', secondTextSpans = []) {
+      // Stesso calcolo di src/utils/stageLayout.js (fitStageShiftX): tenerli allineati.
+      // Una riga lunga, spostata di lato, viene riavvicinata quanto basta per restare nello schermo.
+      function fitStageShiftX(centerX, lineWidth, clipWidth) {
+        const margin = 24;
+        const visible = Math.min(lineWidth || 0, clipWidth || 0);
+        if (visible <= 0) return 0;
+        const half = visible / 2;
+        const min = margin + half;
+        const max = DESIGN_WIDTH - margin - half;
+        if (min > max) return DESIGN_WIDTH / 2 - centerX;
+        return Math.max(min, Math.min(max, centerX)) - centerX;
+      }
+
+      function renderSubtitleText(subtitle, text, settings = {}, cueStyle = 'normal', cueTextStyle = {}, textSpans = [], secondText = '', secondTextSpans = []) {
         const value = String(text || '');
         const lines = value.split(/\r?\n/);
         const secondValue = String(secondText || '');
@@ -347,13 +403,14 @@
         subtitle.replaceChildren();
         subtitle.setAttribute('aria-label', [value, secondValue].filter(Boolean).join('\n'));
 
+        const clipId = `stageTextClip-${subtitle.dataset.layer || '0'}`;
         const defs = createSvgElement('defs');
-        const clipPath = createSvgElement('clipPath', { id: 'stageTextClip' });
+        const clipPath = createSvgElement('clipPath', { id: clipId });
         clipPath.appendChild(createSvgElement('rect', { x: clipX, y: -DESIGN_HEIGHT, width: clipWidth, height: DESIGN_HEIGHT * 3 }));
         defs.appendChild(clipPath);
         subtitle.appendChild(defs);
 
-        const group = createSvgElement('g', { 'clip-path': 'url(#stageTextClip)' });
+        const group = createSvgElement('g', { 'clip-path': `url(#${clipId})` });
         function appendLines(blockLines, ys, linePx, spans) {
           var lineStart = 0;
           blockLines.forEach((line, index) => {
@@ -403,58 +460,138 @@
           appendLines(secondLines, layout.secondY, layout.secondFontPx, secondTextSpans);
         }
         subtitle.appendChild(group);
+
+        // La misura richiede che il livello sia già nella pagina.
+        const widths = Array.from(group.querySelectorAll('text')).map((node) => node.getComputedTextLength());
+        const fitX = Math.round(fitStageShiftX(DESIGN_WIDTH / 2 + shiftX, Math.max(0, ...widths), clipWidth));
+        if (fitX) group.setAttribute('transform', `translate(${fitX} 0)`);
       }
 
-      function getTransitionMs(settings = {}, key, fallback) {
-        const value = Number.parseInt(settings[key], 10);
-        if (!Number.isFinite(value)) return fallback;
-        return Math.max(0, Math.min(1200, value));
+      // Passaggio tra battute, scelto per ogni schermo (Schermi → Aspetto):
+      //   none       cambio netto
+      //   crossfade  la nuova battuta sfuma sopra la vecchia
+      //   fade       la vecchia sparisce, poi compare la nuova (il comportamento di sempre)
+      //   slide      la vecchia sale e svanisce, la nuova arriva dal basso
+      // transitionMs è la durata di ogni fase. Se arriva una battuta nuova a passaggio in corso,
+      // i livelli in uscita spariscono subito: le animazioni non si accodano mai.
+      const TRANSITIONS = ['none', 'crossfade', 'fade', 'slide'];
+
+      function getTransition(settings = {}) {
+        const effect = TRANSITIONS.includes(settings.transition) ? settings.transition : 'fade';
+        const parsed = Number.parseInt(settings.transitionMs, 10);
+        const ms = effect === 'none' ? 0 : Math.max(0, Math.min(1200, Number.isFinite(parsed) ? parsed : 120));
+        return { effect: ms > 0 ? effect : 'none', ms };
+      }
+
+      function createLayer() {
+        layerCounter += 1;
+        const layer = createSvgElement('svg', {
+          class: 'subtitleLayer',
+          viewBox: `0 0 ${DESIGN_WIDTH} ${DESIGN_HEIGHT}`,
+          preserveAspectRatio: 'xMidYMid meet',
+          role: 'img',
+        });
+        layer.dataset.layer = String(layerCounter);
+        return layer;
+      }
+
+      function removeLeavingLayers() {
+        leavingLayers.forEach((entry) => {
+          window.clearTimeout(entry.timer);
+          entry.layer.remove();
+        });
+        leavingLayers = [];
+      }
+
+      function leaveLayer(layer, effect, ms, slidePx) {
+        if (effect === 'none') {
+          layer.remove();
+          return;
+        }
+        // La transizione parte dallo stato in cui il livello si trova, anche se stava ancora entrando.
+        layer.style.transition = `opacity ${ms}ms ease-out, transform ${ms}ms ease-out`;
+        layer.style.opacity = '0';
+        if (effect === 'slide') layer.style.transform = `translateY(${-slidePx}px)`;
+        const entry = { layer, timer: 0 };
+        entry.timer = window.setTimeout(() => {
+          layer.remove();
+          leavingLayers = leavingLayers.filter((item) => item !== entry);
+        }, ms + 60);
+        leavingLayers.push(entry);
+      }
+
+      function enterLayer(layer, effect, ms, afterOutgoing, slidePx) {
+        if (effect === 'none') return;
+        layer.style.transition = 'none';
+        layer.style.opacity = '0';
+        if (effect === 'slide') layer.style.transform = `translateY(${slidePx}px)`;
+        layer.getBoundingClientRect(); // fissa lo stato di partenza prima di animare
+        // Con lo stacco la battuta nuova aspetta che la vecchia sia sparita.
+        const delay = effect === 'fade' && afterOutgoing ? ms : 0;
+        layer.style.transition = `opacity ${ms}ms ease-out ${delay}ms, transform ${ms}ms ease-out ${delay}ms`;
+        layer.style.opacity = '1';
+        layer.style.transform = 'translateY(0)';
+      }
+
+      // Guide della schermata di prova: i limiti laterali del testo («Larghezza» e spostamento)
+      // e l'altezza della fascia in cui il testo viene disegnato.
+      function renderTestGuides(settings) {
+        const guides = document.getElementById('testGuides');
+        document.body.classList.toggle('test-pattern', Boolean(settings));
+        guides.replaceChildren();
+        if (!settings) return;
+        const widthPercent = parsePercent(settings.maxWidth || settings.publicMaxWidth, 90);
+        const clipWidth = DESIGN_WIDTH * (widthPercent / 100);
+        const shiftX = (parseOffset(settings.offsetX ?? settings.publicOffsetX) / 100) * DESIGN_WIDTH;
+        const clipX = Math.max(0, Math.min(DESIGN_WIDTH - clipWidth, (DESIGN_WIDTH - clipWidth) / 2 + shiftX));
+        guides.appendChild(createSvgElement('rect', {
+          x: clipX, y: 2, width: clipWidth, height: DESIGN_HEIGHT - 4,
+          fill: 'none', stroke: '#ffffff', 'stroke-opacity': 0.6, 'stroke-width': 3, 'stroke-dasharray': '18 14',
+        }));
       }
 
       function applyPayload(payload) {
         if (!payload || !payload.settings) return;
 
         const settings = payload.settings;
-        const nextText = payload.blackout ? '' : [payload.text || '', payload.secondText || ''].filter(Boolean).join('\n\u2014\n');
-        const previousText = lastPayloadText || '';
-        const fadeOutMs = payload.blackout
-          ? getTransitionMs(settings, 'blackoutFadeMs', 160)
-          : getTransitionMs(settings, 'fadeOutMs', 120);
-        const fadeInMs = payload.blackout
-          ? 0
-          : getTransitionMs(settings, 'fadeInMs', 120);
-        const shouldFadeOut = previousText && previousText !== nextText && fadeOutMs > 0;
+        const text = payload.blackout ? '' : payload.text || '';
+        const secondText = payload.blackout ? '' : payload.secondText || '';
+        const nextText = [text, secondText].filter(Boolean).join('\n\u2014\n');
+        const { effect, ms } = getTransition(settings);
+        const render = (layer) => renderSubtitleText(layer, text, settings, payload.cueStyle, payload.cueTextStyle, payload.textSpans || [], secondText, payload.secondTextSpans || []);
 
-        window.clearTimeout(transitionTimer);
-        // Stesso testo con stile o posizione diversi (es. mentre lo si sposta): si ridisegna senza dissolvenza.
+        // Stesso testo con stile o posizione diversi (es. mentre lo si sposta): si ridisegna senza effetto.
         const sameText = nextText === lastRawText && Boolean(nextText);
         lastRawText = nextText;
+        lastPayload = payload;
+        lastUpdatedAt = payload.updatedAt || Date.now();
         stage.style.background = settings.background || '#000000';
         canvas.style.background = settings.background || '#000000';
-        subtitle.style.transition = `opacity ${shouldFadeOut ? fadeOutMs : fadeInMs}ms ease-out`;
+        document.body.classList.toggle('debug-empty', !nextText && !payload.blackout);
+        renderTestGuides(payload.testPattern ? settings : null);
 
-        const finishRender = () => {
-          renderSubtitleText(payload.blackout ? '' : payload.text || '', settings, payload.cueStyle, payload.cueTextStyle, payload.textSpans || [], payload.blackout ? '' : payload.secondText || '', payload.secondTextSpans || []);
-          lastPayloadText = subtitle.textContent || '';
-          lastUpdatedAt = payload.updatedAt || Date.now();
-          document.body.classList.toggle('debug-empty', !lastPayloadText && !payload.blackout);
-          subtitle.style.transition = `opacity ${fadeInMs}ms ease-out`;
-          subtitle.style.opacity = nextText && fadeInMs > 0 && !sameText ? '0' : '1';
+        if (sameText && currentLayer) {
+          render(currentLayer);
           updateScale();
-          requestAnimationFrame(() => {
-            subtitle.style.opacity = '1';
-          });
-        };
-
-        if (sameText) {
-          subtitle.style.transition = 'none';
-          finishRender();
-        } else if (shouldFadeOut) {
-          subtitle.style.opacity = '0';
-          transitionTimer = window.setTimeout(finishRender, fadeOutMs);
-        } else {
-          finishRender();
+          return;
         }
+
+        removeLeavingLayers();
+        const outgoing = currentLayer;
+        currentLayer = null;
+        const slidePx = parsePixels(settings.fontSize || settings.publicFontSize, 58) * 0.45;
+        // Lo stacco ha senso solo se la battuta che esce si vede ancora: avanzando in fretta
+        // (la precedente non era ancora comparsa) la nuova entra subito.
+        const outgoingVisible = Boolean(outgoing) && Number(window.getComputedStyle(outgoing).opacity) > 0.05;
+        if (outgoing) leaveLayer(outgoing, effect, ms, slidePx);
+        if (nextText) {
+          const incoming = createLayer();
+          canvas.appendChild(incoming);
+          render(incoming);
+          enterLayer(incoming, effect, ms, outgoingVisible, slidePx);
+          currentLayer = incoming;
+        }
+        updateScale();
       }
 
       function readStoredPayload() {
@@ -477,6 +614,10 @@
       }
 
       window.addEventListener('resize', updateScale);
+      // Quando arriva un carattere web le larghezze cambiano: la battuta in onda si ridisegna sul posto.
+      document.fonts?.addEventListener?.('loadingdone', () => {
+        if (lastPayload && currentLayer) applyPayload(lastPayload);
+      });
       window.addEventListener('storage', (event) => {
         if (event.key !== PAYLOAD_KEY || !event.newValue) return;
         try { applyPayload(JSON.parse(event.newValue)); } catch (error) {}
@@ -493,14 +634,14 @@
       });
 
       // Comandi da tastiera anche nella finestra dello schermo: gli stessi tasti della regia
-      // (card "Scorciatoie"; predefiniti Spazio/→ avanti, Maiusc+Spazio/← indietro, B buio, F schermo intero).
+      // (card "Scorciatoie"; predefiniti Spazio/→/Pag↓ avanti, Maiusc+Spazio/←/Pag↑ indietro, B buio, F schermo intero).
       // Il comando va alla finestra di regia sia con postMessage sia con localStorage, con lo stesso id:
       // la regia lo esegue una volta sola.
       var CONTROL_TYPE = 'STENTORE_CONTROL';
       var CONTROL_STORAGE_KEY = 'stentore-control-command-v1';
       var DEFAULT_KEYS = {
-        next: [{ code: 'Space' }, { code: 'ArrowRight' }],
-        previous: [{ code: 'Space', shift: true }, { code: 'ArrowLeft' }],
+        next: [{ code: 'Space' }, { code: 'ArrowRight' }, { code: 'PageDown' }],
+        previous: [{ code: 'Space', shift: true }, { code: 'ArrowLeft' }, { code: 'PageUp' }],
         blackout: [{ code: 'KeyB' }],
         fullscreen: [{ code: 'KeyF' }],
       };
@@ -546,6 +687,18 @@
           if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
           else document.exitFullscreen?.();
         }
+      });
+
+      // Segnale di presenza per la regia (vedi isStageAlive in src/utils/projectionTargets.js):
+      // riscritto ogni secondo, tolto alla chiusura della finestra.
+      var ALIVE_KEY = 'stentore-public-stage-alive-' + (SCREEN_ID || 'default');
+      function signalAlive() {
+        try { window.localStorage.setItem(ALIVE_KEY, String(Date.now())); } catch (error) {}
+      }
+      signalAlive();
+      window.setInterval(signalAlive, 1000);
+      window.addEventListener('pagehide', function () {
+        try { window.localStorage.removeItem(ALIVE_KEY); } catch (error) {}
       });
 
       window.__STENTORE_APPLY_PUBLIC_PAYLOAD = applyPayload;

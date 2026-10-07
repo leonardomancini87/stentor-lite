@@ -67,3 +67,35 @@ test('buildProjectionPayload conserva il formato schermo configurato', () => {
 
   assert.equal(payload.settings.aspectRatio, '4:3');
 });
+
+test('segnale di presenza: lo schermo risulta aperto solo se il segnale è recente', async () => {
+  const { getStageAliveKey, isStageAlive } = await import('../src/utils/projectionTargets.js');
+  const store = new Map();
+  const storage = { getItem: (key) => store.get(key) ?? null };
+  assert.equal(isStageAlive('sala', storage, 10_000), false);
+  store.set(getStageAliveKey('sala'), String(9_000));
+  assert.equal(isStageAlive('sala', storage, 10_000), true);
+  assert.equal(isStageAlive('altra', storage, 10_000), false);
+  // Finestra chiusa di colpo: il segnale invecchia e dopo cinque secondi non conta più.
+  assert.equal(isStageAlive('sala', storage, 15_000), false);
+  store.set(getStageAliveKey('sala'), 'non un numero');
+  assert.equal(isStageAlive('sala', storage, 10_000), false);
+});
+
+test('schermata di prova: sostituisce battuta e buio con nome dello schermo e riga campione', async () => {
+  const { TEST_PATTERN_SAMPLE } = await import('../src/utils/projectionTargets.js');
+  const payload = buildProjectionPayload({
+    cue: { id: 'c1', translations: { it: 'Una battuta' } },
+    screen: { id: 'sala', name: 'Sala grande', publicFontSize: '80px' },
+    activeLanguage: 'it',
+    languages: ['it'],
+    blackout: true,
+    testPattern: true,
+  });
+  assert.equal(payload.testPattern, true);
+  assert.equal(payload.blackout, false);
+  assert.equal(payload.text, `Sala grande\n${TEST_PATTERN_SAMPLE}`);
+  assert.equal(payload.settings.fontSize, '80px');
+  // Senza prova il payload non porta il segno: la finestra toglie cornice e guide.
+  assert.equal(buildProjectionPayload({ cue: null, screen: { id: 'sala', name: 'Sala' }, languages: ['it'] }).testPattern, undefined);
+});

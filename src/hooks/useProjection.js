@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { buildProjectionPayload, getProjectionStorageKey } from '../utils/projectionTargets.js';
+import { buildProjectionPayload, getProjectionStorageKey, isStageAlive } from '../utils/projectionTargets.js';
 import { getActiveScreen, getScreenAspectOption, getScreens } from '../utils/screenSettings.js';
 
 // Indirizzo della finestra dello schermo (public/public-stage.html), relativo alla base dell'app:
@@ -19,8 +19,11 @@ export function getStageWindowName(screenId) {
 // Finestre degli schermi di proiezione: apertura e aggiornamento del testo proiettato.
 // Il testo arriva alla finestra in tre modi (chiamata diretta, postMessage, localStorage),
 // così resta aggiornato anche se la finestra è stata ricaricata.
-export function useProjection({ project, cue, language, blackout, onBlocked }) {
+export function useProjection({ project, cue, language, blackout, testPattern = false, cardText = '', onBlocked }) {
   const windowsRef = useRef({});
+  // Vero finché almeno una finestra di proiezione è aperta: aperta da qui, oppure viva per conto
+  // suo (segnale di presenza), per esempio dopo che la regia è stata ricaricata.
+  const [isOpen, setIsOpen] = useState(false);
   const screens = getScreens(project.settings);
   const activeScreen = getActiveScreen(project.settings);
 
@@ -32,10 +35,12 @@ export function useProjection({ project, cue, language, blackout, onBlocked }) {
       languages: project.languages,
       primaryLanguage: project.primaryLanguage,
       blackout,
+      testPattern,
+      cardText,
     }),
     projectTitle: project.title || '',
     ...overrides,
-  }), [cue, language, blackout, project.languages, project.primaryLanguage, project.title]);
+  }), [cue, language, blackout, testPattern, cardText, project.languages, project.primaryLanguage, project.title]);
 
   const publish = useCallback((screen, payload = buildPayload(screen)) => {
     const screenId = screen?.id || payload.screenId;
@@ -59,6 +64,12 @@ export function useProjection({ project, cue, language, blackout, onBlocked }) {
     }
   }, [buildPayload]);
 
+  // Sempre l'ultima versione di publish e degli schermi, per gli invii ritardati di openScreen.
+  const publishRef = useRef(publish);
+  publishRef.current = publish;
+  const screensRef = useRef(screens);
+  screensRef.current = screens;
+
   const openScreen = useCallback((screen = activeScreen) => {
     publish(screen);
     const aspect = getScreenAspectOption(screen.publicAspectRatio);
@@ -72,9 +83,16 @@ export function useProjection({ project, cue, language, blackout, onBlocked }) {
       return null;
     }
     windowsRef.current[screen.id] = stageWindow;
+    setIsOpen(true);
     stageWindow.focus();
+    // La finestra impiega un momento a caricarsi: il testo le viene rimandato per qualche secondo.
+    // Ogni invio usa battuta e stile del momento, non quelli di quando lo schermo è stato aperto:
+    // altrimenti un «Avanti» dato subito dopo l'apertura verrebbe sovrascritto dal testo vecchio.
     [0, 100, 300, 700, 1500, 3000].forEach((delay) => {
-      window.setTimeout(() => publish(screen), delay);
+      window.setTimeout(() => {
+        const current = screensRef.current.find((item) => item.id === screen.id) || screen;
+        publishRef.current(current);
+      }, delay);
     });
     return stageWindow;
   }, [activeScreen, onBlocked, publish]);
@@ -85,5 +103,18 @@ export function useProjection({ project, cue, language, blackout, onBlocked }) {
     screens.forEach((screen) => publish(screen));
   }, [publish, project.settings]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { openScreen, activeScreen, screens };
+  // Né la chiusura né l'apertura di una finestra avvisano: si controlla una volta al secondo.
+  const screenIds = screens.map((screen) => screen.id).join('|');
+  useEffect(() => {
+    const check = () => {
+      const openedHere = Object.values(windowsRef.current).some((stageWindow) => stageWindow && !stageWindow.closed);
+      const alive = screenIds.split('|').some((screenId) => isStageAlive(screenId));
+      setIsOpen(openedHere || alive);
+    };
+    check();
+    const timer = window.setInterval(check, 1000);
+    return () => window.clearInterval(timer);
+  }, [screenIds]);
+
+  return { openScreen, activeScreen, screens, isOpen };
 }

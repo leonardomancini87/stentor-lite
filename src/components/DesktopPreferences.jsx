@@ -5,7 +5,6 @@ import FeedbackDialog from './FeedbackDialog.jsx';
 import { APP_LANGUAGES, getAppLanguageMeta } from '../utils/appLanguage.js';
 import { useI18n } from '../i18n/index.js';
 import PageHeader from './PageHeader.jsx';
-import { setConfirmCueDelete, shouldConfirmCueDelete } from '../utils/confirmPreferences.js';
 
 // Le risorse di public/ stanno sotto il percorso base dell'app (es. /stentore-browser/).
 const STENTOR_BASE_PATH = ((BASE) => (BASE.endsWith('/') ? BASE : `${BASE}/`))((typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/');
@@ -152,7 +151,6 @@ export default function DesktopPreferences({ appLanguage = 'it', setAppLanguage,
   const { t } = useI18n();
   const [languageModalOpen, setLanguageModalOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const [confirmCueDelete, setConfirmCueDeleteState] = useState(shouldConfirmCueDelete);
   const selectedLanguage = getAppLanguageMeta(appLanguage);
 
   return (
@@ -181,17 +179,6 @@ export default function DesktopPreferences({ appLanguage = 'it', setAppLanguage,
             </label>
           </div>
           <p>{t('settings.appLanguageHelp')}</p>
-          <label className="dialogCheckbox settingsCheckbox">
-            <input
-              type="checkbox"
-              checked={confirmCueDelete}
-              onChange={(event) => {
-                setConfirmCueDelete(event.target.checked);
-                setConfirmCueDeleteState(event.target.checked);
-              }}
-            />
-            <span>{t('settings.confirmCueDelete')} <small>{t('common.undoHint')}</small></span>
-          </label>
         </article>
 
         <article className="darkPanel projectStatePanel settingsUnifiedPanel settingsVersionPanel">

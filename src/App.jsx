@@ -36,7 +36,7 @@ import {
   saveProject,
   updateArchivedProject,
 } from './utils/projectPersistence.js';
-import { downloadJson } from './lib/storage.js';
+import { downloadJson, downloadText } from './lib/storage.js';
 import {
   chooseProjectSaveHandle,
   createBlankProject,
@@ -94,6 +94,9 @@ import StentoreDialog from './components/StentoreDialog.jsx';
 import StentoreErrorBoundary from './components/StentoreErrorBoundary.jsx';
 import DesktopDashboard from './components/DesktopDashboard.jsx';
 import DesktopPreferences from './components/DesktopPreferences.jsx';
+import { buildScriptHtml, getScriptDownloadName } from './utils/scriptPrint.js';
+import CardsCard from './components/CardsCard.jsx';
+import { addCard, getCards, removeCard, updateCard } from './utils/showCards.js';
 import useAppUpdates from './hooks/useAppUpdates.js';
 import { getWindowTitle } from './utils/windowTitle.js';
 import PageHeader from './components/PageHeader.jsx';
@@ -124,6 +127,9 @@ function loadRightSidebarCollapsed() {
 function classNames(...items) {
   return items.filter(Boolean).join(' ');
 }
+
+const SHOW_LOCK_STORAGE_KEY = 'stentor.showLock.v1';
+const noop = () => {};
 
 function getClickCaretOffset(event) {
   const { clientX: x, clientY: y } = event;
@@ -218,6 +224,29 @@ export default function App() {
   const [projectedIndex, setProjectedIndex] = useState(0);
   const [editingCue, setEditingCue] = useState(null);
   const [expandedCueId, setExpandedCueId] = useState(null);
+  // Schermata di prova per il proiettore (Schermi): non fa parte del progetto, non si salva.
+  const [testPattern, setTestPattern] = useState(false);
+  // Avviso «Battuta eliminata · Annulla»: resta qualche secondo e sparisce alla modifica successiva,
+  // così «Annulla» riporta sempre indietro l'eliminazione e non un'altra modifica fatta nel frattempo.
+  const [deleteNotice, setDeleteNotice] = useState(null);
+  // Cartello in onda al posto della battuta (card «Cartelli»): non si salva.
+  const [activeCardId, setActiveCardId] = useState(null);
+  // Blocco spettacolo: a lucchetto chiuso il copione non si può modificare (testo, note, struttura).
+  // Resta attivo anche dopo un riavvio dell'app, finché non lo si riapre.
+  const [editLocked, setEditLocked] = useState(() => {
+    try { return window.localStorage.getItem(SHOW_LOCK_STORAGE_KEY) === '1'; } catch { return false; }
+  });
+  function toggleEditLock() {
+    setEditLocked((locked) => {
+      const next = !locked;
+      try { window.localStorage.setItem(SHOW_LOCK_STORAGE_KEY, next ? '1' : '0'); } catch { /* memoria locale non disponibile */ }
+      if (next) {
+        setEditingCue(null);
+        setExpandedCueId(null);
+      }
+      return next;
+    });
+  }
   const cueListRef = useRef(null);
   // Tasto G: porta il cursore nel campo Vai a (mai mentre si scrive).
   useEffect(() => {
@@ -301,37 +330,57 @@ export default function App() {
       .catch(() => {});
   }, [windowTitle]);
 
-  // Allinea verticalmente la freccia destra alla firma Sténtor in fondo alla barra sinistra.
+  // La freccia destra sta in alto nella colonna destra, sulla riga indicata da
+  // [data-right-toggle-anchor]. A colonna ridotta resta alla stessa altezza, nella striscia laterale.
+  const rightToggleCenters = useRef({});
   useLayoutEffect(() => {
     if (!hasRightSidebar) return undefined;
-    const leftSidebar = document.querySelector('.stentorSidebar');
+    const rootStyle = document.documentElement.style;
     function alignRightToggle() {
-      const anchor = document.querySelector('.stentorSidebar .stentorSidebarFooter')
-        || document.querySelector('.stentorSidebar .stentorSidebarToggle');
-      if (!anchor) return;
-      const rect = anchor.getBoundingClientRect();
-      if (!rect.height) return;
-      const center = rect.top + rect.height / 2;
-      document.documentElement.style.setProperty('--stentor-right-toggle-center', `${Math.round(center)}px`);
+      // In Sopratitoli la riga della freccia è alta quanto l'intestazione della pagina: così la
+      // prima card della colonna destra parte alla stessa altezza della prima card a sinistra.
+      const column = document.querySelector('.liteRegiaRightColumn');
+      const firstLeftCard = document.querySelector('.liteRegiaEditorMain > .litePageHeader + *');
+      if (column && firstLeftCard && column.getBoundingClientRect().height) {
+        const gap = parseFloat(window.getComputedStyle(column).rowGap) || 0;
+        const height = Math.round(firstLeftCard.getBoundingClientRect().top - column.getBoundingClientRect().top - gap);
+        if (height >= 28) rootStyle.setProperty('--stentor-right-toggle-row', `${height}px`);
+      }
+      const anchor = document.querySelector('[data-right-toggle-anchor]');
+      const rect = anchor?.getBoundingClientRect();
+      if (rect && rect.height) {
+        const paddingRight = parseFloat(window.getComputedStyle(anchor).paddingRight) || 0;
+        const center = Math.round(rect.top + rect.height / 2);
+        const right = Math.round(window.innerWidth - rect.right + Math.max(0, paddingRight - 6));
+        rightToggleCenters.current[viewMode] = center;
+        rootStyle.setProperty('--stentor-right-toggle-center', `${center}px`);
+        rootStyle.setProperty('--stentor-right-toggle-right', `${right}px`);
+        return;
+      }
+      // Colonna ridotta: la riga non è visibile, si riusa l'ultima altezza misurata in questa pagina.
+      rootStyle.removeProperty('--stentor-right-toggle-right');
+      const saved = rightToggleCenters.current[viewMode];
+      if (saved) rootStyle.setProperty('--stentor-right-toggle-center', `${saved}px`);
+      else rootStyle.removeProperty('--stentor-right-toggle-center');
     }
     alignRightToggle();
     const frame = window.requestAnimationFrame(alignRightToggle);
-    // Qualsiasi cambio di dimensione nella barra sinistra (testi, font, immagini) sposta la sua freccia.
-    const observer = typeof ResizeObserver === 'function' && leftSidebar ? new ResizeObserver(alignRightToggle) : null;
-    if (observer) {
-      observer.observe(leftSidebar);
-      Array.from(leftSidebar.children).forEach((child) => observer.observe(child));
-    }
+    // Qualsiasi cambio di dimensione nella pagina (testi, font, card ridotte) può spostare la riga.
+    const main = document.querySelector('.appShell > .main');
+    const observer = typeof ResizeObserver === 'function' && main ? new ResizeObserver(alignRightToggle) : null;
+    observer?.observe(main);
     document.fonts?.ready?.then(alignRightToggle).catch(() => {});
     const settle = window.setTimeout(alignRightToggle, 400);
     window.addEventListener('resize', alignRightToggle);
+    window.addEventListener('scroll', alignRightToggle, true);
     return () => {
       window.cancelAnimationFrame(frame);
       window.clearTimeout(settle);
       observer?.disconnect();
       window.removeEventListener('resize', alignRightToggle);
+      window.removeEventListener('scroll', alignRightToggle, true);
     };
-  }, [hasRightSidebar, leftSidebarCollapsed, viewMode]);
+  }, [hasRightSidebar, isRightSidebarCollapsed, leftSidebarCollapsed, viewMode]);
 
 
   useEffect(() => {
@@ -437,6 +486,7 @@ export default function App() {
     setEditingCue,
     dialogs,
     appLanguage,
+    onCueDeleted: (number) => setDeleteNotice({ number, snapshot: null }),
   });
 
   const {
@@ -458,13 +508,32 @@ export default function App() {
       message: ui('screens.dialog.blocked.message'),
     });
   }, [dialogs, ui]);
+  const showCards = useMemo(() => getCards(project.settings), [project.settings]);
+  const activeCard = showCards.find((card) => card.id === activeCardId) || null;
   const projection = useProjection({
     project,
     cue: projectedCue,
     language,
     blackout,
+    testPattern,
+    cardText: activeCard?.text || '',
     onBlocked: showProjectionBlocked,
   });
+  useEffect(() => {
+    if (!deleteNotice) return undefined;
+    if (deleteNotice.snapshot === null) {
+      setDeleteNotice({ ...deleteNotice, snapshot: project });
+      return undefined;
+    }
+    if (deleteNotice.snapshot !== project) {
+      setDeleteNotice(null);
+      return undefined;
+    }
+    const timer = window.setTimeout(() => setDeleteNotice(null), 8000);
+    return () => window.clearTimeout(timer);
+  }, [deleteNotice, project]);
+  // Schermata di prova e cartello si tolgono da soli appena si manda in onda una battuta o si va al buio.
+  useEffect(() => { setTestPattern(false); setActiveCardId(null); }, [projectedIndex, blackout]);
 
 
   async function createNewProject() {
@@ -770,6 +839,28 @@ export default function App() {
     const source = loadProjectById(projectId);
     if (!source) return;
     downloadJson(getProjectDownloadName(source), withProjectMetadata(source));
+  }
+
+  // Copione da stampare: un file HTML da aprire nel browser, dove si stampa o si salva in PDF.
+  function printProject(projectId) {
+    // Il progetto aperto si stampa com'è adesso, comprese le modifiche non ancora archiviate.
+    const source = projectId === project.id ? project : loadProjectById(projectId);
+    if (!source) return;
+    const printLanguage = source.activeLanguage || source.primaryLanguage || source.languages?.[0] || 'it';
+    const cueCount = (source.cues || []).filter((cue) => !isMarkerCue(cue)).length;
+    const html = buildScriptHtml(source, {
+      language: printLanguage,
+      languageName: getLanguageName(source, printLanguage),
+      date: new Intl.DateTimeFormat(appLanguage, { dateStyle: 'long' }).format(new Date()),
+      labels: {
+        voice: ui('print.voice'),
+        text: ui('screens.field.text'),
+        note: ui('cues.note.label'),
+        print: ui('print.button'),
+        cues: ui('count.cues', { count: cueCount }),
+      },
+    });
+    downloadText(getScriptDownloadName(source), html, 'text/html;charset=utf-8');
   }
 
   async function deleteProject(projectId) {
@@ -1102,8 +1193,9 @@ export default function App() {
 
   useKeyboardShortcuts({
     shortcuts: keyboardShortcuts,
-    undo,
-    redo,
+    // A copione bloccato anche Annulla e Ripeti restano fermi.
+    undo: editLocked ? noop : undo,
+    redo: editLocked ? noop : redo,
     goNext: goNextCue,
     goPrevious: goPreviousCue,
     browseNext: browseNextCue,
@@ -1322,6 +1414,8 @@ export default function App() {
   const projectedText = blackout
     ? ''
     : (getCueText(projectedCue, language) || ui('cues.empty'));
+  // Con un cartello in onda l'anteprima della regia mostra il cartello, come lo schermo.
+  const liveText = activeCard ? activeCard.text : projectedText;
   // Seconda lingua dello schermo attivo, come in sala (sotto, più piccola).
   const projectedSecondLanguage = getScreenSecondLanguage(getActiveScreen(project.settings), language, project.languages);
   const projectedSecondText = blackout || projectedSecondLanguage === language || !getCueText(projectedCue, language).trim()
@@ -1390,6 +1484,7 @@ export default function App() {
             switchProject={switchProject}
             editProjectDetails={editProjectDetails}
             exportProject={exportProject}
+            printProject={printProject}
             duplicateProject={duplicateProject}
             deleteProject={deleteProject}
             updateProjectCover={updateProjectCover}
@@ -1422,7 +1517,7 @@ export default function App() {
                   <div className="r11PreviewLabel live"><span className="r11Dot" aria-hidden="true" />{!blackout ? ui('cues.current') : ui('cues.blackout')} · {cueNumberLabel(projectedIndex)}</div>
                   <article className="regiaLiveCueCard regiaLiveCueCardCurrent">
                     <div className="regiaLiveCueText liteScreenPreviewHost">
-                      <ScreenPreview cue={projectedCue} text={projectedText} spans={getCueTextSpans(projectedCue, language)} secondText={projectedSecondText} secondSpans={projectedSecondText ? getCueTextSpans(projectedCue, projectedSecondLanguage) : []} settings={publicSettings} empty={blackout} />
+                      <ScreenPreview cue={projectedCue} text={liveText} spans={activeCard ? [] : getCueTextSpans(projectedCue, language)} secondText={activeCard ? '' : projectedSecondText} secondSpans={!activeCard && projectedSecondText ? getCueTextSpans(projectedCue, projectedSecondLanguage) : []} settings={publicSettings} empty={blackout && !activeCard} />
                     </div>
                   </article>
                 </section>
@@ -1438,21 +1533,23 @@ export default function App() {
                         project={project}
                         language={language}
                         onChange={(code) => updateProject({ activeLanguage: code })}
-                        onManage={() => openLanguagesDialog(project.id)}
-                        onMakePrimary={(code) => setProject((current) => setPrimaryProjectLanguage(current, code))}
-                        onDelete={deleteProjectLanguage}
+                        onManage={editLocked ? undefined : () => openLanguagesDialog(project.id)}
+                        onMakePrimary={editLocked ? undefined : (code) => setProject((current) => setPrimaryProjectLanguage(current, code))}
+                        onDelete={editLocked ? undefined : deleteProjectLanguage}
                       />
                       <CueStructuralToolbar
                         onAddAfter={() => structuralCue && addCueAfter(structuralCue.id)}
                         onSplit={() => structuralCue && splitCueAtSelection(structuralCue.id, structuralSplitSelection)}
                         onMergeNext={() => structuralCue && mergeWithNext(structuralCue.id)}
                         onDelete={() => structuralCue && deleteCueWithConfirm(structuralCue.id)}
-                        canAddAfter={Boolean(structuralCue)}
-                        canSplit={canSplitStructuralCue}
-                        canMergeNext={canMergeStructuralCue}
-                        canDelete={canDeleteStructuralCue}
+                        canAddAfter={!editLocked && Boolean(structuralCue)}
+                        canSplit={!editLocked && canSplitStructuralCue}
+                        canMergeNext={!editLocked && canMergeStructuralCue}
+                        canDelete={!editLocked && canDeleteStructuralCue}
                         onAddMarker={() => addMarker(activeIndex)}
-                        canAddMarker={project.cues.length > 0}
+                        canAddMarker={!editLocked && project.cues.length > 0}
+                        locked={editLocked}
+                        onToggleLock={toggleEditLock}
                       />
                       <em>{cueNumbers[projectedIndex] || 1} / {playableCueCount || 1}</em>
                     </div>
@@ -1467,11 +1564,11 @@ export default function App() {
                             className={classNames('r11SceneHeader', 'liteMarkerRow', currentMapSection?.markerIndex === index && 'current')}
                             role="listitem"
                             data-marker-index={index}
-                            onDoubleClick={() => editMarker(cue.id)}
-                            title={ui('marker.row.title')}
+                            onDoubleClick={editLocked ? undefined : () => editMarker(cue.id)}
+                            title={editLocked ? undefined : ui('marker.row.title')}
                           >
                             <span className="liteMarkerRowTitle">{getMarkerTitle(cue)}</span>
-                            <span className="liteMarkerRowActions">
+                            <span className="liteMarkerRowActions" hidden={editLocked}>
                               <button type="button" onClick={() => editMarker(cue.id)} aria-label={ui('marker.edit.aria', { title: getMarkerTitle(cue) })} title={ui('marker.edit')}><Pencil size={13} /></button>
                               <button type="button" className="danger" onClick={() => deleteMarker(cue.id)} aria-label={ui('marker.delete.aria', { title: getMarkerTitle(cue) })} title={ui('marker.delete')}><Trash2 size={13} /></button>
                             </span>
@@ -1484,6 +1581,16 @@ export default function App() {
                       const isEditing = editingCue?.index === index;
                       const isExpanded = expandedCueId === cue.id;
                       const panelId = `lite-cue-editor-${index}`;
+                      // Un clic sul testo lo modifica solo a proiezione chiusa e a copione non bloccato.
+                      const canClickEditText = !projection.isOpen && !editLocked;
+                      const startInlineEdit = (event) => {
+                        const offset = getClickCaretOffset(event);
+                        const leading = text.length - text.trimStart().length;
+                        setEditingCue({
+                          index,
+                          caret: offset === null || !text.trim() ? null : leading + offset,
+                        });
+                      };
                       return (
                         <div key={cue.id} className={classNames('liteCueItem', isExpanded && 'expanded')} role="listitem">
                         <div
@@ -1493,24 +1600,26 @@ export default function App() {
                             isProjected && 'live',
                             isSelected && 'selected',
                             hasNextCue && index === nextCueIndex && !isProjected && 'next',
-                            isEditing && 'editing'
+                            isEditing && 'editing',
+                            canClickEditText && 'textClickEdit'
                           )}
-                          onClick={() => {
-                            // Un clic manda in onda la battuta (Regia 1.1).
+                          onClick={(event) => {
                             if (isEditing) return;
+                            // A proiezione chiusa, un clic proprio sul testo lo modifica senza mandarlo in onda.
+                            // Con uno schermo aperto il clic manda sempre in onda: in spettacolo niente sorprese.
+                            if (canClickEditText && event.target.closest?.('.liteEditableCueBody > span')) {
+                              startInlineEdit(event);
+                              return;
+                            }
+                            // Un clic manda in onda la battuta (Regia 1.1).
                             setEditingCue(null);
                             jumpToCue(index);
                           }}
                           onDoubleClick={(event) => {
                             // Doppio clic: modifica il testo nel punto cliccato.
                             setActiveIndex(index);
-                            if (isEditing) return;
-                            const offset = getClickCaretOffset(event);
-                            const leading = text.length - text.trimStart().length;
-                            setEditingCue({
-                              index,
-                              caret: offset === null || !text.trim() ? null : leading + offset,
-                            });
+                            if (isEditing || editLocked) return;
+                            startInlineEdit(event);
                           }}
                         >
                           <strong>{cueNumberLabel(index)}</strong>
@@ -1531,14 +1640,14 @@ export default function App() {
                           {timingMode !== 'manual' && cueHasTime(cue) ? (
                             // Nota/etichetta e orario registrato nella stessa colonna, così la riga non si scompone.
                             <span className="liteCueAnnotationCell">
-                              <CueRowAnnotation cue={cue} isProjected={isProjected} isNext={hasNextCue && index === nextCueIndex} onEditNote={(value) => updateCue(cue.id, (current) => ({ ...current, note: value }))} />
+                              <CueRowAnnotation cue={cue} isProjected={isProjected} isNext={hasNextCue && index === nextCueIndex} onEditNote={editLocked ? undefined : (value) => updateCue(cue.id, (current) => ({ ...current, note: value }))} />
                               <span className="liteCueRecordedTime" title={ui('cues.recordedTime')}>{formatDuration(Number(cue.startTime) * 1000)}</span>
                             </span>
                           ) : (
-                            <CueRowAnnotation cue={cue} isProjected={isProjected} isNext={hasNextCue && index === nextCueIndex} onEditNote={(value) => updateCue(cue.id, (current) => ({ ...current, note: value }))} />
+                            <CueRowAnnotation cue={cue} isProjected={isProjected} isNext={hasNextCue && index === nextCueIndex} onEditNote={editLocked ? undefined : (value) => updateCue(cue.id, (current) => ({ ...current, note: value }))} />
                           )}
                           <button
-                            type="button" className="liteCueExpandButton"
+                            type="button" className="liteCueExpandButton" disabled={editLocked}
                             aria-label={ui(isExpanded ? 'cues.collapse' : 'cues.expand', { number: index + 1 })}
                             aria-expanded={isExpanded} aria-controls={panelId}
                             onClick={(event) => {
@@ -1565,6 +1674,12 @@ export default function App() {
                   </section>
                 </div>
 
+                {deleteNotice ? (
+                  <div className="liteUndoNotice" role="status">
+                    <span>{ui('cue.deleted', { number: deleteNotice.number })}</span>
+                    <button type="button" onClick={() => { setDeleteNotice(null); undo(); }}>{ui('shortcuts.fixed.undo')}</button>
+                  </div>
+                ) : null}
                 <nav className="liteRegiaConductorBar" aria-label={ui('conductor.aria')}>
                   <button type="button" className="liteConductorButton" onClick={goPreviousCue}>
                     <SkipBack /> <span>{ui('conductor.back')}</span>
@@ -1610,12 +1725,13 @@ export default function App() {
               </main>
 
               <aside className="liteRegiaRightColumn" aria-label={ui('rightColumn.aria')}>
+                <div className="stentorRightToggleRow" aria-hidden="true"><span data-right-toggle-anchor="" /></div>
                 <ShowMap
                   sections={showMapSections}
                   currentSectionId={currentMapSection?.id ?? null}
                   onGoToSection={goToMapSection}
                   onAddMarker={() => addMarker(activeIndex)}
-                  canAddMarker={project.cues.length > 0}
+                  canAddMarker={!editLocked && project.cues.length > 0}
                 />
                 <TimeCard
                   timer={showTimer}
@@ -1637,6 +1753,15 @@ export default function App() {
                   onPlay={startPlayback}
                   onPausePlayback={pauseSemiAuto}
                 />
+                <CardsCard
+                  cards={showCards}
+                  activeCardId={activeCard?.id || null}
+                  onToggle={(cardId) => setActiveCardId((current) => (current === cardId ? null : cardId))}
+                  onAdd={(text) => updateProject({ settings: addCard(project.settings, text) })}
+                  onUpdate={(cardId, text) => updateProject({ settings: updateCard(project.settings, cardId, text) })}
+                  onRemove={(cardId) => updateProject({ settings: removeCard(project.settings, cardId) })}
+                  locked={editLocked}
+                />
                 <ToolsCard
                   project={project}
                   language={language}
@@ -1644,6 +1769,7 @@ export default function App() {
                   setProject={setProject}
                   screenColors={toolsScreenColors}
                   onRevealCue={revealCueInList}
+                  locked={editLocked}
                 />
                 <ShortcutsCard
                   shortcuts={keyboardShortcuts}
@@ -1663,6 +1789,9 @@ export default function App() {
               cue={projectedCue}
               blackout={blackout}
               setBlackout={setBlackout}
+              testPattern={testPattern}
+              setTestPattern={setTestPattern}
+              cardText={activeCard?.text || ''}
               updateProject={updateProject}
               setProject={setProject}
               dialogs={dialogs}
