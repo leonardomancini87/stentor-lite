@@ -1,13 +1,14 @@
 // Scorciatoie da tastiera personalizzabili di Sténtor Lite.
-// Ogni azione ha fino a due tasti. Un tasto è { code, shift } (event.code, indipendente
+// Ogni azione ha fino a tre tasti. Un tasto è { code, shift } (event.code, indipendente
 // dal layout). Cmd/Ctrl/Alt restano al sistema e al browser; Esc e Tab non si assegnano.
 
 export const SHORTCUTS_STORAGE_KEY = 'stentor.shortcuts.v1';
-export const MAX_BINDINGS = 2;
+export const MAX_BINDINGS = 3;
 
+// Pag ↓ e Pag ↑ sono i tasti dei telecomandi da presentazione.
 export const SHORTCUT_ACTIONS = [
-  { id: 'next', label: 'Avanti', detail: 'Proietta la battuta successiva', defaults: [{ code: 'Space' }, { code: 'ArrowRight' }] },
-  { id: 'previous', label: 'Indietro', detail: 'Torna alla battuta precedente', defaults: [{ code: 'Space', shift: true }, { code: 'ArrowLeft' }] },
+  { id: 'next', label: 'Avanti', detail: 'Proietta la battuta successiva', defaults: [{ code: 'Space' }, { code: 'ArrowRight' }, { code: 'PageDown' }] },
+  { id: 'previous', label: 'Indietro', detail: 'Torna alla battuta precedente', defaults: [{ code: 'Space', shift: true }, { code: 'ArrowLeft' }, { code: 'PageUp' }] },
   { id: 'blackout', label: 'Schermo vuoto', detail: 'Oscura o riaccende lo schermo', defaults: [{ code: 'KeyB' }] },
   { id: 'fullscreen', label: 'Schermo intero', detail: "Apre l'anteprima a tutto schermo", defaults: [{ code: 'KeyF' }] },
   { id: 'browseNext', label: 'Seleziona successiva', detail: 'Scorre l’elenco senza proiettare', defaults: [{ code: 'ArrowDown' }], editorOnly: true },
@@ -117,7 +118,7 @@ export function findActionForBinding(shortcuts, binding, exceptActionId = null) 
   return null;
 }
 
-// Assegna un tasto a un posto (0 o 1) di un'azione. Se il tasto era usato altrove,
+// Assegna un tasto a un posto (da 0 a MAX_BINDINGS - 1) di un'azione. Se il tasto era usato altrove,
 // viene tolto dall'altra azione. Restituisce { shortcuts, movedFrom }.
 export function assignBinding(shortcuts, actionId, slot, binding) {
   const clean = cleanBinding(binding);

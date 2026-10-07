@@ -18,7 +18,7 @@ test('feedback: email in italiano con risposte chiuse e aperte', () => {
   assert.match(body, /Dove lo usa: Spettacoli, Festival/);
   assert.match(body, /Parte più usata: Conduzione dal vivo/);
   assert.match(body, /Più scorciatoie & colori/);
-  assert.match(body, /Cosa piace di più:\n—/);
+  assert.match(body, /Come lo usa:\n—/);
   assert.match(body, /Lingua dell'interfaccia: en/);
   assert.ok(mailto.startsWith(`mailto:${FEEDBACK_EMAIL}?subject=`));
   assert.ok(decodeURIComponent(mailto.split('&body=')[1]).includes('Più scorciatoie & colori'));

@@ -15,14 +15,14 @@ const IT_LABELS = {
 };
 
 export function createEmptyFeedback() {
-  return { overall: 0, ease: 0, recommend: '', contexts: [], feature: '', liked: '', improve: '', problems: '', contact: '' };
+  return { overall: 0, ease: 0, recommend: '', contexts: [], feature: '', usage: '', improve: '', problems: '', contact: '' };
 }
 
 export function hasFeedbackAnswers(answers = {}) {
   return Boolean(
     answers.overall || answers.ease || answers.recommend || answers.feature
     || (answers.contexts || []).length
-    || [answers.liked, answers.improve, answers.problems].some((text) => String(text || '').trim())
+    || [answers.usage, answers.improve, answers.problems].some((text) => String(text || '').trim())
   );
 }
 
@@ -47,8 +47,8 @@ export function buildFeedbackEmail(answers = {}, meta = {}) {
     `Dove lo usa: ${contexts.length ? contexts.join(', ') : '—'}`,
     `Parte più usata: ${IT_LABELS.feature[answers.feature] || '—'}`,
     '',
-    'Cosa piace di più:',
-    text(answers.liked),
+    'Come lo usa:',
+    text(answers.usage),
     '',
     'Cosa migliorerebbe o aggiungerebbe:',
     text(answers.improve),

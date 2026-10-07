@@ -158,6 +158,7 @@ export default function LanguageSwitcher({ project, language, onChange, onManage
         type="button"
         className="liteLanguageManage"
         onClick={onManage}
+        disabled={!onManage}
         title={t('languages.manage.title')}
         aria-label={t('languages.manage.aria')}
       >

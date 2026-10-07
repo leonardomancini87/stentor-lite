@@ -44,3 +44,21 @@ export function layoutStageText({ lineCount, secondLineCount = 0, fontPx, second
     separator: { y: separatorY, width: fontPx * 1.1, thickness: Math.max(2, fontPx * 0.045) },
   };
 }
+
+// Margine dai bordi laterali dello schermo, in unità della tela (larga 2360).
+export const STAGE_EDGE_MARGIN = 24;
+
+// Spostamento orizzontale da aggiungere al blocco di testo perché resti tutto dentro lo schermo.
+// Con uno spostamento laterale impostato in Schermi, una riga lunga uscirebbe dal bordo: la si
+// riavvicina quanto basta, senza toccare le righe che già ci stanno. `lineWidth` è la riga più
+// larga, `clipWidth` la «Larghezza» dello schermo (oltre la quale il testo è comunque tagliato).
+// Una riga più larga dello schermo torna al centro: così il taglio è uguale ai due lati.
+export function fitStageShiftX({ centerX, lineWidth, clipWidth, stageWidth, margin = STAGE_EDGE_MARGIN }) {
+  const visible = Math.min(Number(lineWidth) || 0, Number(clipWidth) || 0);
+  if (visible <= 0) return 0;
+  const half = visible / 2;
+  const min = margin + half;
+  const max = stageWidth - margin - half;
+  if (min > max) return stageWidth / 2 - centerX;
+  return Math.max(min, Math.min(max, centerX)) - centerX;
+}

@@ -23,7 +23,7 @@ test('i tasti predefiniti corrispondono ai comandi di sempre', () => {
 test('assegnare un tasto già usato lo toglie dall’altra azione', () => {
   const { shortcuts, movedFrom } = assignBinding(getDefaultShortcuts(), 'blackout', 0, { code: 'Space' });
   assert.equal(movedFrom.id, 'next');
-  assert.deepEqual(shortcuts.next, [{ code: 'ArrowRight' }]);
+  assert.deepEqual(shortcuts.next, [{ code: 'ArrowRight' }, { code: 'PageDown' }]);
   assert.deepEqual(shortcuts.blackout, [{ code: 'Space' }]);
   assert.equal(matchShortcut(key('Space'), shortcuts), 'blackout');
 });
@@ -63,4 +63,10 @@ test('etichette leggibili', () => {
   assert.equal(formatBinding({ code: 'Space', shift: true }), '⇧ Spazio');
   assert.equal(formatBinding({ code: 'KeyB' }), 'B');
   assert.equal(formatBinding({ code: 'ArrowRight' }), '→');
+});
+
+test('i telecomandi da presentazione funzionano senza configurare nulla', () => {
+  const shortcuts = getDefaultShortcuts();
+  assert.equal(matchShortcut(key('PageDown'), shortcuts), 'next');
+  assert.equal(matchShortcut(key('PageUp'), shortcuts), 'previous');
 });

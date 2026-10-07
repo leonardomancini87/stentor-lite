@@ -16,6 +16,9 @@ import {
   nextIndexAfter,
   normalizeLineLimit,
 } from '../utils/textCheck.js';
+import { findInCues, replaceInCues } from '../utils/findReplace.js';
+import { createCanvasTextMeasure, findCuesWiderThanScreens, loadScreenFonts } from '../utils/screenFit.js';
+import { getScreens } from '../utils/screenSettings.js';
 import { useCardCollapsed } from '../hooks/useCardCollapsed.js';
 import CardCollapseButton from './CardCollapseButton.jsx';
 import { useI18n } from '../i18n/index.js';
@@ -31,7 +34,7 @@ function classNames(...items) {
 function loadTab() {
   try {
     const saved = window.localStorage.getItem(TAB_STORAGE_KEY);
-    return saved === 'clean' || saved === 'check' ? saved : 'check';
+    return saved === 'clean' || saved === 'check' || saved === 'find' ? saved : 'check';
   } catch {
     return 'check';
   }
@@ -42,7 +45,7 @@ function checkDetail(t, id, limit) {
   return t(`check.${id}.detail`, { limit, total: limit * 2 });
 }
 
-function CleanupPanel({ project, activeCue, activeNumber, setProject }) {
+function CleanupPanel({ project, activeCue, activeNumber, setProject, locked = false }) {
   const [scope, setScope] = useState('cue');
   const [options, setOptions] = useState(DEFAULT_CLEANUP);
   const [result, setResult] = useState('');
@@ -96,9 +99,63 @@ function CleanupPanel({ project, activeCue, activeNumber, setProject }) {
       </div>
       <p className="liteToolsFootnote">{t('clean.footnote')}</p>
 
-      <button type="button" className="liteToolsPrimary" onClick={apply}>
+      <button type="button" className="liteToolsPrimary" onClick={apply} disabled={locked} title={locked ? t('toolbar.locked') : undefined}>
         {effectiveScope === 'cue' ? t('clean.apply.cue', { number: activeNumber }) : t('clean.apply.all')}
       </button>
+      {result ? <p className="liteToolsResult" role="status">{result}</p> : null}
+    </div>
+  );
+}
+
+// Cerca e sostituisci nel testo delle battute, nella lingua di lavoro.
+function FindPanel({ project, language, activeIndex, setProject, onRevealCue, locked = false }) {
+  const [query, setQuery] = useState('');
+  const [replacement, setReplacement] = useState('');
+  const [caseSensitive, setCaseSensitive] = useState(false);
+  const [result, setResult] = useState('');
+  const { t } = useI18n();
+  const options = { caseSensitive, primaryLanguage: project.primaryLanguage };
+  const found = useMemo(
+    () => findInCues(project.cues, language, query, options),
+    [project.cues, language, query, caseSensitive, project.primaryLanguage], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+  const languageName = getLanguageName(project, language);
+
+  useEffect(() => setResult(''), [query, replacement, caseSensitive, language]);
+
+  function replaceAll() {
+    const outcome = replaceInCues(project.cues, language, query, replacement, options);
+    if (outcome.replaced) setProject((current) => ({ ...current, cues: outcome.cues }));
+    setResult(t('find.done', { count: outcome.replaced }));
+  }
+
+  return (
+    <div className="liteToolsPane liteToolsFind">
+      <label>
+        <span>{t('find.query')}</span>
+        <input type="text" value={query} onChange={(event) => setQuery(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' && found.total) onRevealCue?.(nextIndexAfter(found.indexes, activeIndex)); }} autoComplete="off" spellCheck={false} />
+      </label>
+      <label>
+        <span>{t('find.replacement')}</span>
+        <input type="text" value={replacement} onChange={(event) => setReplacement(event.target.value)} autoComplete="off" spellCheck={false} />
+      </label>
+      <label className="liteToolsFindCase">
+        <input type="checkbox" checked={caseSensitive} onChange={(event) => setCaseSensitive(event.target.checked)} />
+        <span>{t('find.case')}</span>
+      </label>
+
+      {query ? (
+        <p className="liteToolsIntro" role="status">
+          {found.total
+            ? t('find.count', { count: found.total, cues: t('count.cues', { count: found.indexes.length }) })
+            : t('find.none', { language: languageName })}
+        </p>
+      ) : null}
+
+      <div className="liteToolsFindActions">
+        <button type="button" onClick={() => onRevealCue?.(nextIndexAfter(found.indexes, activeIndex))} disabled={!found.total}>{t('find.next')}</button>
+        <button type="button" className="liteToolsPrimary" onClick={replaceAll} disabled={locked || !found.total} title={locked ? t('toolbar.locked') : undefined}>{t('find.replaceAll')}</button>
+      </div>
       {result ? <p className="liteToolsResult" role="status">{result}</p> : null}
     </div>
   );
@@ -155,11 +212,31 @@ function LineLimitControl({ limit, onChange }) {
 function CheckPanel({ project, language, activeIndex, screenColors, onRevealCue, onChangeLimit }) {
   const numbers = useMemo(() => getCueNumbers(project.cues), [project.cues]);
   const limit = getLineLimit(project);
-  const report = useMemo(() => buildTextCheck(project.cues, language, screenColors, limit), [project.cues, language, screenColors, limit]);
+  const textReport = useMemo(() => buildTextCheck(project.cues, language, screenColors, limit), [project.cues, language, screenColors, limit]);
+  // Battute più larghe di uno schermo: si rimisura quando arrivano i caratteri web.
+  const measure = useMemo(() => createCanvasTextMeasure(), []);
+  const [fontsTick, setFontsTick] = useState(0);
+  const screenFonts = getScreens(project.settings).map((screen) => screen.publicFontFamily).join('|');
+  useEffect(() => {
+    let alive = true;
+    const refresh = () => { if (alive) setFontsTick((value) => value + 1); };
+    loadScreenFonts(project).then(refresh);
+    document.fonts?.addEventListener?.('loadingdone', refresh);
+    return () => { alive = false; document.fonts?.removeEventListener?.('loadingdone', refresh); };
+  }, [screenFonts]); // eslint-disable-line react-hooks/exhaustive-deps
+  const wideIndexes = useMemo(
+    () => (measure ? findCuesWiderThanScreens(project, language, measure) : []),
+    [measure, project.cues, project.settings, project.languages, project.primaryLanguage, language, fontsTick], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+  const report = useMemo(() => (wideIndexes.length
+    ? { ...textReport, items: [{ id: 'wide', severity: 'error', indexes: wideIndexes }, ...textReport.items] }
+    : textReport), [textReport, wideIndexes]);
   const activeCue = project.cues[activeIndex];
   const showActive = activeCue && !isMarkerCue(activeCue);
   const activeInfo = showActive ? describeCue(activeCue, language) : null;
-  const activeProblems = showActive ? getCueProblems(activeCue, language, limit) : [];
+  const activeProblems = showActive
+    ? [...(wideIndexes.includes(activeIndex) ? ['wide'] : []), ...getCueProblems(activeCue, language, limit)]
+    : [];
   const languageName = getLanguageName(project, language);
   const { t } = useI18n();
 
@@ -216,7 +293,7 @@ function CheckPanel({ project, language, activeIndex, screenColors, onRevealCue,
 }
 
 // Card "Strumenti" nella colonna destra di Sopratitoli: Verifica e Pulizia del copione.
-export default function ToolsCard({ project, language, activeIndex, setProject, screenColors, onRevealCue }) {
+export default function ToolsCard({ project, language, activeIndex, setProject, screenColors, onRevealCue, locked = false }) {
   const [tab, setTab] = useState(loadTab);
   const numbers = useMemo(() => getCueNumbers(project.cues), [project.cues]);
   const activeCue = project.cues[activeIndex] || null;
@@ -240,6 +317,7 @@ export default function ToolsCard({ project, language, activeIndex, setProject, 
           {[
             { id: 'check', label: t('tools.tab.check') },
             { id: 'clean', label: t('tools.tab.clean') },
+            { id: 'find', label: t('tools.tab.find') },
           ].map((item) => (
             <button
               key={item.id}
@@ -267,12 +345,15 @@ export default function ToolsCard({ project, language, activeIndex, setProject, 
             settings: { ...(current.settings || {}), maxCharsPerLine: value },
           }))}
         />
+      ) : tab === 'find' ? (
+        <FindPanel project={project} language={language} activeIndex={activeIndex} setProject={setProject} onRevealCue={onRevealCue} locked={locked} />
       ) : (
         <CleanupPanel
           project={project}
           activeCue={activeCue}
           activeNumber={formatCueNumber(numbers[activeIndex])}
           setProject={setProject}
+          locked={locked}
         />
       )}
     </section>

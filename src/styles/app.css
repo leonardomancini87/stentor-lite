@@ -581,6 +581,30 @@ body,
   to { opacity: 1; }
 }
 
+/* Passaggio tra battute nell'anteprima di Schermi (StageTransition): stessi effetti dello schermo in sala. */
+
+.stageSubtitleSvg.stageFxEnter { animation: stentoreStageFadeIn var(--stage-fx-ms, 120ms) ease-out both; }
+.stageSubtitleSvg.stageFxEnter.stageFx-none { animation: none; }
+.stageSubtitleSvg.stageFxEnter.stageFx-fade.afterOutgoing { animation-delay: var(--stage-fx-ms, 120ms); }
+.stageSubtitleSvg.stageFxEnter.stageFx-slide { animation-name: stentoreStageSlideIn; }
+.stageSubtitleSvg.stageFxLeave { animation: stentoreStageFadeOut var(--stage-fx-ms, 120ms) ease-out both; }
+.stageSubtitleSvg.stageFxLeave.stageFx-slide { animation-name: stentoreStageSlideOut; }
+
+@keyframes stentoreStageFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes stentoreStageSlideIn {
+  from { opacity: 0; transform: translateY(var(--stage-fx-shift, 26px)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes stentoreStageSlideOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(calc(-1 * var(--stage-fx-shift, 26px))); }
+}
+
 .liveOnlyWorkspace {
   overflow: auto;
 }

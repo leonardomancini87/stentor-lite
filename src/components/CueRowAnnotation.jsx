@@ -38,8 +38,8 @@ export default function CueRowAnnotation({ cue, isProjected = false, isNext = fa
   } : { title: note || undefined };
 
   return (
-    <span className="liteCueOperatorNote" data-no-translate="" {...editProps}>
-      {note}
+    <span className={nextTag ? 'liteCueOperatorNote withNextTag' : 'liteCueOperatorNote'} data-no-translate="" {...editProps}>
+      {nextTag ? <span className="liteCueNoteText">{note}</span> : note}
       {nextTag}
     </span>
   );
@@ -59,8 +59,10 @@ function getNoteCaretOffset(event) {
     node = range?.startContainer ?? null;
     offset = range?.startOffset ?? 0;
   }
-  // Solo il testo della nota (primo nodo), non l'etichetta "Prossima".
-  const noteText = event.currentTarget.firstChild;
+  // Solo il testo della nota, non l'etichetta "Prossima": nella battuta successiva il testo
+  // sta dentro .liteCueNoteText, altrove è il primo nodo.
+  const first = event.currentTarget.firstChild;
+  const noteText = first?.nodeType === Node.ELEMENT_NODE ? first.firstChild : first;
   if (!node || node !== noteText || node.nodeType !== Node.TEXT_NODE) return null;
   return offset;
 }

@@ -32,12 +32,12 @@ export const ALL_APP_LANGUAGES = [
 // Lingue offerte nel menu: solo quelle tradotte per intero (vedi src/i18n).
 // Le altre tornano disponibili quando hanno il loro file di traduzione completo.
 export const COMPLETE_APP_LANGUAGES = ALL_APP_LANGUAGES.map((item) => item.code);
-// Nella scelta della lingua i nomi sono in ordine alfabetico, ognuno scritto nella sua lingua:
-// prima gli alfabeti latini, poi greco, cirillico, arabo, devanagari, malayalam e cinese.
-const LANGUAGE_NAME_ORDER = new Intl.Collator('en', { sensitivity: 'base' });
+// Nella scelta della lingua l'ordine è alfabetico per sigla (AR, BG, CS… ZH): è quella che si legge
+// accanto a ogni nome ed è uguale in ogni lingua dell'interfaccia, mentre i nomi, scritti ognuno
+// nel proprio alfabeto, finirebbero raggruppati per scrittura. Le due varianti del cinese chiudono.
 export const APP_LANGUAGES = ALL_APP_LANGUAGES
   .filter((item) => COMPLETE_APP_LANGUAGES.includes(item.code))
-  .sort((a, b) => LANGUAGE_NAME_ORDER.compare(a.label, b.label));
+  .sort((a, b) => a.code.toLowerCase().localeCompare(b.code.toLowerCase(), 'en'));
 
 // Lingue scritte da destra a sinistra: l'interfaccia si specchia.
 export const RTL_APP_LANGUAGES = ['ar'];
