@@ -164,7 +164,7 @@
       transition: opacity 0.3s ease;
     }
 
-    body:hover .hint { opacity: 1; }
+    body.show-hint .hint { opacity: 1; }
 
     .emptyNotice {
       position: fixed;
@@ -632,6 +632,27 @@
       window.addEventListener('dblclick', () => {
         if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
       });
+
+      // Il suggerimento in basso non deve finire in sala: compare solo muovendo il mouse sulla
+      // finestra non a tutto schermo, e sparisce da solo dopo due secondi.
+      var hintTimer = 0;
+      function isFullScreen() {
+        return Boolean(document.fullscreenElement)
+          || (window.innerWidth >= window.screen.width && window.innerHeight >= window.screen.height);
+      }
+      function hideHint() {
+        window.clearTimeout(hintTimer);
+        document.body.classList.remove('show-hint');
+      }
+      window.addEventListener('mousemove', () => {
+        if (isFullScreen()) { hideHint(); return; }
+        document.body.classList.add('show-hint');
+        window.clearTimeout(hintTimer);
+        hintTimer = window.setTimeout(hideHint, 2000);
+      });
+      document.addEventListener('fullscreenchange', hideHint);
+      document.addEventListener('mouseleave', hideHint);
+      window.addEventListener('resize', () => { if (isFullScreen()) hideHint(); });
 
       // Comandi da tastiera anche nella finestra dello schermo: gli stessi tasti della regia
       // (card "Scorciatoie"; predefiniti Spazio/→/Pag↓ avanti, Maiusc+Spazio/←/Pag↑ indietro, B buio, F schermo intero).

@@ -6,6 +6,7 @@ Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténto
 ## 0.10.1 — 7 ottobre 2026 · beta
 
 - Su Mac e Linux «Proiezione» apre davvero la finestra dello schermo: prima l'app installata rispondeva «Schermo di proiezione non aperto». Su Windows non cambia nulla.
+- Nella finestra di proiezione il suggerimento «Doppio clic: tutto schermo · Esc: esci» non compare più a tutto schermo; in finestra appare muovendo il mouse e sparisce dopo due secondi.
 
 ## 0.10.0 — 7 ottobre 2026 · beta
 
