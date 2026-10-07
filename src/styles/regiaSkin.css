@@ -837,7 +837,13 @@ html[data-app-theme] .appShell .stentorRightSidebarToggle:focus-visible { outlin
 /* La freccia sta in alto nella colonna destra: in Sopratitoli ha una riga tutta sua sopra le card,
    in Schermi e in Progetti sta sulla riga del titolo, che in Schermi resta ferma mentre si scorre. */
 
-html[data-app-theme] .appShell .liteRegiaRightColumn > .stentorRightToggleRow { flex: 0 0 28px; height: 28px; box-sizing: border-box; padding-right: 20px; }
+html[data-app-theme] .appShell .liteRegiaRightColumn > .stentorRightToggleRow {
+  flex: 0 0 var(--stentor-right-toggle-row, 64px); height: var(--stentor-right-toggle-row, 64px); box-sizing: border-box;
+  padding-top: 6px; display: flex; align-items: flex-start;
+}
+
+/* La freccia sta all'altezza del titolo della pagina, allineata alle freccette delle card. */
+html[data-app-theme] .appShell .stentorRightToggleRow > [data-right-toggle-anchor] { flex: 1; height: 32px; box-sizing: border-box; padding-right: 20px; }
 
 html[data-app-theme] .appShell .liteScreensWorkspace .liteScreenInspector > .inspectorTitle {
   position: sticky; top: 0; z-index: 2; background: var(--pk-card) !important;

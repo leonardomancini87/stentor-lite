@@ -337,6 +337,15 @@ export default function App() {
     if (!hasRightSidebar) return undefined;
     const rootStyle = document.documentElement.style;
     function alignRightToggle() {
+      // In Sopratitoli la riga della freccia è alta quanto l'intestazione della pagina: così la
+      // prima card della colonna destra parte alla stessa altezza della prima card a sinistra.
+      const column = document.querySelector('.liteRegiaRightColumn');
+      const firstLeftCard = document.querySelector('.liteRegiaEditorMain > .litePageHeader + *');
+      if (column && firstLeftCard && column.getBoundingClientRect().height) {
+        const gap = parseFloat(window.getComputedStyle(column).rowGap) || 0;
+        const height = Math.round(firstLeftCard.getBoundingClientRect().top - column.getBoundingClientRect().top - gap);
+        if (height >= 28) rootStyle.setProperty('--stentor-right-toggle-row', `${height}px`);
+      }
       const anchor = document.querySelector('[data-right-toggle-anchor]');
       const rect = anchor?.getBoundingClientRect();
       if (rect && rect.height) {
@@ -1716,7 +1725,7 @@ export default function App() {
               </main>
 
               <aside className="liteRegiaRightColumn" aria-label={ui('rightColumn.aria')}>
-                <div className="stentorRightToggleRow" data-right-toggle-anchor="" aria-hidden="true" />
+                <div className="stentorRightToggleRow" aria-hidden="true"><span data-right-toggle-anchor="" /></div>
                 <ShowMap
                   sections={showMapSections}
                   currentSectionId={currentMapSection?.id ?? null}
