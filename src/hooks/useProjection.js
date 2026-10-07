@@ -16,6 +16,15 @@ export function getStageWindowName(screenId) {
   return `stentore-public-stage-${screenId}`;
 }
 
+// App desktop: chiede al programma di portare in primo piano la finestra di quello schermo
+// (su Mac il «focus» chiesto dalla pagina non basta). Nel browser non fa nulla.
+function bringStageToFront(screenId) {
+  if (typeof window === 'undefined' || !window.__TAURI_INTERNALS__) return;
+  import('@tauri-apps/api/core')
+    .then(({ invoke }) => invoke('stentor_focus_stage', { screenId }))
+    .catch(() => {});
+}
+
 // Finestre degli schermi di proiezione: apertura e aggiornamento del testo proiettato.
 // Il testo arriva alla finestra in tre modi (chiamata diretta, postMessage, localStorage),
 // così resta aggiornato anche se la finestra è stata ricaricata.
@@ -72,6 +81,14 @@ export function useProjection({ project, cue, language, blackout, testPattern = 
 
   const openScreen = useCallback((screen = activeScreen) => {
     publish(screen);
+    // Schermo già aperto e vivo: non lo si ricarica (sarebbe un lampo nero in sala),
+    // lo si riporta soltanto in primo piano.
+    const existing = windowsRef.current[screen.id];
+    if (existing && !existing.closed && isStageAlive(screen.id)) {
+      try { existing.focus(); } catch { /* finestra in chiusura */ }
+      bringStageToFront(screen.id);
+      return existing;
+    }
     const aspect = getScreenAspectOption(screen.publicAspectRatio);
     const stageWindow = window.open(
       getStageWindowUrl(screen.id),
@@ -85,6 +102,7 @@ export function useProjection({ project, cue, language, blackout, testPattern = 
     windowsRef.current[screen.id] = stageWindow;
     setIsOpen(true);
     stageWindow.focus();
+    bringStageToFront(screen.id);
     // La finestra impiega un momento a caricarsi: il testo le viene rimandato per qualche secondo.
     // Ogni invio usa battuta e stile del momento, non quelli di quando lo schermo è stato aperto:
     // altrimenti un «Avanti» dato subito dopo l'apertura verrebbe sovrascritto dal testo vecchio.
