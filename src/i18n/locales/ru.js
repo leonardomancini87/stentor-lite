@@ -223,6 +223,7 @@ export default {
   'toolbar.marker': 'Вставить метку (действие, сцена…) перед репликой',
   'toolbar.marker.aria': 'Вставить метку перед выбранной репликой',
   'toolbar.delete': 'Удалить',
+  'cue.deleted': 'Реплика {number} удалена',
   'toolbar.lock': 'Заблокировать правку на время спектакля',
   'toolbar.unlock': 'Разблокировать правку',
   'toolbar.locked': 'Заблокировано',
@@ -260,8 +261,6 @@ export default {
   'marker.edit.message': 'Измените тип или название раздела.',
   'marker.delete.title': 'Удалить метку',
   'marker.delete.message': 'Удалить метку «{title}»? Реплики останутся на своих местах. Это можно отменить сочетанием Command/Ctrl+Z.',
-  'cue.delete.title': 'Удалить титр',
-  'cue.delete.message': 'Удалить титр {number}? Это можно отменить сочетанием Command/Ctrl+Z.',
   'cue.split.cursor.title': 'Установите курсор',
   'cue.split.cursor.message': 'Щёлкните в тексте на языке, который нужно разделить, и оставьте курсор точно в месте разделения.',
   'cue.split.title': 'Разделить титр',
@@ -559,6 +558,4 @@ export default {
   'screens.secondLanguage.hint': 'Под первым, мельче, после короткого тире. Для непереведённых реплик показывается только первый язык.',
   'screens.secondLanguage.needMore': 'Чтобы показывать два языка, сначала добавьте в проект ещё один язык.',
   'screens.field.secondSize': 'Размер второго языка',
-  'cue.delete.dontAsk': 'Больше не показывать это предупреждение',
-  'settings.confirmCueDelete': 'Запрашивать подтверждение перед удалением реплики',
 };

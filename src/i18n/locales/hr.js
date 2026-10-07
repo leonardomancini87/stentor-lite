@@ -220,6 +220,7 @@ export default {
   'toolbar.marker': 'Umetni oznaku (čin, scena…) prije replike',
   'toolbar.marker.aria': 'Umetni oznaku prije odabrane replike',
   'toolbar.delete': 'Izbriši',
+  'cue.deleted': 'Replika {number} izbrisana',
   'toolbar.lock': 'Zaključaj uređivanje za vrijeme predstave',
   'toolbar.unlock': 'Otključaj uređivanje',
   'toolbar.locked': 'Zaključano',
@@ -257,8 +258,6 @@ export default {
   'marker.edit.message': 'Promijenite vrstu ili naslov dijela.',
   'marker.delete.title': 'Izbriši oznaku',
   'marker.delete.message': 'Želite li izbrisati oznaku „{title}“? Replike ostaju gdje jesu. Možete poništiti s Command/Ctrl+Z.',
-  'cue.delete.title': 'Izbriši nadnaslov',
-  'cue.delete.message': 'Želite li izbrisati nadnaslov {number}? Možete poništiti s Command/Ctrl+Z.',
   'cue.split.cursor.title': 'Postavite pokazivač',
   'cue.split.cursor.message': 'Kliknite u tekst jezika koji želite podijeliti i ostavite pokazivač točno na mjestu podjele.',
   'cue.split.title': 'Podijeli nadnaslov',
@@ -552,6 +551,4 @@ export default {
   'screens.secondLanguage.hint': 'Ispod prvoga, manji, nakon kratke crtice. Neprevedene replike prikazuju samo prvi jezik.',
   'screens.secondLanguage.needMore': 'Za prikaz dvaju jezika najprije dodajte još jedan jezik u projekt.',
   'screens.field.secondSize': 'Veličina drugog jezika',
-  'cue.delete.dontAsk': 'Ne prikazuj više ovo upozorenje',
-  'settings.confirmCueDelete': 'Traži potvrdu prije brisanja replike',
 };

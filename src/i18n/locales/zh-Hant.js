@@ -222,6 +222,7 @@ export default {
   'toolbar.marker': '在字幕前插入標記（幕、場…）',
   'toolbar.marker.aria': '在所選字幕前插入標記',
   'toolbar.delete': '刪除',
+  'cue.deleted': '已刪除台詞 {number}',
   'toolbar.lock': '演出時鎖定編輯',
   'toolbar.unlock': '解鎖編輯',
   'toolbar.locked': '已鎖定',
@@ -259,8 +260,6 @@ export default {
   'marker.edit.message': '更改段落的類型或名稱。',
   'marker.delete.title': '刪除標記',
   'marker.delete.message': '要刪除標記「{title}」嗎？字幕位置不變。可用 Command/Ctrl+Z 復原。',
-  'cue.delete.title': '刪除字幕',
-  'cue.delete.message': '要刪除第 {number} 則字幕嗎？可用 Command/Ctrl+Z 復原。',
   'cue.split.cursor.title': '放置游標',
   'cue.split.cursor.message': '點按要分割的語言文字，並把游標放在要分開的確切位置。',
   'cue.split.title': '分割字幕',
@@ -557,6 +556,4 @@ export default {
   'screens.secondLanguage.hint': '顯示在第一語言下方，字級較小，中間以短橫線分隔。未翻譯的台詞只顯示第一語言。',
   'screens.secondLanguage.needMore': '要投影兩種語言，請先為專案新增另一種語言。',
   'screens.field.secondSize': '第二語言字級',
-  'cue.delete.dontAsk': '不再顯示此提示',
-  'settings.confirmCueDelete': '刪除台詞前請求確認',
 };

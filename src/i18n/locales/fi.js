@@ -217,6 +217,7 @@ export default {
   'toolbar.marker': 'Lisää merkintä (näytös, kohtaus…) repliikin eteen',
   'toolbar.marker.aria': 'Lisää merkintä valitun repliikin eteen',
   'toolbar.delete': 'Poista',
+  'cue.deleted': 'Repliikki {number} poistettu',
   'toolbar.lock': 'Lukitse muokkaus esityksen ajaksi',
   'toolbar.unlock': 'Avaa muokkauksen lukitus',
   'toolbar.locked': 'Lukittu',
@@ -254,8 +255,6 @@ export default {
   'marker.edit.message': 'Vaihda osion tyyppi tai otsikko.',
   'marker.delete.title': 'Poista merkintä',
   'marker.delete.message': 'Poistetaanko merkintä ”{title}”? Repliikit pysyvät paikoillaan. Voit kumota painamalla Command/Ctrl+Z.',
-  'cue.delete.title': 'Poista repliikki',
-  'cue.delete.message': 'Poistetaanko repliikki {number}? Voit kumota painamalla Command/Ctrl+Z.',
   'cue.split.cursor.title': 'Sijoita kohdistin',
   'cue.split.cursor.message': 'Napsauta jaettavan kielen tekstiä ja jätä kohdistin täsmälleen jakokohtaan.',
   'cue.split.title': 'Jaa repliikki',
@@ -545,6 +544,4 @@ export default {
   'screens.secondLanguage.hint': 'Ensimmäisen alla, pienempänä, lyhyen viivan jälkeen. Kääntämättömissä repliikeissä näkyy vain ensimmäinen kieli.',
   'screens.secondLanguage.needMore': 'Jos haluat heijastaa kaksi kieltä, lisää ensin projektiin toinen kieli.',
   'screens.field.secondSize': 'Toisen kielen koko',
-  'cue.delete.dontAsk': 'Älä näytä tätä varoitusta uudelleen',
-  'settings.confirmCueDelete': 'Kysy vahvistus ennen repliikin poistamista',
 };

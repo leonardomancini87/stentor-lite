@@ -217,6 +217,7 @@ export default {
   'toolbar.marker': 'Вмъкни маркер (действие, сцена…) преди репликата',
   'toolbar.marker.aria': 'Вмъкни маркер преди избраната реплика',
   'toolbar.delete': 'Изтрий',
+  'cue.deleted': 'Реплика {number} е изтрита',
   'toolbar.lock': 'Заключване на редактирането за представлението',
   'toolbar.unlock': 'Отключване на редактирането',
   'toolbar.locked': 'Заключено',
@@ -254,8 +255,6 @@ export default {
   'marker.edit.message': 'Сменете вида или заглавието на раздела.',
   'marker.delete.title': 'Изтриване на маркер',
   'marker.delete.message': 'Да се изтрие ли маркерът „{title}“? Репликите остават на мястото си. Можете да отмените с Command/Ctrl+Z.',
-  'cue.delete.title': 'Изтриване на надпис',
-  'cue.delete.message': 'Да се изтрие ли надпис {number}? Можете да отмените с Command/Ctrl+Z.',
   'cue.split.cursor.title': 'Поставете курсора',
   'cue.split.cursor.message': 'Щракнете в текста на езика, който искате да разделите, и оставете курсора точно на мястото на разделянето.',
   'cue.split.title': 'Разделяне на надпис',
@@ -545,6 +544,4 @@ export default {
   'screens.secondLanguage.hint': 'Под първия, по-малък, след кратко тире. Непреведените реплики показват само първия език.',
   'screens.secondLanguage.needMore': 'За да прожектирате два езика, първо добавете още един език към проекта.',
   'screens.field.secondSize': 'Размер на втория език',
-  'cue.delete.dontAsk': 'Да не се показва повече това предупреждение',
-  'settings.confirmCueDelete': 'Искане на потвърждение преди изтриване на реплика',
 };

@@ -230,6 +230,7 @@ export default {
   'toolbar.marker': 'क्यू से पहले मार्कर (अंक, दृश्य…) जोड़ें',
   'toolbar.marker.aria': 'चुने गए क्यू से पहले मार्कर जोड़ें',
   'toolbar.delete': 'हटाएँ',
+  'cue.deleted': 'पंक्ति {number} हटाई गई',
   'toolbar.lock': 'प्रस्तुति के लिए संपादन लॉक करें',
   'toolbar.unlock': 'संपादन अनलॉक करें',
   'toolbar.locked': 'लॉक है',
@@ -267,8 +268,6 @@ export default {
   'marker.edit.message': 'भाग का प्रकार या शीर्षक बदलें।',
   'marker.delete.title': 'मार्कर हटाएँ',
   'marker.delete.message': 'मार्कर “{title}” हटाएँ? क्यू अपनी जगह पर रहेंगे। Command/Ctrl+Z से पूर्ववत कर सकते हैं।',
-  'cue.delete.title': 'सरटाइटल हटाएँ',
-  'cue.delete.message': 'सरटाइटल {number} हटाएँ? Command/Ctrl+Z से पूर्ववत कर सकते हैं।',
   'cue.split.cursor.title': 'कर्सर रखें',
   'cue.split.cursor.message': 'जिस भाषा को विभाजित करना है उसके पाठ में क्लिक करें और कर्सर ठीक वहीं रखें जहाँ विभाजन होना चाहिए।',
   'cue.split.title': 'सरटाइटल विभाजित करें',
@@ -570,6 +569,4 @@ export default {
   'screens.secondLanguage.hint': 'पहली के नीचे, छोटे आकार में, एक छोटी रेखा के बाद। जिन पंक्तियों का अनुवाद नहीं है, उनमें केवल पहली भाषा दिखती है।',
   'screens.secondLanguage.needMore': 'दो भाषाएँ प्रोजेक्ट करने के लिए, पहले प्रोजेक्ट में एक और भाषा जोड़ें।',
   'screens.field.secondSize': 'दूसरी भाषा का आकार',
-  'cue.delete.dontAsk': 'यह चेतावनी फिर न दिखाएँ',
-  'settings.confirmCueDelete': 'पंक्ति हटाने से पहले पुष्टि माँगें',
 };

@@ -217,6 +217,7 @@ export default {
   'toolbar.marker': 'Infoga märke (akt, scen …) före repliken',
   'toolbar.marker.aria': 'Infoga märke före den markerade repliken',
   'toolbar.delete': 'Radera',
+  'cue.deleted': 'Replik {number} borttagen',
   'toolbar.lock': 'Lås redigering under föreställningen',
   'toolbar.unlock': 'Lås upp redigering',
   'toolbar.locked': 'Låst',
@@ -254,8 +255,6 @@ export default {
   'marker.edit.message': 'Ändra avsnittets typ eller titel.',
   'marker.delete.title': 'Radera märke',
   'marker.delete.message': 'Vill du radera märket ”{title}”? Replikerna ligger kvar där de är. Du kan ångra med Command/Ctrl+Z.',
-  'cue.delete.title': 'Radera övertext',
-  'cue.delete.message': 'Vill du radera övertext {number}? Du kan ångra med Command/Ctrl+Z.',
   'cue.split.cursor.title': 'Placera markören',
   'cue.split.cursor.message': 'Klicka i texten på det språk du vill dela och lämna markören exakt där delningen ska ske.',
   'cue.split.title': 'Dela övertext',
@@ -545,6 +544,4 @@ export default {
   'screens.secondLanguage.hint': 'Under det första, mindre, efter ett kort streck. Repliker utan översättning visar bara det första språket.',
   'screens.secondLanguage.needMore': 'För att projicera två språk lägger du först till ett annat språk i projektet.',
   'screens.field.secondSize': 'Storlek på andra språket',
-  'cue.delete.dontAsk': 'Visa inte den här varningen igen',
-  'settings.confirmCueDelete': 'Fråga innan en replik tas bort',
 };

@@ -222,6 +222,7 @@ export default {
   'toolbar.marker': 'Insérer un repère (acte, scène…) avant la réplique',
   'toolbar.marker.aria': 'Insérer un repère avant la réplique sélectionnée',
   'toolbar.delete': 'Supprimer',
+  'cue.deleted': 'Réplique {number} supprimée',
   'toolbar.lock': 'Verrouiller les modifications pour le spectacle',
   'toolbar.unlock': 'Déverrouiller les modifications',
   'toolbar.locked': 'Verrouillé',
@@ -259,8 +260,6 @@ export default {
   'marker.edit.message': 'Changez le type ou le titre de la section.',
   'marker.delete.title': 'Supprimer le repère',
   'marker.delete.message': 'Supprimer le repère « {title} » ? Les répliques restent à leur place. Vous pouvez annuler avec Commande/Ctrl+Z.',
-  'cue.delete.title': 'Supprimer le surtitre',
-  'cue.delete.message': 'Supprimer le surtitre {number} ? Vous pouvez annuler avec Commande/Ctrl+Z.',
   'cue.split.cursor.title': 'Placez le curseur',
   'cue.split.cursor.message': 'Cliquez dans le texte de la langue à diviser et laissez le curseur exactement là où doit se faire la coupure.',
   'cue.split.title': 'Diviser le surtitre',
@@ -557,6 +556,4 @@ export default {
   'screens.secondLanguage.hint': 'Sous la première, plus petite, après un court tiret. Les répliques non traduites n’affichent que la première langue.',
   'screens.secondLanguage.needMore': 'Pour projeter deux langues, ajoutez d’abord une autre langue au projet.',
   'screens.field.secondSize': 'Taille de la deuxième langue',
-  'cue.delete.dontAsk': 'Ne plus afficher cet avertissement',
-  'settings.confirmCueDelete': 'Demander une confirmation avant de supprimer une réplique',
 };

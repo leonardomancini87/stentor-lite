@@ -223,6 +223,7 @@ export default {
   'toolbar.marker': 'Vložiť značku (dejstvo, scéna…) pred repliku',
   'toolbar.marker.aria': 'Vložiť značku pred vybranú repliku',
   'toolbar.delete': 'Odstrániť',
+  'cue.deleted': 'Replika {number} odstránená',
   'toolbar.lock': 'Zamknúť úpravy počas predstavenia',
   'toolbar.unlock': 'Odomknúť úpravy',
   'toolbar.locked': 'Zamknuté',
@@ -260,8 +261,6 @@ export default {
   'marker.edit.message': 'Zmeňte typ alebo názov časti.',
   'marker.delete.title': 'Odstrániť značku',
   'marker.delete.message': 'Chcete odstrániť značku „{title}“? Repliky zostanú na svojom mieste. Môžete to vrátiť späť pomocou Command/Ctrl+Z.',
-  'cue.delete.title': 'Odstrániť titulok',
-  'cue.delete.message': 'Chcete odstrániť titulok {number}? Môžete to vrátiť späť pomocou Command/Ctrl+Z.',
   'cue.split.cursor.title': 'Umiestnite kurzor',
   'cue.split.cursor.message': 'Kliknite do textu v jazyku, ktorý chcete rozdeliť, a nechajte kurzor presne v mieste rozdelenia.',
   'cue.split.title': 'Rozdeliť titulok',
@@ -559,6 +558,4 @@ export default {
   'screens.secondLanguage.hint': 'Pod prvým, menší, za krátkou čiarkou. Nepreložené repliky zobrazia len prvý jazyk.',
   'screens.secondLanguage.needMore': 'Ak chcete premietať dva jazyky, najprv do projektu pridajte ďalší jazyk.',
   'screens.field.secondSize': 'Veľkosť druhého jazyka',
-  'cue.delete.dontAsk': 'Toto upozornenie už nezobrazovať',
-  'settings.confirmCueDelete': 'Pred odstránením repliky požiadať o potvrdenie',
 };

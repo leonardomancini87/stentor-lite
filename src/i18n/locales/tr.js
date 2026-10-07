@@ -217,6 +217,7 @@ export default {
   'toolbar.marker': 'Replikten önce işaret ekle (perde, sahne…)',
   'toolbar.marker.aria': 'Seçili replikten önce işaret ekle',
   'toolbar.delete': 'Sil',
+  'cue.deleted': 'Replik {number} silindi',
   'toolbar.lock': 'Gösteri için düzenlemeyi kilitle',
   'toolbar.unlock': 'Düzenleme kilidini aç',
   'toolbar.locked': 'Kilitli',
@@ -254,8 +255,6 @@ export default {
   'marker.edit.message': 'Bölümün türünü veya başlığını değiştirin.',
   'marker.delete.title': 'İşareti sil',
   'marker.delete.message': '“{title}” işareti silinsin mi? Replikler yerinde kalır. Command/Ctrl+Z ile geri alabilirsiniz.',
-  'cue.delete.title': 'Üstyazıyı sil',
-  'cue.delete.message': '{number} numaralı üstyazı silinsin mi? Command/Ctrl+Z ile geri alabilirsiniz.',
   'cue.split.cursor.title': 'İmleci yerleştirin',
   'cue.split.cursor.message': 'Bölmek istediğiniz dilin metnine tıklayın ve imleci tam bölme noktasına bırakın.',
   'cue.split.title': 'Üstyazıyı böl',
@@ -545,6 +544,4 @@ export default {
   'screens.secondLanguage.hint': 'Birincinin altında, daha küçük, kısa bir çizgiden sonra. Çevrilmemiş replikler yalnızca birinci dili gösterir.',
   'screens.secondLanguage.needMore': 'İki dil yansıtmak için önce projeye başka bir dil ekleyin.',
   'screens.field.secondSize': 'İkinci dil boyutu',
-  'cue.delete.dontAsk': 'Bu uyarıyı bir daha gösterme',
-  'settings.confirmCueDelete': 'Bir repliği silmeden önce onay iste',
 };

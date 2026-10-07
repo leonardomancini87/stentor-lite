@@ -217,6 +217,7 @@ export default {
   'toolbar.marker': 'Sett inn markør (akt, scene …) før replikken',
   'toolbar.marker.aria': 'Sett inn markør før den valgte replikken',
   'toolbar.delete': 'Slett',
+  'cue.deleted': 'Replikk {number} slettet',
   'toolbar.lock': 'Lås redigering under forestillingen',
   'toolbar.unlock': 'Lås opp redigering',
   'toolbar.locked': 'Låst',
@@ -254,8 +255,6 @@ export default {
   'marker.edit.message': 'Endre typen eller tittelen på delen.',
   'marker.delete.title': 'Slett markør',
   'marker.delete.message': 'Vil du slette markøren «{title}»? Replikkene blir der de er. Du kan angre med Command/Ctrl+Z.',
-  'cue.delete.title': 'Slett overtekst',
-  'cue.delete.message': 'Vil du slette overtekst {number}? Du kan angre med Command/Ctrl+Z.',
   'cue.split.cursor.title': 'Plasser tekstmarkøren',
   'cue.split.cursor.message': 'Klikk i teksten på språket du vil dele, og la tekstmarkøren stå nøyaktig der delingen skal være.',
   'cue.split.title': 'Del overtekst',
@@ -545,6 +544,4 @@ export default {
   'screens.secondLanguage.hint': 'Under det første, mindre, etter en kort strek. Replikker uten oversettelse viser bare det første språket.',
   'screens.secondLanguage.needMore': 'For å projisere to språk må du først legge til et annet språk i prosjektet.',
   'screens.field.secondSize': 'Størrelse på andre språk',
-  'cue.delete.dontAsk': 'Ikke vis denne advarselen igjen',
-  'settings.confirmCueDelete': 'Spør før en replikk slettes',
 };

@@ -232,6 +232,7 @@ export default {
   'toolbar.marker': 'إدراج علامة (فصل، مشهد…) قبل المقطع',
   'toolbar.marker.aria': 'إدراج علامة قبل المقطع المحدد',
   'toolbar.delete': 'حذف',
+  'cue.deleted': 'تم حذف السطر {number}',
   'toolbar.lock': 'قفل التعديل أثناء العرض',
   'toolbar.unlock': 'فتح التعديل',
   'toolbar.locked': 'مقفل',
@@ -269,8 +270,6 @@ export default {
   'marker.edit.message': 'غيّر نوع القسم أو عنوانه.',
   'marker.delete.title': 'حذف العلامة',
   'marker.delete.message': 'هل تريد حذف العلامة «{title}»؟ تبقى المقاطع في أماكنها. يمكنك التراجع باستخدام Command/Ctrl+Z.',
-  'cue.delete.title': 'حذف الترجمة الفوقية',
-  'cue.delete.message': 'هل تريد حذف الترجمة الفوقية {number}؟ يمكنك التراجع باستخدام Command/Ctrl+Z.',
   'cue.split.cursor.title': 'ضع المؤشر',
   'cue.split.cursor.message': 'انقر في نص اللغة التي تريد تقسيمها وضع المؤشر تمامًا حيث يجب أن يكون التقسيم.',
   'cue.split.title': 'تقسيم الترجمة الفوقية',
@@ -576,6 +575,4 @@ export default {
   'screens.secondLanguage.hint': 'أسفل الأولى، بحجم أصغر، بعد شرطة قصيرة. الجمل غير المترجمة تعرض اللغة الأولى فقط.',
   'screens.secondLanguage.needMore': 'لعرض لغتين، أضف أولًا لغة أخرى إلى المشروع.',
   'screens.field.secondSize': 'حجم اللغة الثانية',
-  'cue.delete.dontAsk': 'عدم إظهار هذا التنبيه مرة أخرى',
-  'settings.confirmCueDelete': 'طلب التأكيد قبل حذف سطر',
 };

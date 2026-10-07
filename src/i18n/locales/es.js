@@ -222,6 +222,7 @@ export default {
   'toolbar.marker': 'Insertar marcador (acto, escena…) antes de la réplica',
   'toolbar.marker.aria': 'Insertar marcador antes de la réplica seleccionada',
   'toolbar.delete': 'Eliminar',
+  'cue.deleted': 'Réplica {number} eliminada',
   'toolbar.lock': 'Bloquear la edición para la función',
   'toolbar.unlock': 'Desbloquear la edición',
   'toolbar.locked': 'Bloqueado',
@@ -259,8 +260,6 @@ export default {
   'marker.edit.message': 'Cambia el tipo o el título de la sección.',
   'marker.delete.title': 'Eliminar marcador',
   'marker.delete.message': '¿Eliminar el marcador «{title}»? Las réplicas se quedan donde están. Puedes deshacer con Comando/Ctrl+Z.',
-  'cue.delete.title': 'Eliminar sobretítulo',
-  'cue.delete.message': '¿Eliminar el sobretítulo {number}? Puedes deshacer con Comando/Ctrl+Z.',
   'cue.split.cursor.title': 'Coloca el cursor',
   'cue.split.cursor.message': 'Haz clic en el texto del idioma que quieres dividir y deja el cursor justo donde debe ir el corte.',
   'cue.split.title': 'Dividir sobretítulo',
@@ -557,6 +556,4 @@ export default {
   'screens.secondLanguage.hint': 'Debajo del primero, más pequeño, tras un breve guion. Las réplicas sin traducir muestran solo el primer idioma.',
   'screens.secondLanguage.needMore': 'Para proyectar dos idiomas, añade primero otro idioma al proyecto.',
   'screens.field.secondSize': 'Tamaño del segundo idioma',
-  'cue.delete.dontAsk': 'No volver a mostrar este aviso',
-  'settings.confirmCueDelete': 'Pedir confirmación antes de eliminar una réplica',
 };

@@ -226,6 +226,9 @@ export default function App() {
   const [expandedCueId, setExpandedCueId] = useState(null);
   // Schermata di prova per il proiettore (Schermi): non fa parte del progetto, non si salva.
   const [testPattern, setTestPattern] = useState(false);
+  // Avviso «Battuta eliminata · Annulla»: resta qualche secondo e sparisce alla modifica successiva,
+  // così «Annulla» riporta sempre indietro l'eliminazione e non un'altra modifica fatta nel frattempo.
+  const [deleteNotice, setDeleteNotice] = useState(null);
   // Cartello in onda al posto della battuta (card «Cartelli»): non si salva.
   const [activeCardId, setActiveCardId] = useState(null);
   // Blocco spettacolo: a lucchetto chiuso il copione non si può modificare (testo, note, struttura).
@@ -474,6 +477,7 @@ export default function App() {
     setEditingCue,
     dialogs,
     appLanguage,
+    onCueDeleted: (number) => setDeleteNotice({ number, snapshot: null }),
   });
 
   const {
@@ -506,6 +510,19 @@ export default function App() {
     cardText: activeCard?.text || '',
     onBlocked: showProjectionBlocked,
   });
+  useEffect(() => {
+    if (!deleteNotice) return undefined;
+    if (deleteNotice.snapshot === null) {
+      setDeleteNotice({ ...deleteNotice, snapshot: project });
+      return undefined;
+    }
+    if (deleteNotice.snapshot !== project) {
+      setDeleteNotice(null);
+      return undefined;
+    }
+    const timer = window.setTimeout(() => setDeleteNotice(null), 8000);
+    return () => window.clearTimeout(timer);
+  }, [deleteNotice, project]);
   // Schermata di prova e cartello si tolgono da soli appena si manda in onda una battuta o si va al buio.
   useEffect(() => { setTestPattern(false); setActiveCardId(null); }, [projectedIndex, blackout]);
 
@@ -1648,6 +1665,12 @@ export default function App() {
                   </section>
                 </div>
 
+                {deleteNotice ? (
+                  <div className="liteUndoNotice" role="status">
+                    <span>{ui('cue.deleted', { number: deleteNotice.number })}</span>
+                    <button type="button" onClick={() => { setDeleteNotice(null); undo(); }}>{ui('shortcuts.fixed.undo')}</button>
+                  </div>
+                ) : null}
                 <nav className="liteRegiaConductorBar" aria-label={ui('conductor.aria')}>
                   <button type="button" className="liteConductorButton" onClick={goPreviousCue}>
                     <SkipBack /> <span>{ui('conductor.back')}</span>

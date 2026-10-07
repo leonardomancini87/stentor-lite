@@ -8,7 +8,6 @@ import { useRef } from 'react';
 import { planVoiceChange, applyVoiceChange } from '../utils/cueVoices.js';
 import { voiceMessage } from '../utils/voiceMessages.js';
 import { translate } from '../i18n/index.js';
-import { setConfirmCueDelete, shouldConfirmCueDelete } from '../utils/confirmPreferences.js';
 
 // Messaggi di errore delle funzioni sul copione → chiavi di traduzione.
 const ERROR_KEYS = {
@@ -56,6 +55,7 @@ export function useCueActions({
   setEditingCue,
   dialogs,
   appLanguage = 'it',
+  onCueDeleted,
 }) {
   const voiceChangePending = useRef(false);
   const ui = (key, vars) => translate(appLanguage, key, vars);
@@ -262,20 +262,8 @@ export function useCueActions({
       await dialogs.alert({ title: notPossible, message: ui('error.lastCue') });
       return;
     }
-    if (shouldConfirmCueDelete()) {
-      const confirmed = await dialogs.confirm({
-        title: ui('cue.delete.title'),
-        message: ui('cue.delete.message', { number: String(cueIndex + 1).padStart(3, '0') }),
-        confirmLabel: ui('common.delete'),
-        cancelLabel: ui('common.cancel'),
-        variant: 'danger',
-        trapFocus: true,
-        dontAskAgainLabel: ui('cue.delete.dontAsk'),
-      });
-      if (!confirmed) return;
-      if (confirmed.dontAskAgain) setConfirmCueDelete(false);
-    }
-
+    // Nessuna finestra di conferma: l'eliminazione si annulla dall'avviso che compare subito dopo
+    // (o con Command/Ctrl+Z). Durante lo spettacolo la impedisce il blocco con il lucchetto.
     setProject((current) => {
       const result = deleteCueStructural(current, cueId);
       if (result.error) return current;
@@ -291,6 +279,8 @@ export function useCueActions({
       setEditingCue?.(null);
       return result.project;
     });
+    const number = project.cues.slice(0, cueIndex + 1).filter((item) => !isMarkerCue(item)).length;
+    onCueDeleted?.(String(number).padStart(3, '0'));
   }
 
   async function mergeWithNext(cueId) {

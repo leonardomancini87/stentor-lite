@@ -222,6 +222,7 @@ export default {
   'toolbar.marker': 'Marke (Akt, Szene…) vor der Einblendung einfügen',
   'toolbar.marker.aria': 'Marke vor der ausgewählten Einblendung einfügen',
   'toolbar.delete': 'Löschen',
+  'cue.deleted': 'Einsatz {number} gelöscht',
   'toolbar.lock': 'Bearbeitung für die Vorstellung sperren',
   'toolbar.unlock': 'Bearbeitung entsperren',
   'toolbar.locked': 'Gesperrt',
@@ -259,8 +260,6 @@ export default {
   'marker.edit.message': 'Art oder Titel des Abschnitts ändern.',
   'marker.delete.title': 'Marke löschen',
   'marker.delete.message': 'Die Marke „{title}“ löschen? Die Einblendungen bleiben, wo sie sind. Mit Befehl/Strg+Z rückgängig machen.',
-  'cue.delete.title': 'Übertitel löschen',
-  'cue.delete.message': 'Übertitel {number} löschen? Mit Befehl/Strg+Z rückgängig machen.',
   'cue.split.cursor.title': 'Cursor setzen',
   'cue.split.cursor.message': 'Klicken Sie in den Text der Sprache, die geteilt werden soll, und setzen Sie den Cursor genau an die Trennstelle.',
   'cue.split.title': 'Übertitel teilen',
@@ -557,6 +556,4 @@ export default {
   'screens.secondLanguage.hint': 'Unter der ersten, kleiner, nach einem kurzen Strich. Nicht übersetzte Repliken zeigen nur die erste Sprache.',
   'screens.secondLanguage.needMore': 'Um zwei Sprachen zu projizieren, füge dem Projekt zuerst eine weitere Sprache hinzu.',
   'screens.field.secondSize': 'Größe der zweiten Sprache',
-  'cue.delete.dontAsk': 'Diese Warnung nicht mehr anzeigen',
-  'settings.confirmCueDelete': 'Vor dem Löschen einer Replik nachfragen',
 };

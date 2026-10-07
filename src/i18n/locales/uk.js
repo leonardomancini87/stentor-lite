@@ -223,6 +223,7 @@ export default {
   'toolbar.marker': 'Вставити мітку (дія, сцена…) перед реплікою',
   'toolbar.marker.aria': 'Вставити мітку перед вибраною реплікою',
   'toolbar.delete': 'Видалити',
+  'cue.deleted': 'Репліку {number} видалено',
   'toolbar.lock': 'Заблокувати редагування на час вистави',
   'toolbar.unlock': 'Розблокувати редагування',
   'toolbar.locked': 'Заблоковано',
@@ -260,8 +261,6 @@ export default {
   'marker.edit.message': 'Змініть тип або назву розділу.',
   'marker.delete.title': 'Видалити мітку',
   'marker.delete.message': 'Видалити мітку «{title}»? Репліки залишаться на своїх місцях. Скасувати можна сполученням Command/Ctrl+Z.',
-  'cue.delete.title': 'Видалити супертитр',
-  'cue.delete.message': 'Видалити супертитр {number}? Скасувати можна сполученням Command/Ctrl+Z.',
   'cue.split.cursor.title': 'Поставте курсор',
   'cue.split.cursor.message': 'Клацніть у тексті мови, яку треба розділити, і залиште курсор точно в місці поділу.',
   'cue.split.title': 'Розділити супертитр',
@@ -559,6 +558,4 @@ export default {
   'screens.secondLanguage.hint': 'Під першою, дрібніше, після короткого тире. Для неперекладених реплік показується лише перша мова.',
   'screens.secondLanguage.needMore': 'Щоб показувати дві мови, спершу додайте до проєкту ще одну мову.',
   'screens.field.secondSize': 'Розмір другої мови',
-  'cue.delete.dontAsk': 'Більше не показувати це попередження',
-  'settings.confirmCueDelete': 'Запитувати підтвердження перед видаленням репліки',
 };

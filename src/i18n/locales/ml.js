@@ -231,6 +231,7 @@ export default {
   'toolbar.marker': 'ക്യൂവിന് മുമ്പ് മാർക്കർ (അങ്കം, രംഗം…) ചേർക്കുക',
   'toolbar.marker.aria': 'തിരഞ്ഞെടുത്ത ക്യൂവിന് മുമ്പ് മാർക്കർ ചേർക്കുക',
   'toolbar.delete': 'ഇല്ലാതാക്കുക',
+  'cue.deleted': 'വരി {number} ഇല്ലാതാക്കി',
   'toolbar.lock': 'അവതരണത്തിനായി എഡിറ്റിംഗ് ലോക്ക് ചെയ്യുക',
   'toolbar.unlock': 'എഡിറ്റിംഗ് അൺലോക്ക് ചെയ്യുക',
   'toolbar.locked': 'ലോക്ക് ചെയ്തു',
@@ -268,8 +269,6 @@ export default {
   'marker.edit.message': 'ഭാഗത്തിന്റെ തരമോ പേരോ മാറ്റുക.',
   'marker.delete.title': 'മാർക്കർ ഇല്ലാതാക്കുക',
   'marker.delete.message': '“{title}” എന്ന മാർക്കർ ഇല്ലാതാക്കണോ? ക്യൂകൾ അതേ സ്ഥാനത്ത് നിലനിൽക്കും. Command/Ctrl+Z ഉപയോഗിച്ച് പഴയപടിയാക്കാം.',
-  'cue.delete.title': 'സർടൈറ്റിൽ ഇല്ലാതാക്കുക',
-  'cue.delete.message': 'സർടൈറ്റിൽ {number} ഇല്ലാതാക്കണോ? Command/Ctrl+Z ഉപയോഗിച്ച് പഴയപടിയാക്കാം.',
   'cue.split.cursor.title': 'കഴ്സർ വയ്ക്കുക',
   'cue.split.cursor.message': 'വിഭജിക്കേണ്ട ഭാഷയുടെ വാചകത്തിൽ ക്ലിക്ക് ചെയ്ത്, വിഭജനം വേണ്ട സ്ഥലത്ത് കൃത്യമായി കഴ്സർ വയ്ക്കുക.',
   'cue.split.title': 'സർടൈറ്റിൽ വിഭജിക്കുക',
@@ -571,6 +570,4 @@ export default {
   'screens.secondLanguage.hint': 'ആദ്യത്തേതിന് താഴെ, ചെറുതായി, ഒരു ചെറിയ വരയ്ക്ക് ശേഷം. വിവർത്തനം ചെയ്യാത്ത വരികളിൽ ആദ്യ ഭാഷ മാത്രം കാണിക്കും.',
   'screens.secondLanguage.needMore': 'രണ്ട് ഭാഷകൾ പ്രദർശിപ്പിക്കാൻ, ആദ്യം പ്രോജക്റ്റിൽ മറ്റൊരു ഭാഷ ചേർക്കുക.',
   'screens.field.secondSize': 'രണ്ടാം ഭാഷയുടെ വലുപ്പം',
-  'cue.delete.dontAsk': 'ഈ മുന്നറിയിപ്പ് ഇനി കാണിക്കരുത്',
-  'settings.confirmCueDelete': 'വരി ഇല്ലാതാക്കുന്നതിന് മുമ്പ് സ്ഥിരീകരണം ചോദിക്കുക',
 };

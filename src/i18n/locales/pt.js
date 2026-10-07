@@ -222,6 +222,7 @@ export default {
   'toolbar.marker': 'Inserir marcador (ato, cena…) antes da fala',
   'toolbar.marker.aria': 'Inserir marcador antes da fala selecionada',
   'toolbar.delete': 'Eliminar',
+  'cue.deleted': 'Fala {number} eliminada',
   'toolbar.lock': 'Bloquear a edição para o espetáculo',
   'toolbar.unlock': 'Desbloquear a edição',
   'toolbar.locked': 'Bloqueado',
@@ -259,8 +260,6 @@ export default {
   'marker.edit.message': 'Altere o tipo ou o título da secção.',
   'marker.delete.title': 'Eliminar marcador',
   'marker.delete.message': 'Eliminar o marcador «{title}»? As falas ficam onde estão. Pode anular com Comando/Ctrl+Z.',
-  'cue.delete.title': 'Eliminar legenda',
-  'cue.delete.message': 'Eliminar a legenda {number}? Pode anular com Comando/Ctrl+Z.',
   'cue.split.cursor.title': 'Coloque o cursor',
   'cue.split.cursor.message': 'Clique no texto da língua que quer dividir e deixe o cursor exatamente onde deve ficar o corte.',
   'cue.split.title': 'Dividir legenda',
@@ -557,6 +556,4 @@ export default {
   'screens.secondLanguage.hint': 'Por baixo da primeira, mais pequena, depois de um breve traço. As falas não traduzidas mostram só a primeira língua.',
   'screens.secondLanguage.needMore': 'Para projetar duas línguas, adicione primeiro outra língua ao projeto.',
   'screens.field.secondSize': 'Tamanho da segunda língua',
-  'cue.delete.dontAsk': 'Não voltar a mostrar este aviso',
-  'settings.confirmCueDelete': 'Pedir confirmação antes de eliminar uma fala',
 };

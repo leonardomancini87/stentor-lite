@@ -223,6 +223,7 @@ export default {
   'toolbar.marker': 'Wstaw znacznik (akt, scena…) przed kwestią',
   'toolbar.marker.aria': 'Wstaw znacznik przed zaznaczoną kwestią',
   'toolbar.delete': 'Usuń',
+  'cue.deleted': 'Usunięto kwestię {number}',
   'toolbar.lock': 'Zablokuj edycję na czas spektaklu',
   'toolbar.unlock': 'Odblokuj edycję',
   'toolbar.locked': 'Zablokowane',
@@ -260,8 +261,6 @@ export default {
   'marker.edit.message': 'Zmień typ lub tytuł sekcji.',
   'marker.delete.title': 'Usuń znacznik',
   'marker.delete.message': 'Usunąć znacznik „{title}”? Kwestie pozostaną na swoich miejscach. Możesz cofnąć za pomocą Command/Ctrl+Z.',
-  'cue.delete.title': 'Usuń napis',
-  'cue.delete.message': 'Usunąć napis {number}? Możesz cofnąć za pomocą Command/Ctrl+Z.',
   'cue.split.cursor.title': 'Ustaw kursor',
   'cue.split.cursor.message': 'Kliknij w tekście w języku, który chcesz podzielić, i ustaw kursor dokładnie w miejscu podziału.',
   'cue.split.title': 'Podziel napis',
@@ -559,6 +558,4 @@ export default {
   'screens.secondLanguage.hint': 'Pod pierwszym, mniejszy, po krótkiej kresce. Kwestie bez tłumaczenia pokazują tylko pierwszy język.',
   'screens.secondLanguage.needMore': 'Aby wyświetlać dwa języki, najpierw dodaj do projektu kolejny język.',
   'screens.field.secondSize': 'Rozmiar drugiego języka',
-  'cue.delete.dontAsk': 'Nie pokazuj więcej tego ostrzeżenia',
-  'settings.confirmCueDelete': 'Pytaj o potwierdzenie przed usunięciem kwestii',
 };

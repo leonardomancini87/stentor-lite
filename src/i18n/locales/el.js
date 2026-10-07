@@ -217,6 +217,7 @@ export default {
   'toolbar.marker': 'Εισαγωγή δείκτη (πράξη, σκηνή…) πριν από την ατάκα',
   'toolbar.marker.aria': 'Εισαγωγή δείκτη πριν από την επιλεγμένη ατάκα',
   'toolbar.delete': 'Διαγραφή',
+  'cue.deleted': 'Η ατάκα {number} διαγράφηκε',
   'toolbar.lock': 'Κλείδωμα επεξεργασίας για την παράσταση',
   'toolbar.unlock': 'Ξεκλείδωμα επεξεργασίας',
   'toolbar.locked': 'Κλειδωμένο',
@@ -254,8 +255,6 @@ export default {
   'marker.edit.message': 'Αλλάξτε τον τύπο ή τον τίτλο της ενότητας.',
   'marker.delete.title': 'Διαγραφή δείκτη',
   'marker.delete.message': 'Να διαγραφεί ο δείκτης «{title}»; Οι ατάκες μένουν στη θέση τους. Μπορείτε να κάνετε αναίρεση με Command/Ctrl+Z.',
-  'cue.delete.title': 'Διαγραφή υπέρτιτλου',
-  'cue.delete.message': 'Να διαγραφεί ο υπέρτιτλος {number}; Μπορείτε να κάνετε αναίρεση με Command/Ctrl+Z.',
   'cue.split.cursor.title': 'Τοποθετήστε τον δρομέα',
   'cue.split.cursor.message': 'Κάντε κλικ στο κείμενο της γλώσσας που θέλετε να διαιρέσετε και αφήστε τον δρομέα ακριβώς στο σημείο της διαίρεσης.',
   'cue.split.title': 'Διαίρεση υπέρτιτλου',
@@ -545,6 +544,4 @@ export default {
   'screens.secondLanguage.hint': 'Κάτω από την πρώτη, μικρότερη, μετά από μια σύντομη παύλα. Οι ατάκες χωρίς μετάφραση δείχνουν μόνο την πρώτη γλώσσα.',
   'screens.secondLanguage.needMore': 'Για να προβάλετε δύο γλώσσες, προσθέστε πρώτα μια άλλη γλώσσα στο έργο.',
   'screens.field.secondSize': 'Μέγεθος δεύτερης γλώσσας',
-  'cue.delete.dontAsk': 'Να μην εμφανιστεί ξανά αυτή η προειδοποίηση',
-  'settings.confirmCueDelete': 'Επιβεβαίωση πριν από τη διαγραφή μιας ατάκας',
 };
