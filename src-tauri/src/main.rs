@@ -50,17 +50,30 @@ fn is_stage_window_url(url: &tauri::Url) -> bool {
     from_app && url.path().ends_with("/public-stage.html")
 }
 
+// Schermo di proiezione → etichetta della finestra che lo mostra (solo dove le finestre le crea
+// l'app: vedi open_stage_window).
+static STAGE_WINDOWS: std::sync::Mutex<std::collections::BTreeMap<String, String>> =
+    std::sync::Mutex::new(std::collections::BTreeMap::new());
+
 // Risposta alla richiesta di aprire la finestra di proiezione.
 // Su macOS la finestra va creata qui, come vera finestra dell'app: quella "automatica" del
 // motore non sa caricare le pagine interne dell'app e fa chiudere il programma.
 #[cfg(target_os = "macos")]
 fn open_stage_window(
     app: &tauri::AppHandle,
+    url: &tauri::Url,
     features: tauri::webview::NewWindowFeatures,
 ) -> tauri::webview::NewWindowResponse<tauri::Wry> {
     use std::sync::atomic::{AtomicUsize, Ordering};
     static NEXT_STAGE_WINDOW: AtomicUsize = AtomicUsize::new(1);
     let label = format!("schermo-{}", NEXT_STAGE_WINDOW.fetch_add(1, Ordering::Relaxed));
+    // Si annota quale finestra mostra quale schermo (parametro "i" dell'indirizzo),
+    // per poterla riportare in primo piano: vedi stentor_focus_stage.
+    if let Some((_, screen_id)) = url.query_pairs().find(|(key, _)| key == "i") {
+        if let Ok(mut windows) = STAGE_WINDOWS.lock() {
+            windows.insert(screen_id.into_owned(), label.clone());
+        }
+    }
     let built = tauri::WebviewWindowBuilder::new(
         app,
         label,
@@ -82,6 +95,7 @@ fn open_stage_window(
 #[cfg(not(target_os = "macos"))]
 fn open_stage_window(
     _app: &tauri::AppHandle,
+    _url: &tauri::Url,
     _features: tauri::webview::NewWindowFeatures,
 ) -> tauri::webview::NewWindowResponse<tauri::Wry> {
     tauri::webview::NewWindowResponse::Allow
@@ -215,20 +229,16 @@ fn stentor_window_ready(app: tauri::AppHandle) {
 // Riguarda le finestre create da open_stage_window; altrove non trova nulla e non fa nulla.
 #[tauri::command]
 fn stentor_focus_stage(app: tauri::AppHandle, screen_id: String) {
-    for (label, window) in app.webview_windows() {
-        if !label.starts_with("schermo-") {
-            continue;
-        }
-        let same_screen = window
-            .url()
-            .map(|url| url.query_pairs().any(|(key, value)| key == "i" && value == screen_id.as_str()))
-            .unwrap_or(false);
-        if same_screen {
-            let _ = window.unminimize();
-            let _ = window.show();
-            let _ = window.set_focus();
-        }
-    }
+    let label = STAGE_WINDOWS
+        .lock()
+        .ok()
+        .and_then(|windows| windows.get(&screen_id).cloned());
+    let Some(window) = label.and_then(|label| app.get_webview_window(&label)) else {
+        return;
+    };
+    let _ = window.unminimize();
+    let _ = window.show();
+    let _ = window.set_focus();
 }
 
 fn main() {
@@ -255,7 +265,7 @@ fn main() {
                     if !is_stage_window_url(&url) {
                         return tauri::webview::NewWindowResponse::Deny;
                     }
-                    open_stage_window(&stage_app, features)
+                    open_stage_window(&stage_app, &url, features)
                 })
                 .build()?;
             if let Some(window) = app.get_webview_window("regia") {
