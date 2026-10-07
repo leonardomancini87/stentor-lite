@@ -3,6 +3,10 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
+## 0.10.1 — 7 ottobre 2026 · beta
+
+- Su Mac e Linux «Proiezione» apre davvero la finestra dello schermo: prima l'app installata rispondeva «Schermo di proiezione non aperto». Su Windows non cambia nulla.
+
 ## 0.10.0 — 7 ottobre 2026 · beta
 
 **Per la serata**

@@ -42,6 +42,14 @@ fn stentor_open_project_file() -> Result<Option<Value>, String> {
     })))
 }
 
+// Vero solo per l'indirizzo della finestra di proiezione (public/public-stage.html) servito
+// dall'app stessa: è l'unica finestra che la regia può aprire.
+fn is_stage_window_url(url: &tauri::Url) -> bool {
+    let from_app = url.scheme() == "tauri"
+        || matches!(url.host_str(), Some("localhost") | Some("tauri.localhost"));
+    from_app && url.path().ends_with("/public-stage.html")
+}
+
 // Apre il sito nel browser predefinito del sistema.
 fn open_website() {
     #[cfg(target_os = "macos")]
@@ -165,6 +173,26 @@ fn main() {
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
         .setup(|app| {
+            // La finestra di regia è creata qui e non da tauri.conf.json ("create": false) per
+            // poterle dare il permesso di aprire la finestra di proiezione: su macOS e Linux,
+            // senza questo permesso, la richiesta viene rifiutata e lo schermo non si apre.
+            let regia_config = app
+                .config()
+                .app
+                .windows
+                .iter()
+                .find(|window| window.label == "regia")
+                .cloned()
+                .ok_or("finestra di regia assente in tauri.conf.json")?;
+            tauri::WebviewWindowBuilder::from_config(app.handle(), &regia_config)?
+                .on_new_window(|url, _features| {
+                    if is_stage_window_url(&url) {
+                        tauri::webview::NewWindowResponse::Allow
+                    } else {
+                        tauri::webview::NewWindowResponse::Deny
+                    }
+                })
+                .build()?;
             if let Some(window) = app.get_webview_window("regia") {
                 let _ = window.set_title("Sténtor Lite");
                 // La finestra nasce nascosta ("visible": false in tauri.conf.json): le si dà
