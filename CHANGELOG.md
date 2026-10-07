@@ -3,6 +3,40 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
+## 0.10.0 — 7 ottobre 2026 · beta
+
+**Per la serata**
+- Blocco spettacolo: il lucchetto nella barra delle battute ferma ogni modifica al copione (testo, note, aggiunta, taglio, unione, eliminazione, lingue, pulizia, sostituzioni, Annulla e Ripeti). Mandare in onda, cambiare lingua, schermo vuoto e cartelli restano attivi. Il blocco resta dopo un riavvio.
+- Telecomandi da presentazione: «Avanti» e «Indietro» rispondono anche a Pag ↓ e Pag ↑, in regia e nella finestra di proiezione. Ogni azione può avere fino a tre tasti.
+- Cartelli: nuova card in Sopratitoli con testi pronti («Intervallo», il titolo…) da mandare su tutti gli schermi al posto della battuta. Un altro clic, «Avanti» o lo schermo vuoto li tolgono.
+- La regia riconosce uno schermo aperto anche dopo essere stata riavviata.
+- Corretto: un «Avanti» dato nei tre secondi dopo l'apertura di uno schermo veniva sovrascritto dalla battuta precedente.
+
+**Schermi**
+- Passaggio tra battute: per ogni schermo si sceglie tra nessun effetto, dissolvenza, dissolvenza con stacco e scorrimento, con durata rapida, media o lenta. Il valore iniziale è quello di sempre (stacco, rapida). L'anteprima mostra l'effetto, con il pulsante «Prova».
+- Schermata di prova: cornice, croce al centro, limiti del testo e una riga campione su tutti gli schermi, per allineare e mettere a fuoco il proiettore. Si spegne alla prima battuta.
+- Una riga lunga, con uno spostamento orizzontale impostato, non esce più dallo schermo: viene riavvicinata quanto basta.
+- «Centra» porta il testo al centro esatto dello schermo, anche in verticale; la posizione «Centro» è ora la metà esatta.
+- L'anteprima usa il carattere scelto per lo schermo (prima mostrava sempre quello dell'interfaccia).
+- Le tre card della pagina sono separate e alte uguali.
+
+**Battute**
+- A proiezione chiusa, un clic sul testo di una battuta lo modifica nel punto cliccato, senza mandarla in onda. Con uno schermo aperto il clic manda sempre in onda; il doppio clic resta valido.
+- Eliminando una battuta non compare più la finestra di conferma: per qualche secondo resta l'avviso «Battuta eliminata · Annulla». Tolta la voce corrispondente in Impostazioni.
+- «Prossima» ha lo stesso aspetto di «Attuale» ed è allineata a destra; resta visibile anche nelle finestre strette.
+
+**Strumenti**
+- Verifica: nuovo «Controllo larghezza sullo schermo», che segnala le righe che con carattere e larghezza di uno schermo verrebbero tagliate.
+- Nuova scheda «Trova»: cerca e sostituisci nel testo delle battute, nella lingua di lavoro.
+
+**Progetti**
+- «Stampa copione» nelle azioni del progetto: scarica un documento con numero, voce, testo e nota di ogni battuta, da aprire nel browser per stampare o salvare in PDF.
+
+**Interfaccia**
+- La freccia che riduce la colonna destra è in alto, in tutte le pagine; in Sopratitoli le card di destra partono alla stessa altezza di quelle di sinistra.
+- Modulo di feedback dall'aspetto più essenziale; la domanda aperta è ora «Raccontaci come lo usi».
+- Scelta della lingua dell'interfaccia in ordine alfabetico per sigla (AR, BG, CS…).
+
 ## 0.9.2 — 6 ottobre 2026 · beta
 
 **Schermi**
