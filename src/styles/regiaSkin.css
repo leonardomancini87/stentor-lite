@@ -2219,6 +2219,8 @@ html[data-app-theme] .appShell .litePageHeaderActions button.primaryDesktopActio
 html[data-app-theme] .appShell .litePageHeaderActions button.isPrimary:hover,
 html[data-app-theme] .appShell .litePageHeaderActions button.primaryDesktopAction:hover { background: var(--pk-accent-hover) !important; }
 html[data-app-theme] .appShell .litePageHeaderActions button.isActive { background: var(--pk-ink) !important; border-color: var(--pk-ink) !important; color: #fff !important; }
+/* Un pulsante acceso («Buio», «Schermata di prova») resta leggibile anche con il mouse sopra. */
+html[data-app-theme] .appShell .liteScreensWorkspace .litePageHeaderActions button.isActive:is(:hover, :focus, :active) { background: var(--pk-ink) !important; border-color: var(--pk-ink) !important; color: var(--pk-window) !important; }
 
 /* Stesso margine dal bordo in tutte le pagine. */
 html[data-app-theme] .appShell .liteRegiaWorkspace { padding: var(--lite-page-gutter) !important; }
