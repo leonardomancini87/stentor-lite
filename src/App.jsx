@@ -101,6 +101,7 @@ import useAppUpdates from './hooks/useAppUpdates.js';
 import { getWindowTitle } from './utils/windowTitle.js';
 import PageHeader from './components/PageHeader.jsx';
 import { isStorageQuotaError, shrinkCoverImage } from './utils/coverImage.js';
+import { buildMenuLabels } from './utils/nativeMenu.js';
 
 const RIGHT_SIDEBAR_STORAGE_KEY = 'stentor.rightSidebar.collapsed.v1';
 const SHOW_TIMER_STORAGE_KEY = 'stentor.showTimer.v1';
@@ -392,6 +393,11 @@ export default function App() {
       document.documentElement.dataset.appLanguage = appLanguage;
     }
   }, [appLanguage]);
+
+  // App desktop: anche il menu nativo segue la lingua dell'interfaccia.
+  useEffect(() => {
+    invokeTauriCommand('stentor_set_menu_labels', { labels: buildMenuLabels(ui) }).catch(() => {});
+  }, [ui]);
 
   useEffect(() => {
     saveAppTheme(appTheme);
