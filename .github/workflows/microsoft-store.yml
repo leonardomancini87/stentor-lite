@@ -53,7 +53,7 @@ jobs:
         shell: pwsh
         run: ./scripts/build-msix.ps1
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: stentor-lite-msix
           path: src-tauri/target/release/msix/*.msix
