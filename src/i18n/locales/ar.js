@@ -399,6 +399,7 @@ export default {
   'projects.dialog.image.title': 'لم تُستورد الصورة',
   'projects.dialog.image.message': 'تعذّرت قراءة هذه الصورة.',
   'projects.dialog.image.format': 'تنسيق الصورة غير مدعوم. استخدم JPG أو PNG أو WebP.',
+  'projects.dialog.image.storage': 'لا توجد مساحة كافية لحفظ الصورة. احذف المشاريع التي لم تعد تستخدمها وأعد المحاولة.',
   'projects.dialog.delete.title': 'حذف العرض',
   'projects.dialog.delete.message': 'هل تريد حذف «{title}» نهائيًا؟',
   'projects.dialog.thisShow': 'هذا العرض',

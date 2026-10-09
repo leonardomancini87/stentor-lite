@@ -380,6 +380,7 @@ export default {
   'projects.dialog.image.title': 'Imagem não importada',
   'projects.dialog.image.message': 'Não foi possível ler esta imagem.',
   'projects.dialog.image.format': 'Formato de imagem não suportado. Use JPG, PNG ou WebP.',
+  'projects.dialog.image.storage': 'Já não há espaço para guardar a imagem. Elimine os projetos que já não utiliza e tente novamente.',
   'projects.dialog.delete.title': 'Eliminar espetáculo',
   'projects.dialog.delete.message': 'Eliminar definitivamente «{title}»?',
   'projects.dialog.thisShow': 'este espetáculo',

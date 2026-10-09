@@ -372,6 +372,7 @@ export default {
   'projects.dialog.image.title': 'Görsel içe aktarılmadı',
   'projects.dialog.image.message': 'Bu görsel okunamadı.',
   'projects.dialog.image.format': 'Desteklenmeyen görsel biçimi. JPG, PNG veya WebP kullanın.',
+  'projects.dialog.image.storage': 'Görseli kaydetmek için yer kalmadı. Artık kullanmadığınız projeleri silip yeniden deneyin.',
   'projects.dialog.delete.title': 'Gösteriyi sil',
   'projects.dialog.delete.message': '“{title}” kalıcı olarak silinsin mi?',
   'projects.dialog.thisShow': 'bu gösteri',

@@ -372,6 +372,7 @@ export default {
   'projects.dialog.image.title': 'Η εικόνα δεν εισήχθη',
   'projects.dialog.image.message': 'Δεν ήταν δυνατή η ανάγνωση αυτής της εικόνας.',
   'projects.dialog.image.format': 'Μη έγκυρη μορφή εικόνας. Χρησιμοποιήστε JPG, PNG ή WebP.',
+  'projects.dialog.image.storage': 'Δεν υπάρχει πλέον χώρος για την αποθήκευση της εικόνας. Διαγράψτε έργα που δεν χρησιμοποιείτε πια και δοκιμάστε ξανά.',
   'projects.dialog.delete.title': 'Διαγραφή παράστασης',
   'projects.dialog.delete.message': 'Να διαγραφεί οριστικά το «{title}»;',
   'projects.dialog.thisShow': 'αυτή η παράσταση',

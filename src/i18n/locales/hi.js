@@ -391,6 +391,7 @@ export default {
   'projects.dialog.image.title': 'चित्र इम्पोर्ट नहीं हुआ',
   'projects.dialog.image.message': 'यह चित्र पढ़ा नहीं जा सका।',
   'projects.dialog.image.format': 'यह चित्र फ़ॉर्मेट समर्थित नहीं है। JPG, PNG या WebP का उपयोग करें।',
+  'projects.dialog.image.storage': 'चित्र सहेजने के लिए जगह नहीं बची है। जिन प्रोजेक्ट का अब उपयोग नहीं करते, उन्हें हटाएँ और फिर से प्रयास करें।',
   'projects.dialog.delete.title': 'शो हटाएँ',
   'projects.dialog.delete.message': '“{title}” को स्थायी रूप से हटाएँ?',
   'projects.dialog.thisShow': 'यह शो',

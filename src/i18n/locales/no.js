@@ -372,6 +372,7 @@ export default {
   'projects.dialog.image.title': 'Bildet ble ikke importert',
   'projects.dialog.image.message': 'Kan ikke lese dette bildet.',
   'projects.dialog.image.format': 'Ugyldig bildeformat. Bruk JPG, PNG eller WebP.',
+  'projects.dialog.image.storage': 'Det er ikke plass til å lagre bildet. Slett prosjekter du ikke lenger bruker, og prøv igjen.',
   'projects.dialog.delete.title': 'Slett forestilling',
   'projects.dialog.delete.message': 'Vil du slette «{title}» for godt?',
   'projects.dialog.thisShow': 'denne forestillingen',
