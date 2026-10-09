@@ -69,7 +69,7 @@ function ProjectCard({ project, isCurrent, selected, onSelect, onOpen, onOpenAct
             <MoreHorizontal size={18} />
           </button>
         </div>
-        <p>{companyName || t('projects.liveShow')}</p>
+        {companyName && <p>{companyName}</p>}
         {authorName && <small className="desktopProjectAuthor">{authorName}</small>}
         <small>{t('projects.modified', { date: formatUpdatedAt(updatedAt, language) })}</small>
         <div className="desktopProjectMetaLine">
@@ -94,7 +94,7 @@ function ProjectActionsModal({ project, currentProjectId, onClose, onDetails, ed
   if (!project) return null;
 
   const title = project.title || t('projects.untitled');
-  const companyName = String(project.company || project.companyName || project.collective || project.troupe || t('projects.liveShow')).trim();
+  const companyName = String(project.company || project.companyName || project.collective || project.troupe || '').trim();
   const authorName = getProjectAuthor(project);
   const cueCount = Array.isArray(project.cues) ? project.cues.filter((cue) => cue?.type !== 'marker').length : 0;
   const languageCount = Array.isArray(project.languages) ? project.languages.length : 1;
@@ -125,7 +125,7 @@ function ProjectActionsModal({ project, currentProjectId, onClose, onDetails, ed
           <div>
             <p className="projectActionsEyebrow">{t('projects.actions.eyebrow')}</p>
             <h2 id="project-actions-title">{title}</h2>
-            <p>{companyName}</p>
+            {companyName && <p>{companyName}</p>}
             {authorName && <p className="projectActionsAuthor">{authorName}</p>}
             <div className="projectActionsMeta">
               <span>{t('count.cues', { count: cueCount })}</span>
@@ -249,6 +249,7 @@ export default function DesktopDashboard({
     setViewMode('editor');
   }
 
+  const selectedCompany = String(selectedProject?.company || selectedProject?.companyName || '').trim();
   const languages = Array.isArray(selectedProject?.languages) && selectedProject.languages.length > 0
     ? selectedProject.languages.map((code) => getLanguageLabel(selectedProject, code)).join(', ')
     : '—';
@@ -346,7 +347,7 @@ export default function DesktopDashboard({
       <aside className="projectDetailsPanel projectDetailsPanelMinimal">
         <h2 data-right-toggle-anchor="">{t('projects.details.title')}</h2>
         <h3>{selectedProject?.title || t('projects.untitled')}</h3>
-        <p>{String(selectedProject?.company || selectedProject?.companyName || t('projects.liveShow'))}</p>
+        {selectedCompany && <p>{selectedCompany}</p>}
         <dl>
           <div><dt>{t('projects.details.lastModified')}</dt><dd>{formatUpdatedAt(selectedProject?.updatedAt || selectedProject?.savedAt, language)}</dd></div>
           <div><dt>{t('projects.details.cues')}</dt><dd>{Array.isArray(selectedProject?.cues) ? selectedProject.cues.filter((cue) => cue?.type !== 'marker').length : 0}</dd></div>
@@ -362,7 +363,6 @@ export default function DesktopDashboard({
             </dd>
           </div>
           <div><dt>{t('projects.details.author')}</dt><dd>{getProjectAuthor(selectedProject) || '—'}</dd></div>
-          <div><dt>{t('projects.details.version')}</dt><dd>{selectedProject?.version || '0.4.17'}</dd></div>
         </dl>
         <button type="button" className="primaryDesktopAction fullWidthAction" onClick={openSelectedProject}>
           <Play size={16} /> {t('projects.open')}
