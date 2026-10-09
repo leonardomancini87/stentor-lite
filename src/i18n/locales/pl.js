@@ -384,6 +384,7 @@ export default {
   'projects.dialog.image.title': 'Nie zaimportowano obrazu',
   'projects.dialog.image.message': 'Nie można odczytać tego obrazu.',
   'projects.dialog.image.format': 'Nieobsługiwany format obrazu. Użyj JPG, PNG lub WebP.',
+  'projects.dialog.image.storage': 'Brak miejsca na zapisanie obrazu. Usuń projekty, których już nie używasz, i spróbuj ponownie.',
   'projects.dialog.delete.title': 'Usuń spektakl',
   'projects.dialog.delete.message': 'Trwale usunąć „{title}”?',
   'projects.dialog.thisShow': 'ten spektakl',

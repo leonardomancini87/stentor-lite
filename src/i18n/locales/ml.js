@@ -392,6 +392,7 @@ export default {
   'projects.dialog.image.title': 'ചിത്രം ഇമ്പോർട്ട് ചെയ്തില്ല',
   'projects.dialog.image.message': 'ഈ ചിത്രം വായിക്കാൻ കഴിഞ്ഞില്ല.',
   'projects.dialog.image.format': 'ഈ ചിത്ര ഫോർമാറ്റ് പിന്തുണയ്ക്കുന്നില്ല. JPG, PNG അല്ലെങ്കിൽ WebP ഉപയോഗിക്കുക.',
+  'projects.dialog.image.storage': 'ചിത്രം സംരക്ഷിക്കാൻ ഇടമില്ല. ഇനി ഉപയോഗിക്കാത്ത പ്രോജക്റ്റുകൾ ഇല്ലാതാക്കി വീണ്ടും ശ്രമിക്കുക.',
   'projects.dialog.delete.title': 'ഷോ ഇല്ലാതാക്കുക',
   'projects.dialog.delete.message': '“{title}” സ്ഥിരമായി ഇല്ലാതാക്കണോ?',
   'projects.dialog.thisShow': 'ഈ ഷോ',

@@ -372,6 +372,7 @@ export default {
   'projects.dialog.image.title': 'Изображението не е импортирано',
   'projects.dialog.image.message': 'Това изображение не може да бъде прочетено.',
   'projects.dialog.image.format': 'Неподдържан формат на изображението. Използвайте JPG, PNG или WebP.',
+  'projects.dialog.image.storage': 'Няма достатъчно място за запазване на изображението. Изтрийте проектите, които вече не използвате, и опитайте отново.',
   'projects.dialog.delete.title': 'Изтриване на спектакъл',
   'projects.dialog.delete.message': 'Да се изтрие ли окончателно „{title}“?',
   'projects.dialog.thisShow': 'този спектакъл',

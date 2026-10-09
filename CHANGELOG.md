@@ -3,6 +3,11 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
+## 0.10.2 — 9 ottobre 2026 · beta
+
+- L'immagine di un progetto viene rimpicciolita prima di essere salvata (al massimo 640 pixel sul lato lungo): una foto grande non riempie più la memoria dell'app con l'errore «The quota has been exceeded».
+- Se la memoria è comunque piena, il messaggio spiega cosa fare.
+
 ## 0.10.1 — 7 ottobre 2026 · beta
 
 - Su Mac e Linux «Proiezione» apre davvero la finestra dello schermo: prima l'app installata rispondeva «Schermo di proiezione non aperto». Su Windows non cambia nulla.

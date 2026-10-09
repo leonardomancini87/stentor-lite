@@ -100,6 +100,7 @@ import { addCard, getCards, removeCard, updateCard } from './utils/showCards.js'
 import useAppUpdates from './hooks/useAppUpdates.js';
 import { getWindowTitle } from './utils/windowTitle.js';
 import PageHeader from './components/PageHeader.jsx';
+import { isStorageQuotaError, shrinkCoverImage } from './utils/coverImage.js';
 
 const RIGHT_SIDEBAR_STORAGE_KEY = 'stentor.rightSidebar.collapsed.v1';
 const SHOW_TIMER_STORAGE_KEY = 'stentor.showTimer.v1';
@@ -784,7 +785,8 @@ export default function App() {
           reject(new Error('Il file scelto non sembra essere un’immagine valida.'));
           return;
         }
-        resolve(result);
+        // Rimpicciolita prima di salvarla: per la scheda del progetto bastano pochi pixel.
+        shrinkCoverImage(result).then(resolve, () => resolve(result));
       };
       reader.onerror = () => reject(new Error(ui('projects.dialog.image.message')));
       reader.readAsDataURL(file);
@@ -813,7 +815,9 @@ export default function App() {
     } catch (error) {
       dialogs.alert({
         title: ui('projects.dialog.image.title'),
-        message: error?.message || ui('projects.dialog.image.message'),
+        message: isStorageQuotaError(error)
+          ? ui('projects.dialog.image.storage')
+          : (error?.message || ui('projects.dialog.image.message')),
       });
     }
   }

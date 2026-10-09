@@ -384,6 +384,7 @@ export default {
   'projects.dialog.image.title': 'Зображення не імпортовано',
   'projects.dialog.image.message': 'Не вдалося прочитати це зображення.',
   'projects.dialog.image.format': 'Непідтримуваний формат зображення. Використовуйте JPG, PNG або WebP.',
+  'projects.dialog.image.storage': 'Недостатньо місця для збереження зображення. Видаліть проєкти, якими більше не користуєтеся, і спробуйте ще раз.',
   'projects.dialog.delete.title': 'Видалити виставу',
   'projects.dialog.delete.message': 'Остаточно видалити «{title}»?',
   'projects.dialog.thisShow': 'цю виставу',

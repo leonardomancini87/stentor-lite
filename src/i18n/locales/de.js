@@ -380,6 +380,7 @@ export default {
   'projects.dialog.image.title': 'Bild nicht importiert',
   'projects.dialog.image.message': 'Dieses Bild konnte nicht gelesen werden.',
   'projects.dialog.image.format': 'Bildformat nicht unterstützt. Verwenden Sie JPG, PNG oder WebP.',
+  'projects.dialog.image.storage': 'Es ist kein Platz mehr, um das Bild zu speichern. Löschen Sie Projekte, die Sie nicht mehr verwenden, und versuchen Sie es erneut.',
   'projects.dialog.delete.title': 'Vorstellung löschen',
   'projects.dialog.delete.message': '„{title}“ endgültig löschen?',
   'projects.dialog.thisShow': 'diese Vorstellung',

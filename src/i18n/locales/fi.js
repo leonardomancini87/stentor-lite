@@ -372,6 +372,7 @@ export default {
   'projects.dialog.image.title': 'Kuvaa ei tuotu',
   'projects.dialog.image.message': 'Tätä kuvaa ei voitu lukea.',
   'projects.dialog.image.format': 'Kuvamuotoa ei tueta. Käytä JPG-, PNG- tai WebP-muotoa.',
+  'projects.dialog.image.storage': 'Kuvan tallentamiseen ei ole enää tilaa. Poista projektit, joita et enää käytä, ja yritä uudelleen.',
   'projects.dialog.delete.title': 'Poista esitys',
   'projects.dialog.delete.message': 'Poistetaanko ”{title}” pysyvästi?',
   'projects.dialog.thisShow': 'tämä esitys',
