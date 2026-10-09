@@ -1,0 +1,60 @@
+# Prepara il pacchetto MSIX di Sténtor Lite per il Microsoft Store.
+#
+# Come si usa: Actions → "Pacchetto Microsoft Store" → Run workflow (sceglie il ramo o il tag
+# della versione da pubblicare). Alla fine, in fondo alla pagina dell'esecuzione, sotto
+# "Artifacts", c'è il file .msix da caricare in Partner Center (Sténtor Lite → Packages).
+#
+# Non tocca le Release di GitHub. Il pacchetto non è firmato: lo firma Microsoft quando lo
+# si carica. Nella copia installata dallo Store il riquadro Aggiornamenti non compare,
+# perché gli aggiornamenti li fa Windows (vedi docs/microsoft-store.md).
+
+name: Pacchetto Microsoft Store
+
+on:
+  workflow_dispatch:
+  # Durante la messa a punto: si avvia da solo a ogni modifica del ramo "microsoft-store".
+  push:
+    branches:
+      - microsoft-store
+
+permissions:
+  contents: read
+
+jobs:
+  msix:
+    name: MSIX (Windows x64)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Installa le dipendenze
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      # Solo il programma, senza installatori: qui non servono né la chiave degli aggiornamenti
+      # né altre firme.
+      - name: Compila l'app
+        run: npx tauri build --no-bundle
+
+      - name: Costruisci il pacchetto MSIX
+        shell: pwsh
+        run: ./scripts/build-msix.ps1
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: stentor-lite-msix
+          path: src-tauri/target/release/msix/*.msix
+          if-no-files-found: error

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Manifesto del pacchetto MSIX di Sténtor Lite per il Microsoft Store.
+  I tre valori di identità (Name, Publisher, PublisherDisplayName) sono quelli assegnati da
+  Partner Center (Product management → Product identity): non vanno cambiati.
+  __VERSION__ viene sostituito da scripts/build-msix.ps1 con la versione di tauri.conf.json.
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap">
+  <Identity
+    Name="LeonardoMancini.StntorLite"
+    Publisher="CN=9E356F64-9464-4172-8829-963E0A608DEC"
+    Version="__VERSION__.0"
+    ProcessorArchitecture="x64" />
+  <Properties>
+    <DisplayName>Sténtor Lite</DisplayName>
+    <PublisherDisplayName>Leonardo Mancini</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="en" />
+    <Resource Language="it" />
+    <Resource Language="fr" />
+    <Resource Language="es" />
+    <Resource Language="de" />
+    <Resource Language="pt-PT" />
+    <Resource Language="ar" />
+    <Resource Language="bg" />
+    <Resource Language="cs" />
+    <Resource Language="da" />
+    <Resource Language="el" />
+    <Resource Language="fi" />
+    <Resource Language="hi" />
+    <Resource Language="hr" />
+    <Resource Language="ml" />
+    <Resource Language="nb" />
+    <Resource Language="pl" />
+    <Resource Language="ru" />
+    <Resource Language="sk" />
+    <Resource Language="sr-Cyrl" />
+    <Resource Language="sv" />
+    <Resource Language="tr" />
+    <Resource Language="uk" />
+    <Resource Language="zh-Hans" />
+    <Resource Language="zh-Hant" />
+  </Resources>
+  <Applications>
+    <Application Id="StentorLite" Executable="stentor.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="Sténtor Lite"
+        Description="Sténtor Lite prepara, modifica e proietta sopratitoli per spettacoli dal vivo."
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png" />
+    </Application>
+  </Applications>
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

@@ -257,6 +257,23 @@ fn stentor_window_ready(app: tauri::AppHandle) {
     show_main_window(&app);
 }
 
+// Vero se l'app è installata dal Microsoft Store (pacchetto MSIX): Windows mette i pacchetti
+// in "Program Files\\WindowsApps". In quel caso gli aggiornamenti li fa lo Store e l'app non
+// deve cercarli né installarli da sola (vedi src/hooks/useAppUpdates.js).
+#[tauri::command]
+fn stentor_is_store_package() -> bool {
+    #[cfg(target_os = "windows")]
+    {
+        std::env::current_exe()
+            .map(|path| path.to_string_lossy().to_lowercase().contains("\\windowsapps\\"))
+            .unwrap_or(false)
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        false
+    }
+}
+
 // Porta in primo piano la finestra di proiezione di uno schermo (secondo clic su «Proiezione»).
 // Riguarda le finestre create da open_stage_window; altrove non trova nulla e non fa nulla.
 #[tauri::command]
@@ -355,7 +372,7 @@ fn main() {
                 _ => emit_menu_action(app, &id),
             }
         })
-        .invoke_handler(tauri::generate_handler![stentor_save_project_file, stentor_open_project_file, stentor_window_ready, stentor_focus_stage, stentor_set_menu_labels])
+        .invoke_handler(tauri::generate_handler![stentor_save_project_file, stentor_open_project_file, stentor_window_ready, stentor_focus_stage, stentor_is_store_package, stentor_set_menu_labels])
         .run(tauri::generate_context!())
         .expect("error while running Sténtor Lite");
 }
