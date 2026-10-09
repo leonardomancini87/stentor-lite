@@ -372,6 +372,7 @@ export default {
   'projects.dialog.image.title': 'Bilden importerades inte',
   'projects.dialog.image.message': 'Bilden kunde inte läsas.',
   'projects.dialog.image.format': 'Bildformatet stöds inte. Använd JPG, PNG eller WebP.',
+  'projects.dialog.image.storage': 'Det finns inte plats att spara bilden. Ta bort projekt som du inte längre använder och försök igen.',
   'projects.dialog.delete.title': 'Radera föreställning',
   'projects.dialog.delete.message': 'Vill du radera ”{title}” permanent?',
   'projects.dialog.thisShow': 'den här föreställningen',

@@ -380,6 +380,7 @@ export default {
   'projects.dialog.image.title': '圖片未匯入',
   'projects.dialog.image.message': '無法讀取此圖片。',
   'projects.dialog.image.format': '不支援此圖片格式。請使用 JPG、PNG 或 WebP。',
+  'projects.dialog.image.storage': '沒有足夠的空間儲存圖片。請刪除不再使用的專案後再試一次。',
   'projects.dialog.delete.title': '刪除演出',
   'projects.dialog.delete.message': '要永久刪除「{title}」嗎？',
   'projects.dialog.thisShow': '此演出',

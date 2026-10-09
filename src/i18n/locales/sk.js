@@ -384,6 +384,7 @@ export default {
   'projects.dialog.image.title': 'Obrázok sa neimportoval',
   'projects.dialog.image.message': 'Tento obrázok sa nepodarilo načítať.',
   'projects.dialog.image.format': 'Nepodporovaný formát obrázka. Použite JPG, PNG alebo WebP.',
+  'projects.dialog.image.storage': 'Na uloženie obrázka už nie je miesto. Odstráňte projekty, ktoré už nepoužívate, a skúste to znova.',
   'projects.dialog.delete.title': 'Odstrániť inscenáciu',
   'projects.dialog.delete.message': 'Chcete natrvalo odstrániť „{title}“?',
   'projects.dialog.thisShow': 'túto inscenáciu',

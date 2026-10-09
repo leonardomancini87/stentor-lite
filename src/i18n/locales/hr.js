@@ -378,6 +378,7 @@ export default {
   'projects.dialog.image.title': 'Slika nije uvezena',
   'projects.dialog.image.message': 'Ovu sliku nije moguće pročitati.',
   'projects.dialog.image.format': 'Nevaljan format slike. Upotrijebite JPG, PNG ili WebP.',
+  'projects.dialog.image.storage': 'Nema više mjesta za spremanje slike. Izbrišite projekte koje više ne koristite i pokušajte ponovno.',
   'projects.dialog.delete.title': 'Izbriši predstavu',
   'projects.dialog.delete.message': 'Želite li trajno izbrisati „{title}“?',
   'projects.dialog.thisShow': 'ovu predstavu',
