@@ -3,6 +3,11 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
+## 0.10.4 — 9 ottobre 2026 · beta
+
+- Progetti: sotto il titolo compare la compagnia solo se è indicata (prima, in sua assenza, la scritta generica «Spettacolo dal vivo»).
+- Tolta la voce «Versione del progetto» dai dettagli, che mostrava un numero senza significato.
+
 ## 0.10.3 — 9 ottobre 2026 · beta
 
 - Il menu dell'app (File, Modifica, Vista, Finestra, Aiuto e il menu Sténtor Lite) segue la lingua dell'interfaccia; prima restava sempre in italiano.
