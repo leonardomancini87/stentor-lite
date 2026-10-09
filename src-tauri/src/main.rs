@@ -137,11 +137,11 @@ fn build_macos_menu(app: &tauri::App) -> tauri::Result<Menu<tauri::Wry>> {
         &MenuItem::with_id(app, "app.quit", "Esci da Sténtor Lite", true, Some("CmdOrCtrl+Q"))?,
     ])?;
 
-    let file_menu = Submenu::with_items(app, "File", true, &[
+    let file_menu = Submenu::with_id_and_items(app, "menu.file", "File", true, &[
         &MenuItem::with_id(app, "window.close", "Chiudi finestra", true, Some("CmdOrCtrl+W"))?,
     ])?;
 
-    let edit_menu = Submenu::with_items(app, "Modifica", true, &[
+    let edit_menu = Submenu::with_id_and_items(app, "menu.edit", "Modifica", true, &[
         &MenuItem::with_id(app, "edit.undo", "Annulla", true, Some("CmdOrCtrl+Z"))?,
         &MenuItem::with_id(app, "edit.redo", "Ripeti", true, Some("CmdOrCtrl+Shift+Z"))?,
         &PredefinedMenuItem::separator(app)?,
@@ -151,16 +151,16 @@ fn build_macos_menu(app: &tauri::App) -> tauri::Result<Menu<tauri::Wry>> {
         &MenuItem::with_id(app, "edit.selectAll", "Seleziona tutto", true, Some("CmdOrCtrl+A"))?,
     ])?;
 
-    let view_menu = Submenu::with_items(app, "Vista", true, &[
+    let view_menu = Submenu::with_id_and_items(app, "menu.view", "Vista", true, &[
         &MenuItem::with_id(app, "view.fullscreen", "Schermo intero", true, Some("CmdOrCtrl+Shift+F"))?,
     ])?;
 
-    let window_menu = Submenu::with_items(app, "Finestra", true, &[
+    let window_menu = Submenu::with_id_and_items(app, "menu.window", "Finestra", true, &[
         &MenuItem::with_id(app, "window.minimize", "Riduci a icona", true, Some("CmdOrCtrl+M"))?,
         &MenuItem::with_id(app, "window.zoom", "Zoom", true, None::<&str>)?,
     ])?;
 
-    let help_menu = Submenu::with_items(app, "Aiuto", true, &[
+    let help_menu = Submenu::with_id_and_items(app, "menu.help", "Aiuto", true, &[
         &MenuItem::with_id(app, "help.shortcuts", "Scorciatoie da tastiera", true, None::<&str>)?,
         &MenuItem::with_id(app, "help.website", "Sito Sténtor", true, None::<&str>)?,
         &MenuItem::with_id(app, "help.feedback", "Segnala un problema", true, None::<&str>)?,
@@ -175,6 +175,38 @@ fn build_macos_menu(app: &tauri::App) -> tauri::Result<Menu<tauri::Wry>> {
         &help_menu,
     ])
 }
+// Nomi del menu nella lingua dell'interfaccia: l'app li manda all'avvio e a ogni cambio di lingua
+// (id della voce → testo). Il menu nasce in italiano (build_macos_menu); le voci senza testo
+// restano come sono.
+#[tauri::command]
+async fn stentor_set_menu_labels(app: tauri::AppHandle, labels: std::collections::HashMap<String, String>) {
+    fn relabel(items: Vec<tauri::menu::MenuItemKind<tauri::Wry>>, labels: &std::collections::HashMap<String, String>) {
+        for item in items {
+            match item {
+                tauri::menu::MenuItemKind::Submenu(submenu) => {
+                    if let Some(text) = labels.get(submenu.id().as_ref()) {
+                        let _ = submenu.set_text(text);
+                    }
+                    if let Ok(children) = submenu.items() {
+                        relabel(children, labels);
+                    }
+                }
+                tauri::menu::MenuItemKind::MenuItem(entry) => {
+                    if let Some(text) = labels.get(entry.id().as_ref()) {
+                        let _ = entry.set_text(text);
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+    if let Some(menu) = app.menu() {
+        if let Ok(items) = menu.items() {
+            relabel(items, &labels);
+        }
+    }
+}
+
 fn emit_menu_action(app: &tauri::AppHandle, id: &str) {
     let _ = app.emit("stentor-menu-action", json!({ "id": id }));
 }
@@ -340,7 +372,7 @@ fn main() {
                 _ => emit_menu_action(app, &id),
             }
         })
-        .invoke_handler(tauri::generate_handler![stentor_save_project_file, stentor_open_project_file, stentor_window_ready, stentor_focus_stage, stentor_is_store_package])
+        .invoke_handler(tauri::generate_handler![stentor_save_project_file, stentor_open_project_file, stentor_window_ready, stentor_focus_stage, stentor_is_store_package, stentor_set_menu_labels])
         .run(tauri::generate_context!())
         .expect("error while running Sténtor Lite");
 }

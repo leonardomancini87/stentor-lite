@@ -10,6 +10,7 @@ import projects from './projects.js';
 import screens from './screens.js';
 import settings from './settings.js';
 import feedback from './feedback.js';
+import menu from './menu.js';
 // Lingue aggiunte dopo italiano e inglese: un file unico per lingua, più comodo da far rivedere.
 import ml from './ml.js';
 import hi from './hi.js';
@@ -36,7 +37,7 @@ import el from './el.js';
 import tr from './tr.js';
 
 // Ogni file raccoglie un'area dell'interfaccia con le lingue affiancate.
-export const AREAS = { common, map, time, tools, shortcuts, cues, languages, sidebar, projects, screens, settings, feedback };
+export const AREAS = { common, map, time, tools, shortcuts, cues, languages, sidebar, projects, screens, settings, feedback, menu };
 
 export const LANGUAGE_FILES = { fr, de, es, pt, zh, 'zh-Hant': zhHant, ar, hi, ml, sv, da, no, fi, pl, cs, ru, uk, sk, hr, sr, bg, el, tr };
 

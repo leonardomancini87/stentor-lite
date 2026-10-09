@@ -3,6 +3,10 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
+## 0.10.3 — 9 ottobre 2026 · beta
+
+- Il menu dell'app (File, Modifica, Vista, Finestra, Aiuto e il menu Sténtor Lite) segue la lingua dell'interfaccia; prima restava sempre in italiano.
+
 ## 0.10.2 — 9 ottobre 2026 · beta
 
 - L'immagine di un progetto viene rimpicciolita prima di essere salvata (al massimo 640 pixel sul lato lungo): una foto grande non riempie più la memoria dell'app con l'errore «The quota has been exceeded».
