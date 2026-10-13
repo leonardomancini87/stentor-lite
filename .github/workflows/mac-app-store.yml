@@ -32,16 +32,22 @@ on:
         description: 'Carica su App Store Connect (altrimenti solo il .pkg negli Artifacts)'
         type: boolean
         default: true
+  # Durante la messa a punto: a ogni modifica di questo ramo, solo verifica della compilazione.
+  push:
+    branches:
+      - claude/mac-app-store
 
 jobs:
   build:
     name: Mac App Store
     runs-on: macos-latest
+    env:
+      VERIFICA: ${{ github.event_name == 'push' || inputs.solo_verifica }}
     steps:
       - uses: actions/checkout@v5
 
       - name: Segreti presenti
-        if: ${{ !inputs.solo_verifica }}
+        if: env.VERIFICA != 'true'
         env:
           MAS_CERTIFICATES: ${{ secrets.MAS_CERTIFICATES }}
           MAS_CERTIFICATES_PASSWORD: ${{ secrets.MAS_CERTIFICATES_PASSWORD }}
@@ -86,7 +92,7 @@ jobs:
 
       # Portachiavi temporaneo con i due certificati: uno firma l'app, l'altro il .pkg.
       - name: Certificati e profilo
-        if: ${{ !inputs.solo_verifica }}
+        if: env.VERIFICA != 'true'
         env:
           MAS_CERTIFICATES: ${{ secrets.MAS_CERTIFICATES }}
           MAS_CERTIFICATES_PASSWORD: ${{ secrets.MAS_CERTIFICATES_PASSWORD }}
@@ -124,14 +130,14 @@ jobs:
           sed -i '' -e "s/__TEAM_ID__/$APPLE_TEAM_ID/g" -e "s/__BUNDLE_ID__/$bundle_id/g" src-tauri/macos/AppStore.entitlements
 
       - name: Compila
-        if: ${{ !inputs.solo_verifica }}
+        if: env.VERIFICA != 'true'
         run: |
           npx tauri build --bundles app --target universal-apple-darwin --features app-store \
             --config src-tauri/tauri.appstore.conf.json \
             --config '{"bundle":{"macOS":{"bundleVersion":"${{ github.run_number }}"}}}'
 
       - name: Pacchetto .pkg firmato
-        if: ${{ !inputs.solo_verifica }}
+        if: env.VERIFICA != 'true'
         run: |
           version=$(node -p "require('./src-tauri/tauri.conf.json').version")
           app=$(ls -d src-tauri/target/universal-apple-darwin/release/bundle/macos/*.app | head -1)
@@ -141,20 +147,20 @@ jobs:
           echo "PKG=$pkg" >> "$GITHUB_ENV"
 
       - name: Verifica compilazione (senza firma)
-        if: inputs.solo_verifica
+        if: env.VERIFICA == 'true'
         run: |
           npm run build:desktop
           cd src-tauri && cargo build --release --features app-store --target aarch64-apple-darwin
 
       - uses: actions/upload-artifact@v5
-        if: ${{ !inputs.solo_verifica }}
+        if: env.VERIFICA != 'true'
         with:
           name: mac-app-store-pkg
           path: ${{ env.PKG }}
           retention-days: 90
 
       - name: Carica su App Store Connect
-        if: ${{ inputs.upload && !inputs.solo_verifica }}
+        if: env.VERIFICA != 'true' && inputs.upload
         env:
           APP_STORE_API_KEY_ID: ${{ secrets.APP_STORE_API_KEY_ID }}
           APP_STORE_API_ISSUER_ID: ${{ secrets.APP_STORE_API_ISSUER_ID }}
@@ -167,5 +173,5 @@ jobs:
           echo "::notice::Caricato. Tra poco la build compare in App Store Connect → TestFlight."
 
       - name: Pulizia del portachiavi
-        if: ${{ always() && !inputs.solo_verifica }}
+        if: always() && env.VERIFICA != 'true'
         run: security delete-keychain "$RUNNER_TEMP/mas.keychain-db" 2>/dev/null || true
