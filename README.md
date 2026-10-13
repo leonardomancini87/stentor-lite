@@ -47,7 +47,7 @@ Sténtor Lite è un programma gratuito e open source per gestire i sopratitoli d
 Le versioni per Mac (Apple Silicon e Intel) e Windows sono nella pagina [**Releases**](../../releases) di questo repository.
 
 - **Mac**: scarica il file `.dmg` (`aarch64` per i Mac con chip Apple, `x64` per i Mac Intel), aprilo e trascina Sténtor Lite in Applicazioni. L'app è firmata e verificata da Apple (notarizzata): al primo avvio macOS chiede solo di confermare che vuoi aprire un'app scaricata da internet.
-- **Windows**: l'app non è ancora firmata da Microsoft. Se compare «Windows ha protetto il PC», scegli **Ulteriori informazioni → Esegui comunque**.
+- **Windows**: installa Sténtor Lite da [**Microsoft Store**](https://apps.microsoft.com/detail/9p3rvn3p8q8r), oppure scarica il file `.exe` dalla pagina Releases. Il file `.exe` non è ancora firmato da Microsoft: se compare «Windows ha protetto il PC», scegli **Ulteriori informazioni → Esegui comunque**.
 
 Dalla versione 0.9.0 non serve riscaricare l'app a ogni versione: **Impostazioni → Aggiornamenti → Verifica aggiornamenti** scarica e installa la nuova versione, e progetti e impostazioni restano al loro posto. Come funziona e come si pubblica un aggiornamento: [`docs/aggiornamenti.md`](docs/aggiornamenti.md).
 
@@ -144,7 +144,7 @@ Sténtor Lite is a free, open-source application for managing surtitles in live 
 Mac (Apple Silicon and Intel) and Windows builds are on this repository's [**Releases**](../../releases) page.
 
 - **Mac**: download the `.dmg` file (`aarch64` for Apple-chip Macs, `x64` for Intel Macs), open it and drag Sténtor Lite to Applications. The app is signed and checked by Apple (notarised): on first launch macOS only asks you to confirm that you want to open an app downloaded from the internet.
-- **Windows**: the app is not yet signed by Microsoft. If "Windows protected your PC" appears, choose **More info → Run anyway**.
+- **Windows**: install Sténtor Lite from the [**Microsoft Store**](https://apps.microsoft.com/detail/9p3rvn3p8q8r), or download the `.exe` file from the Releases page. The `.exe` file is not yet signed by Microsoft: if "Windows protected your PC" appears, choose **More info → Run anyway**.
 
 From version 0.9.0 there is no need to download the app again for each release: **Settings → Updates → Check for updates** downloads and installs the new version, keeping your projects and settings. How it works and how to publish an update (in Italian): [`docs/aggiornamenti.md`](docs/aggiornamenti.md).
 
