@@ -143,7 +143,14 @@ jobs:
           app=$(ls -d src-tauri/target/universal-apple-darwin/release/bundle/macos/*.app | head -1)
           codesign -d --entitlements - "$app"
           pkg="$RUNNER_TEMP/Stentor.Lite_${version}_${{ github.run_number }}_universal.pkg"
-          xcrun productbuild --sign "$INSTALLER_IDENTITY" --component "$app" /Applications "$pkg"
+          # «é» nel nome dell'app: Tauri lo scrive come un solo carattere (NFC), gli strumenti Apple
+          # che controllano il pacchetto si aspettano «e» + accento (NFD) e non trovano più i file
+          # (PKPackageCheckErrorPayloadMissingBomFile). Si copia l'app con il nome in forma NFD.
+          staging="$RUNNER_TEMP/staging"
+          mkdir -p "$staging"
+          nfd_name=$(python3 -c "import sys, unicodedata, os; print(unicodedata.normalize('NFD', os.path.basename(sys.argv[1])))" "$app")
+          ditto "$app" "$staging/$nfd_name"
+          xcrun productbuild --sign "$INSTALLER_IDENTITY" --component "$staging/$nfd_name" /Applications "$pkg"
           echo "PKG=$pkg" >> "$GITHUB_ENV"
 
       - name: Verifica compilazione (senza firma)
@@ -168,8 +175,19 @@ jobs:
         run: |
           mkdir -p ~/private_keys
           echo "$APP_STORE_API_KEY" > ~/private_keys/AuthKey_${APP_STORE_API_KEY_ID}.p8
+          # L'esito va anche nelle annotazioni dell'esecuzione: si leggono senza aprire il registro.
+          set +e
           xcrun altool --upload-app --type macos --file "$PKG" \
-            --apiKey "$APP_STORE_API_KEY_ID" --apiIssuer "$APP_STORE_API_ISSUER_ID"
+            --apiKey "$APP_STORE_API_KEY_ID" --apiIssuer "$APP_STORE_API_ISSUER_ID" \
+            --output-format normal > "$RUNNER_TEMP/altool.txt" 2>&1
+          status=$?
+          set -e
+          cat "$RUNNER_TEMP/altool.txt"
+          if [ $status -ne 0 ]; then
+            summary=$(tail -n 60 "$RUNNER_TEMP/altool.txt" | sed -e 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+            echo "::error title=Caricamento non riuscito::$summary"
+            exit $status
+          fi
           echo "::notice::Caricato. Tra poco la build compare in App Store Connect → TestFlight."
 
       - name: Pulizia del portachiavi
