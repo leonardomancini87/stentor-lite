@@ -5,7 +5,7 @@
   Il Mac App Store accetta solo app nella «sandbox» di macOS: l'app vede i propri dati e,
   in più, solo quello che qui è dichiarato.
   __TEAM_ID__ e __BUNDLE_ID__ li sostituisce il workflow «Pacchetto Mac App Store»
-  (segreto APPLE_TEAM_ID e identifier di tauri.conf.json).
+  (segreto APPLE_TEAM_ID e identifier di tauri.appstore.conf.json).
 -->
 <plist version="1.0">
 <dict>
