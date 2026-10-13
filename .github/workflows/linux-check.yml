@@ -42,14 +42,16 @@ jobs:
       - name: Controlla il pacchetto
         run: |
           deb=$(ls src-tauri/target/release/bundle/deb/*.deb | head -1)
+          dir="$RUNNER_TEMP/deb"
+          dpkg-deb -x "$deb" "$dir"
           info=$(dpkg-deb -f "$deb" Package Version Architecture)
-          desktop=$(dpkg-deb --fsys-tarfile "$deb" | tar -xO --wildcards './usr/share/applications/*.desktop')
-          files=$(dpkg-deb -c "$deb" | awk '{print $6}' | grep -E 'usr/bin|applications|icons/hicolor/128' )
+          desktop=$(cat "$dir"/usr/share/applications/*.desktop)
+          files=$(cd "$dir" && find usr/bin usr/share/applications -type f)
           msg=$(printf '%s\n\n%s\n\n%s' "$info" "$desktop" "$files" | sed -e 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
           echo "::notice title=Pacchetto .deb::$msg"
-          ls -la src-tauri/target/release/bundle/deb src-tauri/target/release/bundle/rpm
 
       - uses: actions/upload-artifact@v5
+        if: always()
         with:
           name: linux-pacchetti
           path: |
