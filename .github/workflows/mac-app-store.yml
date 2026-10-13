@@ -126,7 +126,7 @@ jobs:
           echo "INSTALLER_IDENTITY=$installer_identity" >> "$GITHUB_ENV"
 
           echo "$MAS_PROVISION_PROFILE" | base64 --decode > src-tauri/macos/embedded.provisionprofile
-          bundle_id=$(node -p "require('./src-tauri/tauri.conf.json').identifier")
+          bundle_id=$(node -p "require('./src-tauri/tauri.appstore.conf.json').identifier || require('./src-tauri/tauri.conf.json').identifier")
           sed -i '' -e "s/__TEAM_ID__/$APPLE_TEAM_ID/g" -e "s/__BUNDLE_ID__/$bundle_id/g" src-tauri/macos/AppStore.entitlements
 
       - name: Compila

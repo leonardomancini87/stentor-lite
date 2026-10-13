@@ -26,8 +26,13 @@ Tutto con l'account Apple Developer già usato per firmare e notarizzare il `.dm
    selezionare entrambi (con la loro chiave) → tasto destro → Esporta 2 elementi → formato `.p12`,
    con una password.
 3. **Identificativo dell'app** — Identifiers → «+» → App IDs → App, piattaforma macOS,
-   Bundle ID **esplicito** uguale a `identifier` di `src-tauri/tauri.conf.json`.
+   Bundle ID **esplicito** `live.stentor.lite` (`identifier` di `src-tauri/tauri.appstore.conf.json`).
    Nessuna capability da attivare.
+
+   Il Bundle ID della copia App Store è diverso da quello del `.dmg` (`it.tantanteatro.stentor`):
+   viene dal dominio del sito, è legato a Lite (Sténtor Pro potrà usare `live.stentor.pro`) e non
+   tocca il `.dmg`, i cui progetti salvati restano dove sono. Le due copie sono comunque separate:
+   quella dell'App Store tiene i dati nella propria sandbox.
 4. **Profilo** — Profiles → «+» → Distribution → **Mac App Store Connect** → l'App ID del punto 3 →
    il certificato Apple Distribution → scaricare il file `.provisionprofile`.
 5. **L'app in App Store Connect** — [appstoreconnect.apple.com](https://appstoreconnect.apple.com) →
