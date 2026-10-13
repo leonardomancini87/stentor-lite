@@ -10,3 +10,4 @@ src-tauri/target/
 src-tauri/gen/
 .oss-work/
 qa/
+src-tauri/macos/embedded.provisionprofile

@@ -1,0 +1,177 @@
+# Compila Sténtor Lite per il Mac App Store (app «universal»: Apple Silicon e Intel),
+# la impacchetta in un .pkg firmato e la carica su App Store Connect.
+#
+# Come si usa: Actions → «Pacchetto Mac App Store» → Run workflow (sul ramo da compilare).
+# Dopo 5–30 minuti la versione compare in App Store Connect → l'app → TestFlight:
+# da lì si prova sul Mac con l'app TestFlight e poi si invia a Apple per la revisione.
+# Il .pkg resta anche sotto «Artifacts» di questa esecuzione.
+#
+# Segreti del repository (Settings → Secrets and variables → Actions); vedi docs/mac-app-store.md:
+#   MAS_CERTIFICATES            .p12 in base64 con i due certificati «Apple Distribution»
+#                               e «Mac Installer Distribution» (con le chiavi private)
+#   MAS_CERTIFICATES_PASSWORD   password del .p12
+#   MAS_PROVISION_PROFILE       profilo «Mac App Store Connect» (.provisionprofile) in base64
+#   APP_STORE_API_KEY_ID        Key ID della chiave API di App Store Connect
+#   APP_STORE_API_ISSUER_ID     Issuer ID
+#   APP_STORE_API_KEY           contenuto del file AuthKey_<Key ID>.p8
+#   APPLE_TEAM_ID               già presente (lo usa anche la notarizzazione)
+#
+# Il numero di build (CFBundleVersion) è il numero di questa esecuzione: cresce sempre,
+# come vuole App Store Connect, anche se si carica più volte la stessa versione.
+
+name: Pacchetto Mac App Store
+
+on:
+  workflow_dispatch:
+    inputs:
+      solo_verifica:
+        description: 'Solo verifica: compila il codice senza firmare né caricare (non servono i segreti)'
+        type: boolean
+        default: false
+      upload:
+        description: 'Carica su App Store Connect (altrimenti solo il .pkg negli Artifacts)'
+        type: boolean
+        default: true
+  # Durante la messa a punto: a ogni modifica di questo ramo, solo verifica della compilazione.
+  push:
+    branches:
+      - claude/mac-app-store
+
+jobs:
+  build:
+    name: Mac App Store
+    runs-on: macos-latest
+    env:
+      VERIFICA: ${{ github.event_name == 'push' || inputs.solo_verifica }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Segreti presenti
+        if: env.VERIFICA != 'true'
+        env:
+          MAS_CERTIFICATES: ${{ secrets.MAS_CERTIFICATES }}
+          MAS_CERTIFICATES_PASSWORD: ${{ secrets.MAS_CERTIFICATES_PASSWORD }}
+          MAS_PROVISION_PROFILE: ${{ secrets.MAS_PROVISION_PROFILE }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_STORE_API_KEY_ID: ${{ secrets.APP_STORE_API_KEY_ID }}
+          APP_STORE_API_ISSUER_ID: ${{ secrets.APP_STORE_API_ISSUER_ID }}
+          APP_STORE_API_KEY: ${{ secrets.APP_STORE_API_KEY }}
+          UPLOAD: ${{ inputs.upload }}
+        run: |
+          missing=0
+          needed="MAS_CERTIFICATES MAS_CERTIFICATES_PASSWORD MAS_PROVISION_PROFILE APPLE_TEAM_ID"
+          if [ "$UPLOAD" = "true" ]; then
+            needed="$needed APP_STORE_API_KEY_ID APP_STORE_API_ISSUER_ID APP_STORE_API_KEY"
+          fi
+          for name in $needed; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Manca il segreto $name (vedi docs/mac-app-store.md)."
+              missing=1
+            fi
+          done
+          exit $missing
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Installa le dipendenze
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      # Portachiavi temporaneo con i due certificati: uno firma l'app, l'altro il .pkg.
+      - name: Certificati e profilo
+        if: env.VERIFICA != 'true'
+        env:
+          MAS_CERTIFICATES: ${{ secrets.MAS_CERTIFICATES }}
+          MAS_CERTIFICATES_PASSWORD: ${{ secrets.MAS_CERTIFICATES_PASSWORD }}
+          MAS_PROVISION_PROFILE: ${{ secrets.MAS_PROVISION_PROFILE }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          keychain="$RUNNER_TEMP/mas.keychain-db"
+          keychain_password="$(uuidgen)"
+          echo "$MAS_CERTIFICATES" | base64 --decode > "$RUNNER_TEMP/mas.p12"
+          security create-keychain -p "$keychain_password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$keychain_password" "$keychain"
+          security import "$RUNNER_TEMP/mas.p12" -k "$keychain" -P "$MAS_CERTIFICATES_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/productbuild -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$keychain_password" "$keychain" > /dev/null
+          security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
+          rm "$RUNNER_TEMP/mas.p12"
+
+          app_identity=$(security find-identity -v -p codesigning "$keychain" \
+            | grep -E '"(Apple Distribution|3rd Party Mac Developer Application):' | head -1 | sed -E 's/.*"(.*)"/\1/')
+          installer_identity=$(security find-identity -v "$keychain" \
+            | grep -E '"(3rd Party Mac Developer Installer|Mac Installer Distribution):' | head -1 | sed -E 's/.*"(.*)"/\1/')
+          if [ -z "$app_identity" ] || [ -z "$installer_identity" ]; then
+            echo "::error::Nel .p12 servono i certificati «Apple Distribution» e «Mac Installer Distribution». Trovati:"
+            security find-identity -v "$keychain"
+            exit 1
+          fi
+          echo "Firma dell'app: $app_identity"
+          echo "Firma del pacchetto: $installer_identity"
+          echo "APPLE_SIGNING_IDENTITY=$app_identity" >> "$GITHUB_ENV"
+          echo "INSTALLER_IDENTITY=$installer_identity" >> "$GITHUB_ENV"
+
+          echo "$MAS_PROVISION_PROFILE" | base64 --decode > src-tauri/macos/embedded.provisionprofile
+          bundle_id=$(node -p "require('./src-tauri/tauri.conf.json').identifier")
+          sed -i '' -e "s/__TEAM_ID__/$APPLE_TEAM_ID/g" -e "s/__BUNDLE_ID__/$bundle_id/g" src-tauri/macos/AppStore.entitlements
+
+      - name: Compila
+        if: env.VERIFICA != 'true'
+        run: |
+          npx tauri build --bundles app --target universal-apple-darwin --features app-store \
+            --config src-tauri/tauri.appstore.conf.json \
+            --config '{"bundle":{"macOS":{"bundleVersion":"${{ github.run_number }}"}}}'
+
+      - name: Pacchetto .pkg firmato
+        if: env.VERIFICA != 'true'
+        run: |
+          version=$(node -p "require('./src-tauri/tauri.conf.json').version")
+          app=$(ls -d src-tauri/target/universal-apple-darwin/release/bundle/macos/*.app | head -1)
+          codesign -d --entitlements - "$app"
+          pkg="$RUNNER_TEMP/Stentor.Lite_${version}_${{ github.run_number }}_universal.pkg"
+          xcrun productbuild --sign "$INSTALLER_IDENTITY" --component "$app" /Applications "$pkg"
+          echo "PKG=$pkg" >> "$GITHUB_ENV"
+
+      - name: Verifica compilazione (senza firma)
+        if: env.VERIFICA == 'true'
+        run: |
+          npm run build:desktop
+          cd src-tauri && cargo build --release --features app-store --target aarch64-apple-darwin
+
+      - uses: actions/upload-artifact@v5
+        if: env.VERIFICA != 'true'
+        with:
+          name: mac-app-store-pkg
+          path: ${{ env.PKG }}
+          retention-days: 90
+
+      - name: Carica su App Store Connect
+        if: env.VERIFICA != 'true' && inputs.upload
+        env:
+          APP_STORE_API_KEY_ID: ${{ secrets.APP_STORE_API_KEY_ID }}
+          APP_STORE_API_ISSUER_ID: ${{ secrets.APP_STORE_API_ISSUER_ID }}
+          APP_STORE_API_KEY: ${{ secrets.APP_STORE_API_KEY }}
+        run: |
+          mkdir -p ~/private_keys
+          echo "$APP_STORE_API_KEY" > ~/private_keys/AuthKey_${APP_STORE_API_KEY_ID}.p8
+          xcrun altool --upload-app --type macos --file "$PKG" \
+            --apiKey "$APP_STORE_API_KEY_ID" --apiIssuer "$APP_STORE_API_ISSUER_ID"
+          echo "::notice::Caricato. Tra poco la build compare in App Store Connect → TestFlight."
+
+      - name: Pulizia del portachiavi
+        if: always() && env.VERIFICA != 'true'
+        run: security delete-keychain "$RUNNER_TEMP/mas.keychain-db" 2>/dev/null || true
