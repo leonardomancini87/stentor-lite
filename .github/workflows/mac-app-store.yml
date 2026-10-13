@@ -143,7 +143,14 @@ jobs:
           app=$(ls -d src-tauri/target/universal-apple-darwin/release/bundle/macos/*.app | head -1)
           codesign -d --entitlements - "$app"
           pkg="$RUNNER_TEMP/Stentor.Lite_${version}_${{ github.run_number }}_universal.pkg"
-          xcrun productbuild --sign "$INSTALLER_IDENTITY" --component "$app" /Applications "$pkg"
+          # «é» nel nome dell'app: Tauri lo scrive come un solo carattere (NFC), gli strumenti Apple
+          # che controllano il pacchetto si aspettano «e» + accento (NFD) e non trovano più i file
+          # (PKPackageCheckErrorPayloadMissingBomFile). Si copia l'app con il nome in forma NFD.
+          staging="$RUNNER_TEMP/staging"
+          mkdir -p "$staging"
+          nfd_name=$(python3 -c "import sys, unicodedata, os; print(unicodedata.normalize('NFD', os.path.basename(sys.argv[1])))" "$app")
+          ditto "$app" "$staging/$nfd_name"
+          xcrun productbuild --sign "$INSTALLER_IDENTITY" --component "$staging/$nfd_name" /Applications "$pkg"
           echo "PKG=$pkg" >> "$GITHUB_ENV"
 
       - name: Verifica compilazione (senza firma)
