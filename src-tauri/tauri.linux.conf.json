@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Stentor Lite",
+  "bundle": {
+    "linux": {
+      "deb": {
+        "desktopTemplate": "./linux/stentor-lite.desktop"
+      },
+      "rpm": {
+        "desktopTemplate": "./linux/stentor-lite.desktop"
+      }
+    }
+  }
+}
