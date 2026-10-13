@@ -2,7 +2,9 @@ import { convertStentorProProject, isStentorProProject } from './stentorProImpor
 import { demoProject } from '../lib/demoProject.js';
 import { normalizeProject, withProjectMetadata } from './projectSchema.js';
 
-export const STENTORE_PROJECT_EXTENSION = '.stentore.json';
+// I progetti di Sténtor Lite si salvano come semplici file .json.
+// Fino alla 0.10.4 il nome finiva in .stentore.json: quei file si aprono ancora (sono JSON).
+export const PROJECT_FILE_EXTENSION = '.json';
 
 export function createBlankProject(title = 'Nuovo progetto') {
   return normalizeProject({
@@ -35,15 +37,15 @@ export function createBlankProject(title = 'Nuovo progetto') {
   });
 }
 
-export function getProjectDownloadName(project, fallback = 'progetto-stentore') {
+export function getProjectDownloadName(project, fallback = 'progetto-stentor') {
   const base = String(project?.title || fallback)
     .trim()
     .replace(/[^a-z0-9-_.]+/gi, '-')
     .replace(/^-+|-+$/g, '') || fallback;
 
-  return base.toLowerCase().endsWith(STENTORE_PROJECT_EXTENSION)
+  return base.toLowerCase().endsWith(PROJECT_FILE_EXTENSION)
     ? base
-    : `${base}${STENTORE_PROJECT_EXTENSION}`;
+    : `${base}${PROJECT_FILE_EXTENSION}`;
 }
 
 export async function readProjectFile(file) {
