@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Permessi (entitlements) della copia di Sténtor Lite per il Mac App Store.
+  Il Mac App Store accetta solo app nella «sandbox» di macOS: l'app vede i propri dati e,
+  in più, solo quello che qui è dichiarato.
+  __TEAM_ID__ e __BUNDLE_ID__ li sostituisce il workflow «Pacchetto Mac App Store»
+  (segreto APPLE_TEAM_ID e identifier di tauri.conf.json).
+-->
+<plist version="1.0">
+<dict>
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+    <key>com.apple.application-identifier</key>
+    <string>__TEAM_ID__.__BUNDLE_ID__</string>
+    <key>com.apple.developer.team-identifier</key>
+    <string>__TEAM_ID__</string>
+    <!-- Apri / Salva progetto: solo i file scelti da chi usa l'app nelle finestre di macOS. -->
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+    <!-- «Esporta» e «Stampa copione» salvano il file nella cartella Download. -->
+    <key>com.apple.security.files.downloads.read-write</key>
+    <true/>
+    <!-- Il motore web (WebKit) dell'app: senza, in sandbox la finestra può restare vuota. -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+</dict>
+</plist>

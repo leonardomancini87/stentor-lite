@@ -6,6 +6,11 @@ authors = ["Leonardo Mancini"]
 license = "EUPL-1.2"
 edition = "2021"
 
+[features]
+# Copia per il Mac App Store: niente aggiornamenti dall'app (li fa l'App Store).
+# Si attiva con `tauri build --features app-store` (workflow «Pacchetto Mac App Store»).
+app-store = []
+
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 

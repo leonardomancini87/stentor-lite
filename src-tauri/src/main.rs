@@ -257,8 +257,9 @@ fn stentor_window_ready(app: tauri::AppHandle) {
     show_main_window(&app);
 }
 
-// Vero se l'app è installata dal Microsoft Store (pacchetto MSIX): Windows mette i pacchetti
-// in "Program Files\\WindowsApps". In quel caso gli aggiornamenti li fa lo Store e l'app non
+// Vero se l'app è installata da uno store. Microsoft Store (pacchetto MSIX): Windows mette i
+// pacchetti in "Program Files\\WindowsApps". Mac App Store: la copia compilata con la funzione
+// `app-store` (vedi Cargo.toml). In quel caso gli aggiornamenti li fa lo Store e l'app non
 // deve cercarli né installarli da sola (vedi src/hooks/useAppUpdates.js).
 #[tauri::command]
 fn stentor_is_store_package() -> bool {
@@ -268,7 +269,11 @@ fn stentor_is_store_package() -> bool {
             .map(|path| path.to_string_lossy().to_lowercase().contains("\\windowsapps\\"))
             .unwrap_or(false)
     }
-    #[cfg(not(target_os = "windows"))]
+    #[cfg(all(target_os = "macos", feature = "app-store"))]
+    {
+        true
+    }
+    #[cfg(not(any(target_os = "windows", all(target_os = "macos", feature = "app-store"))))]
     {
         false
     }
