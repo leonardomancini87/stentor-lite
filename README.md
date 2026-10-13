@@ -54,7 +54,7 @@ Dalla versione 0.9.0 non serve riscaricare l'app a ogni versione: **Impostazioni
 ### I tuoi progetti
 
 Sténtor Lite salva da solo i progetti **in uno spazio interno dell'app** sul tuo computer (nel browser, se lo usi lì), non come file in Documenti. Quando installi una versione nuova i progetti restano al loro posto. Non li ritrovi però se cambi computer, se cancelli i dati del browser o se, disinstallando su Windows, scegli di eliminare anche i dati dell'applicazione.
-Per avere una copia sicura usa **Salva** o **Salva con nome…** nella pagina Progetti: ottieni un file `.stentore.json` che puoi conservare, mandare ai colleghi e riaprire con **Importa**. Prima di ogni spettacolo salva una copia aggiornata.
+Per avere una copia sicura usa **Salva** o **Salva con nome…** nella pagina Progetti: ottieni un file `.json` che puoi conservare, mandare ai colleghi e riaprire con **Importa**. Prima di ogni spettacolo salva una copia aggiornata.
 
 <p align="center">
   <img src="docs/images/stentor-proiezione.png" alt="La finestra di proiezione con un sopratitolo in sala" width="860">
@@ -151,7 +151,7 @@ From version 0.9.0 there is no need to download the app again for each release: 
 ### Your projects
 
 Sténtor Lite saves your projects automatically **in the app's own storage** on your computer (in the browser, if you use it there), not as files in Documents. Installing a new version keeps your projects where they are. They are gone, however, if you change computer, clear the browser data or, when uninstalling on Windows, choose to delete the application data as well.
-To keep a safe copy use **Save** or **Save as…** on the Projects page: you get a `.stentore.json` file that you can keep, send to colleagues and reopen with **Import**. Save an up-to-date copy before every performance.
+To keep a safe copy use **Save** or **Save as…** on the Projects page: you get a `.json` file that you can keep, send to colleagues and reopen with **Import**. Save an up-to-date copy before every performance.
 
 ### Run from source
 

@@ -23,7 +23,7 @@ test('crea un nuovo progetto Stentore vuoto e normalizzato', () => {
 test('prepara un nome file progetto riconoscibile', () => {
   assert.equal(
     getProjectDownloadName({ title: 'La prova finale' }),
-    'La-prova-finale.stentore.json'
+    'La-prova-finale.json'
   );
 
   assert.equal(
