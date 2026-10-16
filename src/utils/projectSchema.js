@@ -14,6 +14,20 @@ export function withProjectMetadata(project) {
   };
 }
 
+// Note che le versioni precedenti scrivevano da sole in ogni battuta importata da Word:
+// non dicono nulla all'utente e vengono tolte all'apertura del progetto.
+const AUTOMATIC_IMPORT_NOTES = new Set([
+  'Importato dal copione Word',
+  'Battuta importata dal copione Word',
+  'Didascalia importata dal copione Word',
+  'Testo importato dal copione Word',
+]);
+
+function cleanCueNote(note) {
+  const text = note || '';
+  return AUTOMATIC_IMPORT_NOTES.has(text.trim()) ? '' : text;
+}
+
 export function normalizeCue(cue, index = 0) {
   const source = cue && typeof cue === 'object' ? cue : {};
   const translations = source.translations && typeof source.translations === 'object'
@@ -27,7 +41,7 @@ export function normalizeCue(cue, index = 0) {
     original: source.original || '',
     translations,
     textSpans: normalizeCueTextSpans(source.textSpans, translations),
-    note: source.note || '',
+    note: cleanCueNote(source.note),
     startTime: source.startTime ?? null,
     endTime: source.endTime ?? null,
     renderStyle: source.renderStyle || 'normal',
