@@ -48,6 +48,8 @@ import { normalizeCue, normalizeProject, withProjectMetadata } from './utils/pro
 import { toggleFullscreen } from './utils/fullscreen.js';
 import { getInitialAppLanguage, saveAppLanguage, isRtlLanguage } from './utils/appLanguage.js';
 import { getInitialAppTheme, saveAppTheme } from './utils/appTheme.js';
+import { WELCOME_TOUR_STEPS, clampTourStep, markWelcomeTourSeen, shouldShowWelcomeTour } from './utils/welcomeTour.js';
+import WelcomeTour from './components/WelcomeTour.jsx';
 import { findNextPlayableIndex, getMarkerJumpIndex, getMarkerTitle, isMarkerCue } from './utils/markers.js';
 import {
   buildShowMap,
@@ -159,6 +161,8 @@ async function invokeTauriCommand(command, args = {}) {
 
 
 export default function App() {
+  // Guida di benvenuto: va decisa prima che l'avvio scriva qualcosa nella memoria locale.
+  const [tourStep, setTourStep] = useState(() => (shouldShowWelcomeTour() ? 0 : null));
   const initialProject = useMemo(
     () => {
       refreshBuiltInDemo(demoProject);
@@ -199,7 +203,7 @@ export default function App() {
   const activeTextareaRef = useRef(null);
   const editorStagePreviewRef = useRef(null);
   const [editorPreviewOpen, setEditorPreviewOpen] = useState(false);
-  const [viewMode, setViewMode] = useState('dashboard');
+  const [viewMode, setViewMode] = useState(() => (tourStep === null ? 'dashboard' : WELCOME_TOUR_STEPS[tourStep].page));
   const updates = useAppUpdates();
   const [appLanguage, setAppLanguage] = useState(getInitialAppLanguage);
   // Testi dell'interfaccia per chiave (vedi src/i18n).
@@ -1460,6 +1464,17 @@ export default function App() {
     jumpToCue(target);
   }
 
+  const goToTourStep = useCallback((index) => {
+    const step = clampTourStep(index);
+    setTourStep(step);
+    setViewMode(WELCOME_TOUR_STEPS[step].page);
+  }, []);
+  const openWelcomeTour = useCallback(() => goToTourStep(0), [goToTourStep]);
+  const closeWelcomeTour = useCallback(() => {
+    markWelcomeTourSeen();
+    setTourStep(null);
+  }, []);
+
   return (
     <I18nProvider language={appLanguage}>
     <div
@@ -1510,6 +1525,7 @@ export default function App() {
             appTheme={appTheme}
             setAppTheme={setAppTheme}
             updates={updates}
+            onOpenTour={openWelcomeTour}
           />
         )}
 
@@ -1850,6 +1866,10 @@ export default function App() {
         onCancel={() => closeDialog(false)}
         onConfirm={(value) => closeDialog(value)}
       />
+
+      {tourStep !== null && (
+        <WelcomeTour step={tourStep} onStepChange={goToTourStep} onClose={closeWelcomeTour} />
+      )}
 
       {editorPreviewOpen && (
         <StageFrame

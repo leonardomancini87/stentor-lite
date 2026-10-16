@@ -1,6 +1,6 @@
 import { APP_VERSION } from '../lib/appVersion.js';
 import { useEffect, useState } from 'react';
-import { Check, ChevronDown, Globe2, Info, MessageSquareHeart, RefreshCw, X } from 'lucide-react';
+import { Check, ChevronDown, Globe2, Info, MessageSquareHeart, RefreshCw, Star, X } from 'lucide-react';
 import FeedbackDialog from './FeedbackDialog.jsx';
 import { APP_LANGUAGES, getAppLanguageMeta } from '../utils/appLanguage.js';
 import { useI18n } from '../i18n/index.js';
@@ -147,7 +147,7 @@ function UpdatesPanel({ updates }) {
   );
 }
 
-export default function DesktopPreferences({ appLanguage = 'it', setAppLanguage, appTheme = 'night', setAppTheme, updates }) {
+export default function DesktopPreferences({ appLanguage = 'it', setAppLanguage, appTheme = 'night', setAppTheme, updates, onOpenTour }) {
   const { t } = useI18n();
   const [languageModalOpen, setLanguageModalOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
@@ -190,6 +190,21 @@ export default function DesktopPreferences({ appLanguage = 'it', setAppLanguage,
         </article>
 
         {updates?.supported && <UpdatesPanel updates={updates} />}
+
+        {onOpenTour && (
+          <article className="darkPanel projectStatePanel settingsUnifiedPanel settingsFeedbackPanel settingsTourPanel">
+            <div className="settingsPanelTitleWithIcon">
+              <Star size={18} />
+              <h2>{t('tour.card.title')}</h2>
+            </div>
+            <div className="settingsFeedbackRow">
+              <p>{t('tour.card.text')}</p>
+              <button type="button" className="interfaceLanguageConfirm settingsFeedbackButton" onClick={onOpenTour}>
+                {t('tour.card.button')}
+              </button>
+            </div>
+          </article>
+        )}
 
         <article className="darkPanel projectStatePanel settingsUnifiedPanel settingsFeedbackPanel">
           <div className="settingsPanelTitleWithIcon">
