@@ -4,8 +4,14 @@ La copia per il Mac App Store è la stessa app del `.dmg`, con tre differenze:
 
 - gira nella **sandbox** di macOS (obbligatoria sul Mac App Store): vede i propri dati, i file scelti
   in Apri/Salva e la cartella Download (`src-tauri/macos/AppStore.entitlements`);
-- **non si aggiorna da sola**: gli aggiornamenti li fa l'App Store e il riquadro Aggiornamenti
-  non compare (funzione `app-store` in `src-tauri/Cargo.toml`, comando `stentor_is_store_package`);
+- **non contiene l'aggiornamento dall'app**: gli aggiornamenti li fa solo l'App Store (Apple lo
+  richiede, linea guida 2.4.5; la prima revisione è stata rifiutata per questo). Si compila con
+  `--features app-store -- --no-default-features`: senza la funzione `self-update` il plugin updater
+  e il plugin di riavvio non entrano nel programma, i loro permessi (`capabilities/self-update`)
+  non vengono caricati (vedi `src-tauri/build.rs`), `tauri.appstore.conf.json` toglie la
+  configurazione `plugins.updater`, e con `VITE_APP_STORE=1` anche l'interfaccia lascia fuori il
+  codice di aggiornamento. Se si compila `app-store` con le funzioni predefinite la compilazione si
+  ferma con un errore (`compile_error!` in `src-tauri/src/main.rs`);
 - è un'unica app «universal» (Apple Silicon e Intel), per macOS 11 e successivi.
 
 Si compila e si carica con il workflow **«Pacchetto Mac App Store»**
