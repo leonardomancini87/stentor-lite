@@ -157,7 +157,7 @@ function markerFromLine(line, cueId) {
       speaker: 'MARCATORE',
       original: '',
       translations: {},
-      note: 'Importato dal copione Word',
+      note: '',
       startTime: null,
       endTime: null,
       renderStyle: 'normal',
@@ -173,7 +173,7 @@ function markerFromLine(line, cueId) {
       speaker: 'MARCATORE',
       original: '',
       translations: {},
-      note: 'Importato dal copione Word',
+      note: '',
       startTime: null,
       endTime: null,
       renderStyle: 'normal',
@@ -189,7 +189,7 @@ function markerFromLine(line, cueId) {
       speaker: 'MARCATORE',
       original: '',
       translations: {},
-      note: 'Importato dal copione Word',
+      note: '',
       startTime: null,
       endTime: null,
       renderStyle: 'normal',
@@ -205,7 +205,7 @@ function markerFromLine(line, cueId) {
       speaker: 'MARCATORE',
       original: '',
       translations: {},
-      note: 'Importato dal copione Word',
+      note: '',
       startTime: null,
       endTime: null,
       renderStyle: 'normal',
@@ -316,16 +316,14 @@ export function parseTheatreScriptText(text, options = {}) {
       const speaker = speakerLine?.speaker || pending.voice;
       const body = speakerLine?.text ?? line;
       knownSpeakers.add(speaker);
-      cues.push(createScriptCue({ id: startCueId + cues.length, speaker, text: body, language,
-        note: 'Battuta importata dal copione Word' }));
+      cues.push(createScriptCue({ id: startCueId + cues.length, speaker, text: body, language }));
       dialogueCount += 1;
       pending = null;
       continue;
     }
 
     const direction = isStageDirection(line);
-    cues.push(createScriptCue({ id: startCueId + cues.length, speaker: '', text: line, language,
-      note: direction ? 'Didascalia importata dal copione Word' : 'Testo importato dal copione Word' }));
+    cues.push(createScriptCue({ id: startCueId + cues.length, speaker: '', text: line, language }));
     if (direction) stageDirectionCount += 1;
     else unassignedCount += 1;
   }
