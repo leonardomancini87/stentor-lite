@@ -3,7 +3,7 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
-## Prossima versione
+## 0.10.6 — 16 ottobre 2026 · beta
 
 - Corretto: importando un copione Word il nuovo progetto prendeva dal progetto aperto copertina, autore, compagnia, repliche, archiviazione e lingue. Ora, come per gli altri formati, è un progetto nuovo: dal progetto aperto restano solo le impostazioni degli schermi.
 - Mac App Store: la copia per lo Store non contiene più l'aggiornamento dall'app; gli aggiornamenti arrivano solo dall'App Store. Nessun cambiamento per il `.dmg`, Windows e Linux.
