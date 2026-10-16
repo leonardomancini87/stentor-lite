@@ -144,10 +144,6 @@
   outline: 2px solid #a7a7a7; outline-offset: 1px;
 }
 
-.workspace.liteRegiaWorkspace .liteRichCueTextEditor:empty::before {
-  content: 'Inserisci il sopratitolo…'; color: #777; pointer-events: none;
-}
-
 .liteCueStyleButtons button:disabled,
 .liteCueColorControl.disabled,
 .liteCueScaleValue.disabled {

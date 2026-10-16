@@ -14,10 +14,18 @@ function joinCueText(first, second, separator = ' ') {
   return `${left}${separator}${right}`;
 }
 
-function getCueLanguageText(cue, language) {
+// Il testo di una lingua sta in translations[lingua]. Solo la lingua principale, se manca, ricade sul
+// testo originale: per le altre lingue una battuta non tradotta è vuota. (Prima ricadeva sempre
+// sull'originale, e dividere o unire copiava il testo della lingua principale nelle altre.)
+function primaryLanguageOf(project) {
+  return project?.primaryLanguage || project?.languages?.[0] || project?.activeLanguage || null;
+}
+
+function getCueLanguageText(cue, language, primaryLanguage = null) {
   if (cue?.translations && Object.prototype.hasOwnProperty.call(cue.translations, language)) {
     return String(cue.translations[language] ?? '');
   }
+  if (primaryLanguage && language !== primaryLanguage) return '';
   return String(cue?.original ?? '');
 }
 
@@ -87,13 +95,14 @@ export function mergeCueWithNextStructural(project, cueId) {
   }
 
   const languages = projectLanguages(project, first, second);
+  const primaryLanguage = primaryLanguageOf(project);
   const translations = {};
   const textSpans = {};
   languages.forEach((language) => {
     const merged = mergeTextAndSpans(
-      getCueLanguageText(first, language),
+      getCueLanguageText(first, language, primaryLanguage),
       getCueTextSpans(first, language),
-      getCueLanguageText(second, language),
+      getCueLanguageText(second, language, primaryLanguage),
       getCueTextSpans(second, language),
     );
     translations[language] = merged.text;
@@ -150,6 +159,7 @@ export function splitCueAtCursorStructural({
   const before = split.firstText;
   const after = split.secondText;
   const languages = projectLanguages(project, cue);
+  const primaryLanguage = primaryLanguageOf(project);
   const firstTranslations = { ...(cue.translations || {}) };
   const secondTranslations = { ...(cue.translations || {}) };
   const firstTextSpans = {};
@@ -163,7 +173,7 @@ export function splitCueAtCursorStructural({
       if (split.secondSpans.length) secondTextSpans[lang] = split.secondSpans;
       return;
     }
-    const value = getCueLanguageText(cue, lang);
+    const value = getCueLanguageText(cue, lang, primaryLanguage);
     const spans = getCueTextSpans(cue, lang);
     firstTranslations[lang] = otherLanguagesTarget === 'first' ? value : '';
     secondTranslations[lang] = otherLanguagesTarget === 'second' ? value : '';
@@ -171,7 +181,9 @@ export function splitCueAtCursorStructural({
     if (otherLanguagesTarget === 'second' && spans.length) secondTextSpans[lang] = spans;
   });
 
-  const originalMatchesEditedText = String(cue.original ?? '') === source;
+  // Il vecchio campo «original» segue la lingua principale: si divide solo se si divide quella.
+  const originalMatchesEditedText = (!primaryLanguage || language === primaryLanguage)
+    && String(cue.original ?? '') === source;
   const firstOriginal = originalMatchesEditedText
     ? before
     : (otherLanguagesTarget === 'first' ? String(cue.original ?? '') : '');
@@ -211,6 +223,6 @@ export function hasOtherLanguageText(project, cueId, activeLanguage) {
   const cue = project?.cues?.find((item) => item.id === cueId);
   if (!cue || isMarkerCue(cue)) return false;
   return projectLanguages(project, cue).some((language) => (
-    language !== activeLanguage && normalizeEdgeWhitespace(getCueLanguageText(cue, language))
+    language !== activeLanguage && normalizeEdgeWhitespace(getCueLanguageText(cue, language, primaryLanguageOf(project)))
   ));
 }

@@ -6,6 +6,9 @@ Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténto
 ## Prossima versione
 
 - I progetti si salvano come semplici file `.json` (per esempio `Antigone.json`); prima il nome finiva in `.stentore.json`. I file salvati in precedenza si aprono come sempre, così come i `.stn` di Sténtor Pro.
+- Corretto: scrivendo in un campo vuoto della battuta (per esempio dopo «Dividi») il testo si duplicava a ogni tasto.
+- Corretto: in una lingua senza traduzione l'editor mostrava il testo della lingua principale, e dividendo o unendo battute quel testo finiva copiato nelle altre lingue.
+- «Dividi sopratitolo»: la finestra dice quale lingua viene divisa e che cosa succede alle altre.
 
 ## 0.10.4 — 9 ottobre 2026 · beta
 

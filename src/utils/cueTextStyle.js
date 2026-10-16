@@ -1,7 +1,13 @@
 // Optional per-cue overrides. Global screen geometry/font/colour stay untouched.
 // Missing overrides inherit the old rendering; old projects require no migration.
-export function getCueText(cue, language) {
-  return String(cue?.translations?.[language] ?? cue?.original ?? '');
+// Con primaryLanguage indicata, il testo originale fa da riserva solo per la lingua principale:
+// nelle altre lingue una battuta senza traduzione è vuota (così l'editor non mostra, e poi salva,
+// il testo italiano nel campo francese).
+export function getCueText(cue, language, primaryLanguage = null) {
+  const translated = cue?.translations?.[language];
+  if (translated !== undefined && translated !== null) return String(translated);
+  if (primaryLanguage && language !== primaryLanguage) return '';
+  return String(cue?.original ?? '');
 }
 
 // In Sténtor Lite i sopratitoli sono sempre centrati: un allineamento diverso salvato
