@@ -1387,7 +1387,7 @@ export default function App() {
     ? splitSelectionByCueRef.current.get(structuralCue.id) || null
     : null;
   const structuralSplitText = structuralCue && structuralSplitSelection
-    ? getCueText(structuralCue, structuralSplitSelection.language)
+    ? getCueText(structuralCue, structuralSplitSelection.language, project.primaryLanguage || project.languages?.[0])
     : '';
   const canSplitStructuralCue = Boolean(
     structuralCue

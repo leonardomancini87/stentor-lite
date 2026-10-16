@@ -321,12 +321,17 @@ export function useCueActions({
 
     let otherLanguagesTarget = 'first';
     if (hasOtherLanguageText(project, cueId, selectedLanguage)) {
+      const languageName = (code) => project.languageNames?.[code] || String(code).toUpperCase();
+      const otherNames = (project.languages || [])
+        .filter((code) => code !== selectedLanguage)
+        .map(languageName)
+        .join(', ');
       const choice = await dialogs.choice({
         title: ui('cue.split.title'),
-        message: ui('cue.split.message'),
+        message: ui('cue.split.message', { language: languageName(selectedLanguage), others: otherNames }),
         options: [
-          { value: 'first', label: ui('cue.split.first'), selected: true, description: ui('cue.split.detail') },
-          { value: 'second', label: ui('cue.split.second'), description: ui('cue.split.detail') },
+          { value: 'first', label: ui('cue.split.first'), selected: true, description: ui('cue.split.first.detail') },
+          { value: 'second', label: ui('cue.split.second'), description: ui('cue.split.second.detail') },
         ],
         cancelLabel: ui('common.cancel'),
         trapFocus: true,

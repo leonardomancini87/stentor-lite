@@ -67,11 +67,12 @@ export default function CueRowEditor({
   const { t } = useI18n();
   const italic = cue.renderStyle === 'italic';
   const languages = [...new Set(project.languages?.length ? project.languages : [project.activeLanguage || 'it'])];
+  const primaryLanguage = project.primaryLanguage || languages[0];
   const [selection, setSelection] = useState(null);
 
   const activeSelection = useMemo(() => {
     if (!selection || selection.cueId !== cue.id || selection.end <= selection.start) return null;
-    const text = getCueText(cue, selection.language);
+    const text = getCueText(cue, selection.language, primaryLanguage);
     if (selection.end > text.length) return null;
     return { ...selection, text };
   }, [cue, selection]);
@@ -94,7 +95,7 @@ export default function CueRowEditor({
   function applyLocalPatch(patch) {
     if (!activeSelection) return;
     updateCue(cue.id, (current) => {
-      const text = getCueText(current, activeSelection.language);
+      const text = getCueText(current, activeSelection.language, primaryLanguage);
       const spans = getCueTextSpans(current, activeSelection.language);
       const next = applyStylePatchToRange(
         spans,
@@ -124,7 +125,7 @@ export default function CueRowEditor({
   function clearLocalFormatting() {
     if (!activeSelection) return;
     updateCue(cue.id, (current) => {
-      const text = getCueText(current, activeSelection.language);
+      const text = getCueText(current, activeSelection.language, primaryLanguage);
       const spans = getCueTextSpans(current, activeSelection.language);
       return setCueLanguageSpans(
         current,
@@ -181,10 +182,10 @@ export default function CueRowEditor({
             <span className="liteCueFieldLabel">
               <strong>{String(lang).toUpperCase()}</strong>
               <span>{project.languageNames?.[lang] || String(lang).toUpperCase()}</span>
-              <CharCounter text={getCueText(cue, lang)} limit={getLineLimit(project)} />
+              <CharCounter text={getCueText(cue, lang, primaryLanguage)} limit={getLineLimit(project)} />
             </span>
             <RichCueTextEditor
-              value={getCueText(cue, lang)}
+              value={getCueText(cue, lang, primaryLanguage)}
               spans={getCueTextSpans(cue, lang)}
               cueId={cue.id}
               language={lang}

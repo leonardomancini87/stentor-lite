@@ -295,6 +295,34 @@ test('structure: detects content in other languages before multilingual split', 
   assert.equal(hasOtherLanguageText(project, 1, 'it'), false);
 });
 
+function untranslatedFixture() {
+  return normalizeProject({
+    languages: ['it', 'fr'],
+    activeLanguage: 'it',
+    primaryLanguage: 'it',
+    cues: [
+      { id: 1, original: 'Ciao. Come stai?', translations: { fr: 'Salut. Ça va ?' } },
+      { id: 2, original: 'Bene.', translations: {} },
+    ],
+  });
+}
+
+test('structure: a missing translation is empty, never a copy of the primary text', () => {
+  const project = untranslatedFixture();
+  const split = splitCueAtCursorStructural({ project, cueId: 1, language: 'fr', cursor: 6, fullText: 'Salut. Ça va ?', otherLanguagesTarget: 'first' }).project.cues;
+  assert.equal(split[0].translations.fr, 'Salut.');
+  assert.equal(split[1].translations.fr, 'Ça va ?');
+  assert.equal(split[0].translations.it, 'Ciao. Come stai?');
+  assert.equal(split[1].translations.it, '');
+  assert.equal(split[1].original, '');
+
+  const merged = mergeCueWithNextStructural(project, 1).project.cues[0];
+  assert.equal(merged.translations.fr, 'Salut. Ça va ?');
+  assert.equal(merged.translations.it, 'Ciao. Come stai? Bene.');
+
+  assert.equal(hasOtherLanguageText(project, 2, 'it'), false);
+});
+
 // Ensure the structural editor is exposed as one compact, always-visible toolbar.
 const filename = new URL('../src/components/CueStructuralToolbar.jsx', import.meta.url);
 const { outputText, diagnostics } = ts.transpileModule(readFileSync(filename, 'utf8'), {
