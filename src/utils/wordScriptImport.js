@@ -1,4 +1,4 @@
-import { normalizeProject } from './projectSchema.js';
+import { buildImportedProject } from './importedProject.js';
 import { getUniqueVoices } from './cueVoices.js';
 import { decodeXmlEntities, extractZipEntry } from './zipArchive.js';
 
@@ -354,23 +354,17 @@ function fileTitle(fileName) {
 }
 
 export async function importWordScriptAsProject(file, baseProject, options = {}) {
-  const language = options.language || baseProject.activeLanguage || baseProject.primaryLanguage || 'it';
+  // Lingua del copione: quella scelta, altrimenti la lingua di lavoro del progetto aperto.
+  const language = options.language || baseProject?.activeLanguage || baseProject?.primaryLanguage || 'it';
   const result = await parseDocxTheatreScript(file, { language, startCueId: 1 });
   const title = options.title || fileTitle(file.name);
 
-  const project = normalizeProject({
-    ...baseProject,
-    id: `project-${Date.now()}`,
-    title,
-    languages: Array.from(new Set([language, ...(baseProject.languages || ['it'])])),
-    activeLanguage: language,
-    primaryLanguage: language,
-    languageNames: {
-      ...(baseProject.languageNames || {}),
-      [language]: baseProject.languageNames?.[language] || 'Italiano',
-    },
+  // Progetto nuovo e pulito, come per gli altri formati (vedi importedProject.js).
+  const name = baseProject?.languageNames?.[language] || (language === 'it' ? 'Italiano' : '');
+  const project = buildImportedProject(baseProject, {
     cues: result.cues,
-    savedAt: null,
+    languages: [{ code: language, name }],
+    title,
   });
 
   return {
