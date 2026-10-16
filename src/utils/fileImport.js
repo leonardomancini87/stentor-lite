@@ -5,7 +5,7 @@
 //   - testo semplice (.txt): letto come un copione (PERSONAGGIO: battuta).
 // I progetti Sténtor (.json, .stn) e i copioni Word (.docx) hanno i loro percorsi.
 
-import { normalizeProject } from './projectSchema.js';
+import { buildImportedProject } from './importedProject.js';
 import { normalizeLanguageCode } from './projectLanguages.js';
 import { parseSrt, parseVtt } from './subtitleExchange.js';
 import { parseTheatreScriptText } from './wordScriptImport.js';
@@ -373,35 +373,6 @@ function fileTitle(fileName) {
     .trim();
 }
 
-function buildProject(baseProject, { cues, languages, title }) {
-  const codes = languages.map((item) => item.code);
-  const languageNames = { ...(baseProject.languageNames || {}) };
-  for (const { code, name } of languages) {
-    if (name) languageNames[code] = name;
-    else if (!languageNames[code]) languageNames[code] = code.toUpperCase();
-  }
-  return normalizeProject({
-    ...baseProject,
-    id: `project-${Date.now()}`,
-    title: title || baseProject.title,
-    company: '',
-    author: '',
-    authorName: '',
-    projectAuthor: '',
-    coverImage: '',
-    coverImageName: '',
-    languages: codes,
-    activeLanguage: codes[0],
-    primaryLanguage: codes[0],
-    languageNames,
-    cues,
-    performances: [],
-    archived: false,
-    archivedAt: null,
-    savedAt: null,
-  });
-}
-
 // Legge un file (tabella, presentazione, sottotitoli o testo) e crea un nuovo progetto.
 // Errori: `error.code === 'empty'` se nel file non ci sono testi; 'unsupported' per altri formati.
 export async function importFileAsProject(file, baseProject, options = {}) {
@@ -438,7 +409,7 @@ export async function importFileAsProject(file, baseProject, options = {}) {
     throw error;
   }
 
-  const project = buildProject(baseProject, { ...result, title: fileTitle(file.name) });
+  const project = buildImportedProject(baseProject, { ...result, title: fileTitle(file.name) });
   return {
     project,
     summary: {
