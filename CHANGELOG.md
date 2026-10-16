@@ -3,7 +3,7 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
-## Prossima versione
+## 0.10.7 — 16 ottobre 2026 · beta
 
 - Corretto: importando un copione Word ogni battuta, didascalia e marcatore riceveva una nota automatica («Battuta importata dal copione Word» e simili). Ora l'importazione non scrive note, e quelle già presenti nei progetti vengono tolte all'apertura; le note scritte a mano restano.
 
