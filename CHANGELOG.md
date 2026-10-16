@@ -3,7 +3,7 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
-## Prossima versione
+## 0.10.5 — 16 ottobre 2026 · beta
 
 - I progetti si salvano come semplici file `.json` (per esempio `Antigone.json`); prima il nome finiva in `.stentore.json`. I file salvati in precedenza si aprono come sempre, così come i `.stn` di Sténtor Pro.
 - Corretto: scrivendo in un campo vuoto della battuta (per esempio dopo «Dividi») il testo si duplicava a ogni tasto.
