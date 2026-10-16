@@ -295,12 +295,20 @@ fn stentor_focus_stage(app: tauri::AppHandle, screen_id: String) {
     let _ = window.set_focus();
 }
 
+// La copia per il Mac App Store non deve contenere l'aggiornamento dall'app: se per errore la
+// si compila con le funzioni predefinite, la compilazione si ferma qui.
+#[cfg(all(feature = "app-store", feature = "self-update"))]
+compile_error!("La copia App Store va compilata con --no-default-features (senza self-update).");
+
 fn main() {
-    tauri::Builder::default()
-        // Aggiornamenti: verifica, download e installazione (src/hooks/useAppUpdates.js);
-        // "process" serve per riavviare l'app dopo l'installazione.
+    let builder = tauri::Builder::default();
+    // Aggiornamenti: verifica, download e installazione (src/hooks/useAppUpdates.js);
+    // "process" serve per riavviare l'app dopo l'installazione. Assenti nella copia App Store.
+    #[cfg(feature = "self-update")]
+    let builder = builder
         .plugin(tauri_plugin_updater::Builder::new().build())
-        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_process::init());
+    builder
         .setup(|app| {
             // La finestra di regia è creata qui e non da tauri.conf.json ("create": false) per
             // poterle dare il permesso di aprire la finestra di proiezione: su macOS e Linux,

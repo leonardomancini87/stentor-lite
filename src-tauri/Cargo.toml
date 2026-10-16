@@ -7,8 +7,13 @@ license = "EUPL-1.2"
 edition = "2021"
 
 [features]
-# Copia per il Mac App Store: niente aggiornamenti dall'app (li fa l'App Store).
-# Si attiva con `tauri build --features app-store` (workflow «Pacchetto Mac App Store»).
+default = ["self-update"]
+# Aggiornamento dall'app (plugin updater e riavvio). Presente nel .dmg, su Windows e su Linux.
+self-update = ["dep:tauri-plugin-updater", "dep:tauri-plugin-process"]
+# Copia per il Mac App Store: gli aggiornamenti li fa l'App Store e Apple non accetta app che
+# contengano un proprio sistema di aggiornamento (linea guida 2.4.5). Si compila SENZA le
+# funzioni predefinite: `tauri build --features app-store -- --no-default-features`
+# (workflow «Pacchetto Mac App Store»); così il plugin updater non entra nel programma.
 app-store = []
 
 [build-dependencies]
@@ -19,5 +24,5 @@ tauri = { version = "2", features = [] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rfd = "0.15"
-tauri-plugin-updater = "2"
-tauri-plugin-process = "2"
+tauri-plugin-updater = { version = "2", optional = true }
+tauri-plugin-process = { version = "2", optional = true }

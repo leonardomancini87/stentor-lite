@@ -5,13 +5,21 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 // laterale, ma scarica e installa solo quando lo sceglie chi la usa (mai durante uno spettacolo).
 // Nella versione browser non fa nulla. Nemmeno nella copia installata dal Microsoft Store:
 // lì gli aggiornamenti li fa Windows, e il riquadro Aggiornamenti non compare.
+// La copia per il Mac App Store (VITE_APP_STORE=1, workflow «Pacchetto Mac App Store») non contiene
+// proprio il codice di aggiornamento: Apple vuole che gli aggiornamenti passino solo dallo Store.
+
+const APP_STORE_BUILD = import.meta.env?.VITE_APP_STORE === '1';
+// Nella copia App Store queste funzioni sono null e i plugin non finiscono nel pacchetto.
+const loadUpdater = APP_STORE_BUILD ? null : () => import('@tauri-apps/plugin-updater');
+const loadProcess = APP_STORE_BUILD ? null : () => import('@tauri-apps/plugin-process');
 
 const STARTUP_CHECK_DELAY_MS = 4000;
 
 export const isDesktopApp = () => typeof window !== 'undefined' && Boolean(window.__TAURI_INTERNALS__);
 
-// Chiede all'app se è installata dal Microsoft Store. Se la domanda fallisce vale «no».
+// Chiede all'app se è installata da uno store. Se la domanda fallisce vale «no».
 const isStorePackage = async () => {
+  if (APP_STORE_BUILD) return true;
   try {
     const { invoke } = await import('@tauri-apps/api/core');
     return (await invoke('stentor_is_store_package')) === true;
@@ -30,11 +38,11 @@ export default function useAppUpdates() {
   const selfUpdating = isDesktopApp() && storeManaged === false;
 
   const check = useCallback(async ({ silent = false } = {}) => {
-    if (!selfUpdating || busyRef.current) return;
+    if (!loadUpdater || !selfUpdating || busyRef.current) return;
     busyRef.current = true;
     if (!silent) setState({ status: 'checking', version: null, progress: null });
     try {
-      const { check: checkForUpdate } = await import('@tauri-apps/plugin-updater');
+      const { check: checkForUpdate } = await loadUpdater();
       const update = await checkForUpdate();
       updateRef.current = update;
       if (update) {
@@ -83,7 +91,8 @@ export default function useAppUpdates() {
   }, []);
 
   const restart = useCallback(async () => {
-    const { relaunch } = await import('@tauri-apps/plugin-process');
+    if (!loadProcess) return;
+    const { relaunch } = await loadProcess();
     await relaunch();
   }, []);
 

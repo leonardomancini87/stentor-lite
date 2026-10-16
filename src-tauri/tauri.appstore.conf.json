@@ -11,5 +11,8 @@
         "embedded.provisionprofile": "./macos/embedded.provisionprofile"
       }
     }
+  },
+  "plugins": {
+    "updater": null
   }
 }

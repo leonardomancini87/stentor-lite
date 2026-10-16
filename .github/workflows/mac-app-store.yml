@@ -131,10 +131,14 @@ jobs:
 
       - name: Compila
         if: env.VERIFICA != 'true'
+        env:
+          VITE_APP_STORE: '1'
         run: |
+          # Senza le funzioni predefinite: niente aggiornamento dall'app (vedi src-tauri/Cargo.toml).
           npx tauri build --bundles app --target universal-apple-darwin --features app-store \
             --config src-tauri/tauri.appstore.conf.json \
-            --config '{"bundle":{"macOS":{"bundleVersion":"${{ github.run_number }}"}}}'
+            --config '{"bundle":{"macOS":{"bundleVersion":"${{ github.run_number }}"}}}' \
+            -- --no-default-features
 
       - name: Pacchetto .pkg firmato
         if: env.VERIFICA != 'true'
@@ -155,9 +159,11 @@ jobs:
 
       - name: Verifica compilazione (senza firma)
         if: env.VERIFICA == 'true'
+        env:
+          VITE_APP_STORE: '1'
         run: |
           npm run build:desktop
-          cd src-tauri && cargo build --release --features app-store --target aarch64-apple-darwin
+          cd src-tauri && cargo build --release --no-default-features --features app-store --target aarch64-apple-darwin
 
       - uses: actions/upload-artifact@v5
         if: env.VERIFICA != 'true'
