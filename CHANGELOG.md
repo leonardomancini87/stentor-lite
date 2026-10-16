@@ -3,6 +3,10 @@
 Le versioni seguono la numerazione `MAGGIORE.MINORE.CORREZIONE`. Finché Sténtor Lite è in beta il numero maggiore resta 0.
 *Versions follow `MAJOR.MINOR.PATCH`. While Sténtor Lite is in beta the major number stays at 0.*
 
+## Prossima versione
+
+- Nuovo: al primo avvio una guida in sette passaggi presenta Sténtor Lite (progetti, sopratitoli, schermi, proiezione, conduzione dello spettacolo, impostazioni). A ogni passaggio dietro la guida si apre la pagina di cui parla; frecce, Invio ed Esc la comandano dalla tastiera. Si riapre quando si vuole da Impostazioni → Guida introduttiva. Chi aggiorna da una versione precedente non la vede da sola. Testi in 25 lingue.
+
 ## 0.10.7 — 16 ottobre 2026 · beta
 
 - Corretto: importando un copione Word ogni battuta, didascalia e marcatore riceveva una nota automatica («Battuta importata dal copione Word» e simili). Ora l'importazione non scrive note, e quelle già presenti nei progetti vengono tolte all'apertura; le note scritte a mano restano.

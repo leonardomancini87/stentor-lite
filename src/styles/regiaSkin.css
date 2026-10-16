@@ -2309,3 +2309,90 @@ html[data-app-theme] .stentoreDialog .dialogCheckbox input { margin: 0 !importan
 /* Meno spazio sotto la barra dei comandi (Indietro/Avanti…) e, allineata, sotto la firma della barra laterale. */
 html[data-app-theme] .appShell .workspace.liteRegiaWorkspace { padding-bottom: 10px !important; }
 html[data-app-theme] .appShell .stentorSidebar { padding-bottom: 14px !important; }
+
+/* ---------- Guida di benvenuto (primo avvio, Impostazioni → Guida introduttiva) ----------
+   Il riquadro sta in basso a destra: dietro resta visibile la pagina di cui parla. */
+
+html[data-app-theme] .welcomeTourOverlay {
+  position: fixed; inset: 0; z-index: 240;
+  background: var(--pk-overlay);
+  display: flex; align-items: flex-end; justify-content: flex-end;
+  padding: 24px;
+}
+
+html[data-app-theme] .welcomeTourCard {
+  position: relative;
+  width: min(420px, 100%);
+  background: var(--pk-window); color: var(--pk-ink);
+  border: 1px solid var(--pk-line); border-radius: 16px;
+  box-shadow: 0 24px 60px var(--pk-shadow-strong);
+  padding: 22px 22px 18px;
+  font-family: var(--pk-font);
+  animation: welcomeTourIn .22s ease-out;
+}
+
+@keyframes welcomeTourIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { html[data-app-theme] .welcomeTourCard { animation: none; } }
+
+html[data-app-theme] .welcomeTourClose {
+  position: absolute; top: 12px; inset-inline-end: 12px;
+  width: 28px; height: 28px; display: grid; place-items: center;
+  border: 0; border-radius: 8px; background: transparent; color: var(--pk-muted);
+}
+html[data-app-theme] .welcomeTourClose:hover,
+html[data-app-theme] .welcomeTourClose:focus-visible { background: var(--pk-card); color: var(--pk-ink); }
+
+html[data-app-theme] .welcomeTourIcon {
+  width: 40px; height: 40px; display: grid; place-items: center;
+  border-radius: 12px; background: var(--pk-live-bg); color: var(--pk-live-ink);
+  margin-bottom: 14px;
+}
+
+html[data-app-theme] .welcomeTourCounter {
+  margin: 0 0 4px; font-size: 11px; font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--pk-faint);
+}
+
+html[data-app-theme] .welcomeTourCard h2 {
+  margin: 0 0 8px; padding-inline-end: 28px;
+  font-size: 18px; font-weight: 600; line-height: 1.25; color: var(--pk-ink);
+}
+
+html[data-app-theme] .welcomeTourText {
+  margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--pk-muted);
+}
+html[data-app-theme] .welcomeTourText b { color: var(--pk-ink); font-weight: 600; }
+
+html[data-app-theme] .welcomeTourDots { display: flex; gap: 6px; margin: 18px 0 16px; }
+html[data-app-theme] .welcomeTourDot {
+  width: 7px; height: 7px; padding: 0; border: 0; border-radius: 999px;
+  background: var(--pk-line-2); transition: width .2s ease, background .2s ease;
+}
+html[data-app-theme] .welcomeTourDot.active { width: 20px; background: var(--pk-accent); }
+html[data-app-theme] .welcomeTourDot:focus-visible { outline: 2px solid var(--pk-accent); outline-offset: 2px; }
+
+html[data-app-theme] .welcomeTourFooter { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+html[data-app-theme] .welcomeTourNav { display: flex; gap: 8px; }
+
+html[data-app-theme] .welcomeTourSkip,
+html[data-app-theme] .welcomeTourBack,
+html[data-app-theme] .welcomeTourNext {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 32px; padding: 0 12px; border-radius: 8px;
+  font-size: 13px; font-weight: 500; white-space: nowrap;
+}
+html[data-app-theme] .welcomeTourSkip { border: 0; background: transparent; color: var(--pk-muted); padding: 0 4px; }
+html[data-app-theme] .welcomeTourSkip:hover { color: var(--pk-ink); }
+html[data-app-theme] .welcomeTourBack { border: 1px solid var(--pk-line-2); background: var(--pk-window); color: var(--pk-ink); }
+html[data-app-theme] .welcomeTourBack:hover { background: var(--pk-card); }
+html[data-app-theme] .welcomeTourNext { border: 1px solid var(--pk-accent); background: var(--pk-accent); color: #fff; }
+html[data-app-theme] .welcomeTourNext:hover { background: var(--pk-accent-hover); border-color: var(--pk-accent-hover); }
+html[data-app-theme] .welcomeTourNext:focus-visible,
+html[data-app-theme] .welcomeTourBack:focus-visible { outline: 2px solid var(--pk-accent); outline-offset: 2px; }
+
+/* Nelle lingue da destra a sinistra le frecce si girano. */
+html[dir="rtl"] .welcomeTourArrow { transform: scaleX(-1); }
+
+@media (max-width: 560px) {
+  html[data-app-theme] .welcomeTourOverlay { justify-content: center; padding: 16px; }
+}
